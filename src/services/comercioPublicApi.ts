@@ -1,22 +1,19 @@
 import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
-import { BACKEND_URL, BASE_URL } from "../api/http";
-
-
-
-
-
-console.log("BACKEND_URL:", BACKEND_URL);
-console.log("BASE_URL:", BASE_URL);
-
-
-
+const BASE_URL =
+  typeof window === "undefined"
+    ? // SSR (server) en Astro/Vercel
+      import.meta.env.PUBLIC_BACKEND_PROD_URL ?? import.meta.env.PUBLIC_BACKEND_URL_LOCAL
+    : // Cliente
+      import.meta.env.PUBLIC_BACKEND_URL + "/comercios";
+    
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
+console.log(BASE_URL);
 
 api.interceptors.response.use(
   (r) => r,

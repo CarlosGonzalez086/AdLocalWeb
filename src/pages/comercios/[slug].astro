@@ -1,55 +1,28 @@
 ---
-import App from "../../components/App";
-import ComercioDetalle from "../../components/business/ComercioDetalle";
-import { comercioPublicApi } from "../../services/comercioPublicApi";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/global.css";
+import ComercioWraper from "../../wrappers/ComercioWraper"; 
+
+
 
 const { slug } = Astro.params;
 const parts = slug?.split("_");
 const id = Number(parts?.[0]);
 
-let comercio = null;
-
-try {
-  const response = await comercioPublicApi.getById(id);
-  comercio = response.data.respuesta ?? null;
-} catch (err) {
-  console.error("ERROR AL OBTENER COMERCIO:", err);
-}
-
-if (!comercio) {
+if (isNaN(id)) {
   return Astro.redirect("/");
 }
 ---
 
 <html lang="es">
   <head>
-    <meta charset="utf-8" />
-    <link
-      rel="icon"
-      type="image/jpeg"
-      sizes="32x32"
-      href={comercio.logoBase64 ??
-        "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"}
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comercio</title>
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-sA+1E9IYJrySAB8GkuPxHohDpC3Lx2F0YlGOCq4SvYg="
-      crossorigin=""
     />
-
-    <title>{comercio.nombre}</title>
   </head>
   <body>
-    <App client:load>
-      <ComercioDetalle
-        client:only="react"
-        comercio={comercio}
-        productos={comercio.productos ?? []}
-        loadingProducts={false}
-      />
-    </App>
+    <ComercioWraper id={id} client:only="react" />
   </body>
 </html>
