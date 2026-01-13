@@ -3,6 +3,7 @@ import 'piccolore';
 export { renderers } from '../../renderers.mjs';
 
 const $$Astro = createAstro();
+const prerender = false;
 const $$slug = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$slug;
@@ -12,7 +13,7 @@ const $$slug = createComponent(($$result, $$props, $$slots) => {
   if (isNaN(id)) {
     return Astro2.redirect("/");
   }
-  return renderTemplate`<html lang="es"> <head><meta charset="utf-8"><title>AdLocal | Comercios</title><link rel="icon" type="image/jpeg" sizes="32x32" href="https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg">${renderHead()}</head> <body> ${renderComponent($$result, "ComercioWraper", null, { "id": id, "client:only": "react", "client:component-hydration": "only", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/wrappers/ComercioWraper", "client:component-export": "default" })} </body></html>`;
+  return renderTemplate`<html lang="es"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Comercio</title><link rel="icon" type="image/jpeg" sizes="32x32" href="https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"><link rel="stylesheet" href="/styles/global.css"><link rel="stylesheet" href="/styles/leaflet.css">${renderHead()}</head> <body> <!-- Renderizamos el wrapper en cliente --> ${renderComponent($$result, "ComercioWraper", null, { "id": id, "client:only": "react", "client:component-hydration": "only", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/wrappers/ComercioWraper", "client:component-export": "default" })} </body></html>`;
 }, "C:/Users/USER/source/repos/AdLocalWeb/src/pages/comercios/[slug].astro", void 0);
 
 const $$file = "C:/Users/USER/source/repos/AdLocalWeb/src/pages/comercios/[slug].astro";
@@ -22,6 +23,7 @@ const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: $$slug,
   file: $$file,
+  prerender,
   url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 
