@@ -1,9 +1,8 @@
 ---
-import App from "../components/App.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/leaflet.css";
 import "../styles/global.css";
-import BusinessTabs from "../components/business/BusinessTabs";
+import BusinessWraper from "../wrappers/BusinessWraper";
 ---
 
 <html lang="es">
@@ -18,8 +17,6 @@ import BusinessTabs from "../components/business/BusinessTabs";
     <title>AdLocal</title>
   </head>
   <body>
-    <App client:load>
-      <BusinessTabs client:only="react" />
-    </App>
+    <BusinessWraper client:only="react" />
   </body>
 </html>
