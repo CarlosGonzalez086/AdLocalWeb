@@ -32,6 +32,7 @@
     "sweetalert2": "^11.26.17"
   },
   "devDependencies": {
+    "@astrojs/vercel": "^9.0.3",
     "@types/react-slick": "^0.23.13"
   }
 }
