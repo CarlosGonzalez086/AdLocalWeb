@@ -6,10 +6,11 @@ import "../styles/global.css";
 import "../styles/leaflet.css";
 
 interface ComercioWraperProps {
+  children: React.ReactNode;
   id: number;
 }
 
-const ComercioWraper: React.FC<ComercioWraperProps> = ({ id }) => {
+const ComercioWraper: React.FC<ComercioWraperProps> = ({ children, id }) => {
   return (
     <App>
       <div>

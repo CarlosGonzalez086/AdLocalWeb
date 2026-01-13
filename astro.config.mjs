@@ -6,17 +6,17 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "@": "/src", // equivale a src/
+        "@": "/src",
       },
     },
   },
   integrations: [
     react({
-      client: "load", // Renderiza todos los componentes React en cliente
+      client: "load",
     }),
   ],
   output: "server",
-  adapter: vercel(), // <-- Adaptador Vercel serverless
+  adapter: vercel(),
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     host: true,
