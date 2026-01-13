@@ -9,7 +9,4 @@ export const URL_ADLOCAL_COMERCIO =
     ? import.meta.env.PUBLIC_URL_ADLOCAL_COMERCIO
     : import.meta.env.PUBLIC_URL_ADLOCAL_PROD_COMERCIO;
 
-export const BASE_URL = `${BACKEND_URL}/comercios`;
 
-console.log("BACKEND_URL:", BACKEND_URL);
-console.log("BASE_URL:", BASE_URL);

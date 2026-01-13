@@ -35,7 +35,7 @@ import {
 const MapaComercio = lazy(() => import("./MapaComercio.client"));
 
 interface Props {
-  comercio: ComercioDto;
+  comercio: ComercioDto | null;
   productos: ProductoServicioDto[];
   loadingProducts: boolean;
 }
@@ -45,13 +45,13 @@ export default function ComercioDetalle({
   productos,
   loadingProducts,
 }: Props) {
-  const abiertoAhora = comercio.horarios
+  const abiertoAhora = comercio?.horarios
     ? estaAbiertoAhora(comercio.horarios)
     : false;
 
-  const colorPrimario = comercio.colorPrimario ?? "#6f4e37";
-  const colorSecundario = comercio.colorSecundario ?? "#3e2723";
-  const horarios = comercio.horarios || [];
+  const colorPrimario = comercio?.colorPrimario ?? "#6f4e37";
+  const colorSecundario = comercio?.colorSecundario ?? "#3e2723";
+  const horarios = comercio?.horarios || [];
 
   return (
     <Box
@@ -102,7 +102,7 @@ export default function ComercioDetalle({
         }}
       >
         <Avatar
-          src={comercio.logoBase64}
+          src={comercio?.logoBase64}
           sx={{
             width: 120,
             height: 120,
@@ -113,16 +113,16 @@ export default function ComercioDetalle({
         />
 
         <Typography variant="h4" fontWeight="bold" color="#fff">
-          {comercio.nombre}
+          {comercio?.nombre}
         </Typography>
 
-        {comercio.descripcion && (
+        {comercio?.descripcion && (
           <Typography color="#eee" mt={1}>
             {comercio.descripcion}
           </Typography>
         )}
 
-        {comercio.horarios && (
+        {comercio?.horarios && (
           <Chip
             icon={<AccessTimeIcon />}
             label={abiertoAhora ? "Abierto ahora" : "Cerrado ahora"}
@@ -138,10 +138,10 @@ export default function ComercioDetalle({
       <Stack spacing={2} px={4} py={4}>
         <Stack direction="row" spacing={1}>
           <LocationOnIcon />
-          <Typography>{comercio.direccion}</Typography>
+          <Typography>{comercio?.direccion}</Typography>
         </Stack>
 
-        {comercio.telefono && (
+        {comercio?.telefono && (
           <Stack direction="row" spacing={1}>
             <WhatsAppIcon sx={{ color: "#25D366" }} />
             <Link
@@ -154,7 +154,7 @@ export default function ComercioDetalle({
           </Stack>
         )}
 
-        {comercio.email && (
+        {comercio?.email && (
           <Stack direction="row" spacing={1}>
             <EmailIcon />
             <Link href={`mailto:${comercio.email}`} underline="none">
@@ -283,7 +283,7 @@ export default function ComercioDetalle({
           </AccordionDetails>
         </Accordion>
 
-        {comercio.lat && comercio.lng && (
+        {comercio?.lat && comercio?.lng && (
           <Box
             sx={{
               mt: 3,
@@ -311,7 +311,7 @@ export default function ComercioDetalle({
           }}
           onClick={() =>
             window.open(
-              `https://www.google.com/maps?q=${comercio.lat},${comercio.lng}`,
+              `https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`,
               "_blank"
             )
           }
