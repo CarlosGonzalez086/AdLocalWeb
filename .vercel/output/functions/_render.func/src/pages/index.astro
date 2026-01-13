@@ -18,7 +18,8 @@ import BusinessTabs from "../components/business/BusinessTabs";
     <title>AdLocal</title>
   </head>
   <body>
-    <App client:load>
+    <!-- React solo en cliente -->
+    <App client:only="react">
       <BusinessTabs client:only="react" />
     </App>
   </body>
