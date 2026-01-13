@@ -1,9 +1,7 @@
-export const URL_ADLOCAL_COMERCIO =
-  import.meta.env.NODE_ENV === "development"
-    ? "http://localhost:5173/registro"
-    : "https://ad-local-gamma.vercel.app/registro";
+export const URL_ADLOCAL_COMERCIO = import.meta.env.PROD
+  ? "https://ad-local-gamma.vercel.app/registro"
+  : "http://localhost:5173/registro";
 
-export const BACKEND_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8080/api"
-    : "https://adlocalapi.onrender.com/api";
+export const BACKEND_URL = import.meta.env.PROD
+  ? "https://adlocalapi.onrender.com/api"
+  : "http://localhost:8080/api";

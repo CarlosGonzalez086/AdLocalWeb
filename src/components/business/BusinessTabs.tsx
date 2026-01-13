@@ -36,6 +36,8 @@ const BusinessTabs = () => {
   } = useComercioPublico();
 
   useEffect(() => {
+    console.log(import.meta.env.PROD);
+    
     switch (activeTab) {
       case "destacados":
       case "populares":
