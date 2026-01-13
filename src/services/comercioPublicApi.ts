@@ -6,6 +6,9 @@ import { BACKEND_URL } from "../api/http";
 
 const BASE_URL = `${BACKEND_URL}/comercios`;
 
+console.log(BASE_URL);
+
+
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
