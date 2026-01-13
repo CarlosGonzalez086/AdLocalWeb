@@ -2,6 +2,8 @@ import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
 import { BACKEND_URL } from "../api/http";
 
+
+
 const BASE_URL = `${BACKEND_URL}/comercios`;
 
 const api = axios.create({
