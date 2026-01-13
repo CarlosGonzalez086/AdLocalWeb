@@ -5206,9 +5206,6 @@ const Header = () => {
   const handleClick = () => {
     window.location.href = process.env.NODE_ENV === "production" ? "https://ad-local-gamma.vercel.app/registro" : "http://localhost:5173/registro";
   };
-  const handleInicio = () => {
-    window.location.href = "/";
-  };
   return /* @__PURE__ */ jsxs(AppBar, { position: "static", color: "primary", elevation: 1, children: [
     /* @__PURE__ */ jsxs(Toolbar, { className: "container-lg px-3", children: [
       /* @__PURE__ */ jsxs(Box, { className: "d-flex align-items-center gap-2 flex-grow-1", children: [
@@ -5224,12 +5221,12 @@ const Header = () => {
         /* @__PURE__ */ jsx(Typography, { variant: "h6", fontWeight: 600, children: "ADLocal" })
       ] }),
       /* @__PURE__ */ jsxs(Box, { className: "d-none d-lg-flex gap-2", children: [
-        /* @__PURE__ */ jsx(Button, { color: "inherit", onClick: handleInicio, children: "Inicio" }),
+        /* @__PURE__ */ jsx(Button, { color: "inherit", onClick: () => location.assign("/"), children: "Inicio" }),
         /* @__PURE__ */ jsx(Button, { variant: "contained", color: "secondary", onClick: handleClick, children: "Unirme como negocio" })
       ] })
     ] }),
     /* @__PURE__ */ jsxs(Box, { className: "d-flex d-lg-none px-3 pb-2 gap-2", children: [
-      /* @__PURE__ */ jsx(Button, { fullWidth: true, color: "inherit", variant: "outlined", onClick: handleInicio, children: "Inicio" }),
+      /* @__PURE__ */ jsx(Button, { fullWidth: true, color: "inherit", variant: "outlined", onClick: () => location.assign("/"), children: "Inicio" }),
       /* @__PURE__ */ jsx(Button, { fullWidth: true, variant: "contained", color: "secondary", onClick: handleClick, children: "Unirme como negocio" })
     ] })
   ] });
@@ -5275,7 +5272,10 @@ const Footer = () => {
 };
 
 const Body = ({ children }) => {
-  return /* @__PURE__ */ jsx(Box, { className: "flex-grow-1 d-flex", children: /* @__PURE__ */ jsx("div", { className: "container-lg py-4 d-flex flex-column flex-grow-1", children }) });
+  return /* @__PURE__ */ jsx(Box, { className: "flex-grow-1 d-flex", children: /* @__PURE__ */ jsxs("div", { className: "container-lg py-4 d-flex flex-column flex-grow-1", children: [
+    /* @__PURE__ */ jsx("div", { className: "mb-3 text-center", children: /* @__PURE__ */ jsx("span", { className: "badge bg-warning text-dark", children: "Ambiente de Prod" }) }) ,
+    children
+  ] }) });
 };
 
 const coffee = {

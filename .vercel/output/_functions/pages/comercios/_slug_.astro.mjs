@@ -1,6 +1,6 @@
 import { e as createComponent, f as createAstro, h as addAttribute, k as renderHead, l as renderComponent, r as renderTemplate } from '../../chunks/astro/server_DGJ8zzG5.mjs';
 import 'piccolore';
-import { u as useDefaultProps, s as styled, m as memoTheme, d as duration, a as useTheme, P as Paper, B as ButtonBase, c as createSimplePaletteValueFilter, b as Box, T as Typography, e as Button, L as Link, A as App } from '../../chunks/App_rwJr5YN-.mjs';
+import { u as useDefaultProps, s as styled, m as memoTheme, d as duration, a as useTheme, P as Paper, B as ButtonBase, c as createSimplePaletteValueFilter, b as Box, T as Typography, e as Button, L as Link, A as App } from '../../chunks/App_B7EaWBeq.mjs';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -2847,7 +2847,7 @@ function ComercioDetalle({
           Button,
           {
             startIcon: /* @__PURE__ */ jsx(ArrowBackIcon, {}),
-            onClick: () => window.location.href = "/",
+            onClick: () => location.assign("/"),
             sx: {
               position: "absolute",
               top: 16,
@@ -3071,10 +3071,13 @@ function ComercioDetalle({
   );
 }
 
-const BACKEND_URL = process.env.NODE_ENV === "production" ? "https://adlocalapi.onrender.com/api" : "http://localhost:8080/api";
-process.env.NODE_ENV === "production" ? "http://localhost:5173/registro" : "https://ad-local-gamma.vercel.app/registro";
-
+const BACKEND_URL = "https://adlocalapi.onrender.com/api";
 const BASE_URL = `${BACKEND_URL}/comercios`;
+console.log("BACKEND_URL:", BACKEND_URL);
+console.log("BASE_URL:", BASE_URL);
+
+console.log("BACKEND_URL:", BACKEND_URL);
+console.log("BASE_URL:", BASE_URL);
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -3106,6 +3109,7 @@ const prerender = false;
 const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$slug;
+  const leafletLink = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
   const { slug } = Astro2.params;
   const parts = slug?.split("_");
   const id = Number(parts?.[0]);
@@ -3113,18 +3117,17 @@ const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   if (isNaN(id)) {
     return Astro2.redirect("/");
   }
-  let comercio;
+  let comercio = null;
   try {
     const response = await comercioPublicApi.getById(id);
-    comercio = response.data.respuesta;
-    if (!comercio) {
-      throw new Error("Comercio no encontrado");
-    }
+    comercio = response.data.respuesta ?? null;
   } catch (err) {
-    console.error("ERROR ASTRO:", err);
-    throw err instanceof Error ? err : new Error("Error cargando comercio");
+    console.error("ERROR AL OBTENER COMERCIO:", err);
   }
-  return renderTemplate`<html lang="es"> <head><meta charset="utf-8"><link rel="icon" type="image/jpeg" sizes="32x32"${addAttribute(comercio.logoBase64 ? comercio.logoBase64 : "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg", "href")}><title>${nombre}</title>${renderHead()}</head> <body> ${renderComponent($$result, "App", App, { "client:load": true, "client:component-hydration": "load", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/components/App", "client:component-export": "default" }, { "default": async ($$result2) => renderTemplate` ${renderComponent($$result2, "ComercioDetalle", ComercioDetalle, { "client:load": true, "comercio": comercio, "productos": comercio.productos || [], "loadingProducts": false, "client:component-hydration": "load", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/components/business/ComercioDetalle", "client:component-export": "default" })} ` })} </body></html>`;
+  if (!comercio) {
+    return Astro2.redirect("/");
+  }
+  return renderTemplate`<html lang="es"> <head><meta charset="utf-8"><link rel="icon" type="image/jpeg" sizes="32x32"${addAttribute(comercio.logoBase64 ?? "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg", "href")}><title>${nombre}</title><!-- Solo CSS de Leaflet en head, no import en server --><link rel="stylesheet"${addAttribute(leafletLink, "href")} integrity="sha256-sA+1E9IYJrySAB8GkuPxHohDpC3Lx2F0YlGOCq4SvYg=" crossorigin="">${renderHead()}</head> <body> ${renderComponent($$result, "App", App, { "client:load": true, "client:component-hydration": "load", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/components/App", "client:component-export": "default" }, { "default": async ($$result2) => renderTemplate` ${renderComponent($$result2, "ComercioDetalle", ComercioDetalle, { "client:load": true, "comercio": comercio, "productos": comercio.productos ?? [], "loadingProducts": false, "client:component-hydration": "load", "client:component-path": "C:/Users/USER/source/repos/AdLocalWeb/src/components/business/ComercioDetalle", "client:component-export": "default" })} ` })} </body></html>`;
 }, "C:/Users/USER/source/repos/AdLocalWeb/src/pages/comercios/[slug].astro", void 0);
 
 const $$file = "C:/Users/USER/source/repos/AdLocalWeb/src/pages/comercios/[slug].astro";
