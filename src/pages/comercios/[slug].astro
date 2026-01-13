@@ -1,0 +1,57 @@
+---
+export const prerender = false;
+
+import App from "../../components/App";
+import ComercioDetalle from "../../components/business/ComercioDetalle";
+import { comercioPublicApi } from "../../services/comercioPublicApi";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../styles/leaflet.css";
+import "../../styles/global.css";
+
+const { slug } = Astro.params;
+
+const parts = slug?.split("_");
+const id = Number(parts?.[0]);
+const nombre = parts?.slice(1).join("_").replace(/_/g, " ");
+
+if (isNaN(id)) {
+  return Astro.redirect("/");
+}
+
+let comercio;
+
+try {
+  const response = await comercioPublicApi.getById(id);
+  comercio = response.data.respuesta;
+
+  if (!comercio) {
+    throw new Error("Comercio no encontrado");
+  }
+} catch (err) {
+  console.error("ERROR ASTRO:", err);
+  throw err instanceof Error ? err : new Error("Error cargando comercio");
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      type="image/jpeg"
+      sizes="32x32"
+      href={comercio.logoBase64 ? comercio.logoBase64 : "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"}
+    />
+    <title>{nombre}</title>
+  </head>
+  <body>
+    <App client:load>
+      <ComercioDetalle
+        client:load
+        comercio={comercio}
+        productos={comercio.productos || []}
+        loadingProducts={false}
+      />
+    </App>
+  </body>
+</html>
