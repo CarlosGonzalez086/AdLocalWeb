@@ -30,7 +30,6 @@ import ProductoCard from "./ProductoCard";
 import {
   DIAS_SEMANA_MAP,
   estaAbiertoAhora,
-  formatHoraSimple,
 } from "../../utils/generals";
 
 const MapaComercio = lazy(() => import("./MapaComercio.client"));
@@ -72,7 +71,7 @@ export default function ComercioDetalle({
     >
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => (window.location.href = "/")}
+        onClick={() => location.assign("/")}
         sx={{
           position: "absolute",
           top: 16,
