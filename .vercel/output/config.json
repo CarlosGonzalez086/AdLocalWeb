@@ -22,10 +22,6 @@
 		{
 			"src": "^/comercios/([^/]+?)/?$",
 			"dest": "_render"
-		},
-		{
-			"src": "^/$",
-			"dest": "_render"
 		}
 	]
 }
