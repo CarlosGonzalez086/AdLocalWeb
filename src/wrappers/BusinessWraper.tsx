@@ -1,16 +1,15 @@
 import React from "react";
 import App from "../components/App";
-// Bootstrap y global CSS pueden ir aquí (ok para SSR)
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/global.css";
 
 import BusinessTabsWrapper from "./BusinessTabsWrapper";
 
-const BusinessWraper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+const BusinessWraper: React.FC = () => {
   return (
     <App>
       <div>
-        {/* BusinessTabsWrapper solo cliente */}
+        {/* Solo se ejecuta en cliente */}
         <BusinessTabsWrapper client:only="react" />
       </div>
     </App>

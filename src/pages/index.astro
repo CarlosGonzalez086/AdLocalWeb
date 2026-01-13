@@ -1,13 +1,11 @@
 ---
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/leaflet.css";
-import "../styles/global.css";
 import BusinessWraper from "../wrappers/BusinessWraper";
 ---
 
 <html lang="es">
   <head>
     <meta charset="utf-8" />
+    <title>AdLocal | Comercios</title>
     <link
       rel="icon"
       type="image/jpeg"
@@ -16,7 +14,6 @@ import BusinessWraper from "../wrappers/BusinessWraper";
     />
   </head>
   <body>
-
     <!-- El componente real solo en cliente -->
     <BusinessWraper client:only="react" />
   </body>
