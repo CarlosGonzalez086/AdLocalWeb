@@ -45,7 +45,7 @@ if (!comercio) {
   <body>
     <App client:load>
       <ComercioDetalle
-        client:load
+        client:only="react"
         comercio={comercio}
         productos={comercio.productos ?? []}
         loadingProducts={false}
