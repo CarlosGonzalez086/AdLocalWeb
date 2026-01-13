@@ -3,7 +3,7 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel/serverless";
 
 export default defineConfig({
-  output: "server", 
   integrations: [react()],
+  output: "server",
   adapter: vercel(),
 });
