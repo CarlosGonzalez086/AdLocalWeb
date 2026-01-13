@@ -68,7 +68,6 @@ export default function ComercioDetalle({
         },
         backgroundColor: "#fff",
         overflow: "hidden",
-
       }}
     >
       <Button
@@ -93,9 +92,9 @@ export default function ComercioDetalle({
       <Box
         sx={{
           background: `linear-gradient(135deg, ${colorPrimario}, ${colorSecundario})`,
-          width: "100%", 
-          px: { xs: 2, sm: 4, md: 6 }, 
-          py: { xs: 4, sm: 5, md: 6 }, 
+          width: "100%",
+          px: { xs: 2, sm: 4, md: 6 },
+          py: { xs: 4, sm: 5, md: 6 },
           textAlign: "center",
           display: "flex",
           flexDirection: "column",
