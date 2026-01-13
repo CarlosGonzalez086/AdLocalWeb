@@ -5,8 +5,10 @@ import App from "../../components/App";
 import ComercioDetalle from "../../components/business/ComercioDetalle";
 import { comercioPublicApi } from "../../services/comercioPublicApi";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/leaflet.css";
 import "../../styles/global.css";
+
+// Leaflet CSS solo se carga en cliente
+const leafletLink = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 
 const { slug } = Astro.params;
 
@@ -18,18 +20,19 @@ if (isNaN(id)) {
   return Astro.redirect("/");
 }
 
-let comercio;
+let comercio = null;
 
 try {
+  // Intentamos obtener el comercio desde API
   const response = await comercioPublicApi.getById(id);
-  comercio = response.data.respuesta;
-
-  if (!comercio) {
-    throw new Error("Comercio no encontrado");
-  }
+  comercio = response.data.respuesta ?? null;
 } catch (err) {
-  console.error("ERROR ASTRO:", err);
-  throw err instanceof Error ? err : new Error("Error cargando comercio");
+  console.error("ERROR AL OBTENER COMERCIO:", err);
+}
+
+// Si no existe comercio, redirigimos sin crashear
+if (!comercio) {
+  return Astro.redirect("/");
 }
 ---
 
@@ -40,16 +43,23 @@ try {
       rel="icon"
       type="image/jpeg"
       sizes="32x32"
-      href={comercio.logoBase64 ? comercio.logoBase64 : "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"}
+      href={comercio.logoBase64 ?? "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"}
     />
     <title>{nombre}</title>
+    <!-- Solo CSS de Leaflet en head, no import en server -->
+    <link
+      rel="stylesheet"
+      href={leafletLink}
+      integrity="sha256-sA+1E9IYJrySAB8GkuPxHohDpC3Lx2F0YlGOCq4SvYg="
+      crossorigin=""
+    />
   </head>
   <body>
     <App client:load>
       <ComercioDetalle
         client:load
         comercio={comercio}
-        productos={comercio.productos || []}
+        productos={comercio.productos ?? []}
         loadingProducts={false}
       />
     </App>
