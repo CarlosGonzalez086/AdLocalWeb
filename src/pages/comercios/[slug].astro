@@ -1,10 +1,17 @@
 ---
+// src/pages/comercios/[slug].astro
+
 import ComercioWraper from "../../wrappers/ComercioWraper";
 
+// ✨ Esto indica que la página no se prerenderiza y se ejecuta en serverless
+export const prerender = false;
+
+// Obtenemos el slug de la URL
 const { slug } = Astro.params;
 const parts = slug?.split("_");
 const id = Number(parts?.[0]);
 
+// Redirigimos si el ID no es válido
 if (isNaN(id)) {
   return Astro.redirect("/");
 }
@@ -12,16 +19,21 @@ if (isNaN(id)) {
 
 <html lang="es">
   <head>
-    <meta charset="utf-8" />
-    <title>AdLocal | Comercios</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comercio</title>
     <link
       rel="icon"
       type="image/jpeg"
       sizes="32x32"
       href="https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="stylesheet" href="/styles/leaflet.css" />
   </head>
   <body>
+    <!-- Renderizamos el wrapper en cliente -->
     <ComercioWraper id={id} client:only="react" />
   </body>
 </html>
