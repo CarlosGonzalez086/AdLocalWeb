@@ -6,9 +6,21 @@ interface BodyProps {
 }
 
 const Body: FC<BodyProps> = ({ children }) => {
+  const data = import.meta.env;
   return (
     <Box className="flex-grow-1 d-flex">
       <div className="container-lg py-4 d-flex flex-column flex-grow-1">
+        {data.PROD ? (
+          <div className="mb-3 text-center">
+            <span className="badge bg-warning text-dark">Ambiente de Prod</span>
+          </div>
+        ) : (
+          <div className="mb-3 text-center">
+            <span className="badge bg-warning text-dark">
+              Ambiente de desarrollo
+            </span>
+          </div>
+        )}
         {children}
       </div>
     </Box>
@@ -16,4 +28,3 @@ const Body: FC<BodyProps> = ({ children }) => {
 };
 
 export default Body;
-
