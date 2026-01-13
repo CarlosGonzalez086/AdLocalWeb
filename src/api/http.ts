@@ -1,5 +1,5 @@
 export const URL_ADLOCAL_COMERCIO =
-  import.meta.env.NODE_ENV === "production"
+  import.meta.env.NODE_ENV === "development"
     ? "http://localhost:5173/registro"
     : "https://ad-local-gamma.vercel.app/registro";
 
