@@ -1,4 +1,4 @@
-import type { FC } from "react";
+
 import {
   Card,
   CardContent,
@@ -8,6 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import type { Business } from "../../types/business";
+import type { FC } from "react";
 
 interface Props {
   business: Business;

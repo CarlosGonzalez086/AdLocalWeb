@@ -1,16 +1,10 @@
-import type { FC } from "react";
 import { Box, Typography, Link, IconButton } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import type { FC } from "react";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
-  const handleClick = () => {
-    window.location.href =
-      import.meta.env.NODE_ENV === "production"
-        ? "https://ad-local-gamma.vercel.app/registro"
-        : "http://localhost:5173/registro";
-  };
   return (
     <Box
       component="footer"
@@ -21,13 +15,15 @@ const Footer: FC = () => {
           <div className="col-12 col-lg-6">
             <Typography variant="body1">
               ¿Quieres unirte como negocio?
-              <Link
-                onClick={handleClick}
-                underline="hover"
-                sx={{ ml: 1, color: "white", fontWeight: 500, cursor: "pointer" }}
+              <a
+                href={
+                  import.meta.env.NODE_ENV === "production"
+                    ? "https://ad-local-gamma.vercel.app/registro"
+                    : "http://localhost:5173/registro"
+                }
               >
                 Da clic aquí
-              </Link>
+              </a>
             </Typography>
           </div>
 
@@ -42,7 +38,8 @@ const Footer: FC = () => {
 
           <div className="col-12 col-lg-3 text-center text-lg-end">
             <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
-              © {year} Da VinciX Code Labs. <br /> Todos los derechos reservados.
+              © {year} Da VinciX Code Labs. <br /> Todos los derechos
+              reservados.
             </Typography>
           </div>
         </div>

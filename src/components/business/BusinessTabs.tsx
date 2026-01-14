@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type Dispatch, type SetStateAction } from "react";
+
 import {
   Box,
   Typography,
@@ -11,6 +11,7 @@ import ComercioCard from "./ComercioCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 const tabs = [
   { label: "Destacados", key: "destacados" },

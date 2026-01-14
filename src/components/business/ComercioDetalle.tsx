@@ -19,31 +19,27 @@ import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { lazy, Suspense } from "react";
-
 import type {
   ComercioDto,
   ProductoServicioDto,
 } from "../../services/comercioPublicApi";
 
 import ProductoCard from "./ProductoCard";
-import {
-  DIAS_SEMANA_MAP,
-  estaAbiertoAhora,
-} from "../../utils/generals";
+import { DIAS_SEMANA_MAP, estaAbiertoAhora } from "../../utils/generals";
+import React, { lazy, Suspense } from "react";
 
-const MapaComercio = lazy(() => import("./MapaComercio.client"));
+const MapaComercioLazy = React.lazy(() => import("./MapaComercio.client"));
 
 interface Props {
   comercio: ComercioDto | null;
   productos: ProductoServicioDto[];
-  loadingProducts: boolean;
+  loadingProducts?: boolean;
 }
 
 export default function ComercioDetalle({
   comercio,
   productos,
-  loadingProducts,
+  loadingProducts = false,
 }: Props) {
   const abiertoAhora = comercio?.horarios
     ? estaAbiertoAhora(comercio.horarios)
@@ -71,7 +67,9 @@ export default function ComercioDetalle({
     >
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => location.assign("/")}
+        onClick={() =>
+          typeof window !== "undefined" && window.location.assign("/")
+        }
         sx={{
           position: "absolute",
           top: 16,
@@ -294,8 +292,10 @@ export default function ComercioDetalle({
               boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
             }}
           >
-            <Suspense fallback={<Typography>Cargando mapa…</Typography>}>
-              <MapaComercio lat={comercio.lat} lng={comercio.lng} />
+            <Suspense fallback={<div>Cargando mapa…</div>}>
+              {typeof window !== "undefined" && (
+                <MapaComercioLazy lat={comercio.lat} lng={comercio.lng} />
+              )}
             </Suspense>
           </Box>
         )}

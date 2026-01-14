@@ -1,17 +1,9 @@
-import type { FC } from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
 const LOGO_URL =
   "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
 
-const Header: FC = () => {
-  const handleClick = () => {
-    window.location.href =
-      import.meta.env.NODE_ENV === "production"
-        ? "https://ad-local-gamma.vercel.app/registro"
-        : "http://localhost:5173/registro";
-  };
-
+const Header: React.FC = () => {
   return (
     <AppBar position="static" color="primary" elevation={1}>
       <Toolbar className="container-lg px-3">
@@ -27,24 +19,44 @@ const Header: FC = () => {
           </Typography>
         </Box>
 
-
         <Box className="d-none d-lg-flex gap-2">
           <Button color="inherit" onClick={() => location.assign("/")}>
             Inicio
           </Button>
-          <Button variant="contained" color="secondary" onClick={handleClick}>
-            Unirme como negocio
-          </Button>
+          <a
+            href={
+              import.meta.env.NODE_ENV === "production"
+                ? "https://ad-local-gamma.vercel.app/registro"
+                : "http://localhost:5173/registro"
+            }
+          >
+            <Button variant="contained" color="secondary">
+              Unirme como negocio
+            </Button>
+          </a>
         </Box>
       </Toolbar>
 
       <Box className="d-flex d-lg-none px-3 pb-2 gap-2">
-        <Button fullWidth color="inherit" variant="outlined" onClick={() => location.assign("/")}>
+        <Button
+          fullWidth
+          color="inherit"
+          variant="outlined"
+          onClick={() => location.assign("/")}
+        >
           Inicio
         </Button>
-        <Button fullWidth variant="contained" color="secondary" onClick={handleClick}>
-          Unirme como negocio
-        </Button>
+        <a
+          href={
+            import.meta.env.NODE_ENV === "production"
+              ? "https://ad-local-gamma.vercel.app/registro"
+              : "http://localhost:5173/registro"
+          }
+        >
+          <Button fullWidth variant="contained" color="secondary">
+            Unirme como negocio
+          </Button>
+        </a>
       </Box>
     </AppBar>
   );

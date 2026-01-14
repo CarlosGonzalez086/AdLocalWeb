@@ -1,7 +1,8 @@
-import React from "react";
+
 import App from "../components/App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/global.css";
+import React from "react";
 
 // ⚡ Wrapper que solo carga Comercio en cliente
 const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
