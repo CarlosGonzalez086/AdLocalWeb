@@ -3,16 +3,20 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
-  adapter: vercel({ edge: false }),
-  output: "server",
+  output: "server", // ⚡ Habilita SSR
   integrations: [
     react({
       client: "load", // React solo en cliente
     }),
   ],
+  adapter: vercel({
+    edge: false, // Serverless tradicional
+  }),
   vite: {
     resolve: {
-      alias: { "@": "/src" },
+      alias: {
+        "@": "/src",
+      },
     },
   },
 });
