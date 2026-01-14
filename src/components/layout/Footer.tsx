@@ -14,10 +14,10 @@ const Footer: FC = () => {
         <div className="row gy-3 align-items-center text-center text-lg-start">
           <div className="col-12 col-lg-6">
             <Typography variant="body1">
-              ¿Quieres unirte como negocio?
+              ¿Quieres unirte como negocio? {" "}
               <a
                 href={
-                  import.meta.env.NODE_ENV === "production"
+                  import.meta.env.MODE === "production"
                     ? "https://ad-local-gamma.vercel.app/registro"
                     : "http://localhost:5173/registro"
                 }

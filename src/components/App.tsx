@@ -1,4 +1,3 @@
-
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -24,9 +23,7 @@ const App: React.FC<AppProps> = ({ children }) => {
       >
         <Header />
 
-        <Body>
-          {children} 
-        </Body>
+        <Body>{children}</Body>
 
         <Footer />
       </Box>

@@ -25,7 +25,7 @@ const Header: React.FC = () => {
           </Button>
           <a
             href={
-              import.meta.env.NODE_ENV === "production"
+              import.meta.env.MODE === "production"
                 ? "https://ad-local-gamma.vercel.app/registro"
                 : "http://localhost:5173/registro"
             }
@@ -48,7 +48,7 @@ const Header: React.FC = () => {
         </Button>
         <a
           href={
-            import.meta.env.NODE_ENV === "production"
+            import.meta.env.MODE === "production"
               ? "https://ad-local-gamma.vercel.app/registro"
               : "http://localhost:5173/registro"
           }
