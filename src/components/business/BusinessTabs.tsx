@@ -1,10 +1,10 @@
-
 import {
   Box,
   Typography,
   CircularProgress,
   Button,
   Stack,
+  Grid,
 } from "@mui/material";
 import Slider from "react-slick";
 import ComercioCard from "./ComercioCard";
@@ -16,8 +16,8 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 const tabs = [
   { label: "Destacados", key: "destacados" },
   { label: "Populares", key: "populares" },
-  { label: "Más Recientes", key: "recientes" },
-  { label: "Más Cercanos", key: "cercanos" },
+  { label: "Más recientes", key: "recientes" },
+  { label: "Cercanos", key: "cercanos" },
 ];
 
 export const coffee = {
@@ -26,12 +26,14 @@ export const coffee = {
   light: "#E8D8C8",
 };
 
+type TabKey = "destacados" | "populares" | "recientes" | "cercanos";
+
 interface BusinessTabsProps {
-  comercios: ComercioDtoListItem[]; 
-  loading?: boolean; 
+  comercios: ComercioDtoListItem[];
+  loading?: boolean;
   error?: string | null;
-  activeTab?: "destacados" | "populares" | "recientes" | "cercanos";
-  setActiveTab?: Dispatch<SetStateAction<"destacados" | "populares" | "recientes" | "cercanos">> | undefined;
+  activeTab?: TabKey;
+  setActiveTab?: Dispatch<SetStateAction<TabKey>>;
 }
 
 const BusinessTabs: React.FC<BusinessTabsProps> = ({
@@ -41,15 +43,15 @@ const BusinessTabs: React.FC<BusinessTabsProps> = ({
   activeTab: activeTabProp = "destacados",
   setActiveTab: setActiveTabProp,
 }) => {
-  const [activeTab, setActiveTab] = useState(activeTabProp);
+  const [activeTab, setActiveTab] = useState<TabKey>(activeTabProp);
 
   useEffect(() => {
     setActiveTab(activeTabProp);
   }, [activeTabProp]);
 
-  const handleTabClick = (tabKey: "destacados" | "populares" | "recientes" | "cercanos") => {
-    setActiveTab(tabKey);
-    if (setActiveTabProp) setActiveTabProp(tabKey);
+  const handleTabClick = (tab: TabKey) => {
+    setActiveTab(tab);
+    setActiveTabProp?.(tab);
   };
 
   const carouselSettings = {
@@ -68,101 +70,98 @@ const BusinessTabs: React.FC<BusinessTabsProps> = ({
 
   if (error) {
     return (
-      <Typography sx={{ textAlign: "center", mt: 4 }}>
+      <Typography textAlign="center" mt={4}>
         {error}
       </Typography>
     );
   }
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Stack direction="row" spacing={1} justifyContent="center" mb={3}>
-        {tabs.map((t) => (
-          <Button
-            key={t.key}
-            onClick={() => handleTabClick(t.key as "destacados" | "populares" | "recientes" | "cercanos")}
-            variant={activeTab === t.key ? "contained" : "outlined"}
-            sx={{
-              borderRadius: "20px",
-              textTransform: "none",
-              fontWeight: 600,
-              px: 3,
-              py: 1,
-              color: activeTab === t.key ? "#fff" : coffee.main,
-              backgroundColor: activeTab === t.key ? coffee.main : coffee.light,
-              borderColor: coffee.main,
-              boxShadow: activeTab === t.key ? 3 : 0,
-              transition: "all 0.3s",
-              "&:hover": {
-                backgroundColor: activeTab === t.key ? coffee.dark : coffee.main,
-                color: "#fff",
-              },
-            }}
-          >
-            {t.label}
-          </Button>
-        ))}
+    <Box>
+      {/* Tabs estilo iOS */}
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="center"
+        mb={4}
+        sx={{
+          bgcolor: coffee.light,
+          p: 1,
+          borderRadius: 999,
+          width: "fit-content",
+          mx: "auto",
+        }}
+      >
+        {tabs.map((t) => {
+          const isActive = activeTab === t.key;
+          return (
+            <Button
+              key={t.key}
+              onClick={() => handleTabClick(t.key as TabKey)}
+              disableElevation
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                borderRadius: 999,
+                px: 3,
+                color: isActive ? "#fff" : coffee.main,
+                backgroundColor: isActive ? coffee.main : "transparent",
+                transition: "all 0.25s ease",
+                "&:hover": {
+                  backgroundColor: isActive ? coffee.dark : coffee.light,
+                },
+              }}
+            >
+              {t.label}
+            </Button>
+          );
+        })}
       </Stack>
 
+      {/* Loading */}
       {loading && (
         <Box
-          sx={{
-            minHeight: "60vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-            p: 3,
-          }}
+          minHeight="50vh"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={2}
         >
-          <CircularProgress size={60} thickness={4.5} sx={{ color: "#6F4E37" }} />
-          <Typography
-            sx={{
-              fontWeight: 600,
-              fontSize: "1.1rem",
-              color: "text.secondary",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          >
-            Cargando comercios...
+          <CircularProgress size={52} sx={{ color: coffee.main }} />
+          <Typography fontWeight={600} color="text.secondary">
+            Cargando comercios…
           </Typography>
-          <style>{`
-            @keyframes pulse {
-              0% { opacity: 0.4; }
-              50% { opacity: 1; }
-              100% { opacity: 0.4; }
-            }
-          `}</style>
         </Box>
       )}
 
+      {/* Contenido */}
       {!loading && comercios.length > 0 && (
-        <Box>
+        <>
           {activeTab === "destacados" ? (
-            <Slider {...carouselSettings} className="p-3">
+            <Slider {...carouselSettings}>
               {comercios.map((c) => (
-                <Box key={c.id} sx={{ px: 1 }}>
+                <Box key={c.id} px={1}>
                   <ComercioCard comercio={c} />
                 </Box>
               ))}
             </Slider>
           ) : (
-            <div className="p-3 w-100">
-              <div className="row gap-3">
+            <Box className="container-fluid">
+              <div className="row g-3">
                 {comercios.map((c) => (
                   <div key={c.id} className="col-12 col-sm-6 col-md-4">
                     <ComercioCard comercio={c} />
                   </div>
                 ))}
               </div>
-            </div>
+            </Box>
           )}
-        </Box>
+        </>
       )}
 
       {!loading && comercios.length === 0 && (
-        <Typography sx={{ textAlign: "center", mt: 4 }}>
+        <Typography textAlign="center" mt={4}>
           No hay comercios disponibles
         </Typography>
       )}

@@ -1,63 +1,132 @@
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 
 const LOGO_URL =
   "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
 
 const Header: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const registroUrl =
+    import.meta.env.MODE === "production"
+      ? "https://ad-local-gamma.vercel.app/registro"
+      : "http://localhost:5173/registro";
+
   return (
-    <AppBar position="static" color="primary" elevation={1}>
-      <Toolbar className="container-lg px-3">
-        <Box className="d-flex align-items-center gap-2 flex-grow-1">
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        backdropFilter: "blur(14px)",
+        background: "rgba(255,255,255,0.75)",
+        borderBottom: "1px solid rgba(0,0,0,0.08)",
+        color: "#111",
+      }}
+    >
+      <Toolbar
+        sx={{
+          maxWidth: 1200,
+          mx: "auto",
+          width: "100%",
+          px: 2,
+        }}
+      >
+        {/* Logo */}
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={1.5}
+          flexGrow={1}
+          sx={{ cursor: "pointer" }}
+          onClick={() => location.assign("/")}
+        >
           <Box
             component="img"
             src={LOGO_URL}
             alt="ADLocal"
-            sx={{ height: 36 }}
+            sx={{
+              height: 36,
+              width: 36,
+              borderRadius: "50%",
+            }}
           />
-          <Typography variant="h6" fontWeight={600}>
+          <Typography fontWeight={700} fontSize={18}>
             ADLocal
           </Typography>
         </Box>
 
-        <Box className="d-none d-lg-flex gap-2">
-          <Button color="inherit" onClick={() => location.assign("/")}>
-            Inicio
-          </Button>
-          <a
-            href={
-              import.meta.env.MODE === "production"
-                ? "https://ad-local-gamma.vercel.app/registro"
-                : "http://localhost:5173/registro"
-            }
-          >
-            <Button variant="contained" color="secondary">
+        {/* Desktop */}
+        {!isMobile && (
+          <Box display="flex" gap={1.5}>
+            <Button
+              color="inherit"
+              sx={{ textTransform: "none", fontWeight: 500 }}
+              onClick={() => location.assign("/")}
+            >
+              Inicio
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              href={registroUrl}
+              sx={{
+                textTransform: "none",
+                borderRadius: 999,
+                px: 3,
+                fontWeight: 600,
+                boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
+              }}
+            >
               Unirme como negocio
             </Button>
-          </a>
-        </Box>
+          </Box>
+        )}
       </Toolbar>
 
-      <Box className="d-flex d-lg-none px-3 pb-2 gap-2">
-        <Button
-          fullWidth
-          color="inherit"
-          variant="outlined"
-          onClick={() => location.assign("/")}
+      {/* Mobile */}
+      {isMobile && (
+        <Box
+          px={2}
+          pb={2}
+          display="flex"
+          gap={1.5}
         >
-          Inicio
-        </Button>
-        <a
-          href={
-            import.meta.env.MODE === "production"
-              ? "https://ad-local-gamma.vercel.app/registro"
-              : "http://localhost:5173/registro"
-          }
-        >
-          <Button fullWidth variant="contained" color="secondary">
-            Unirme como negocio
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              textTransform: "none",
+              borderRadius: 999,
+              fontWeight: 500,
+            }}
+            onClick={() => location.assign("/")}
+          >
+            Inicio
           </Button>
-        </a>
-      </Box>
+
+          <Button
+            fullWidth
+            variant="contained"
+            href={registroUrl}
+            sx={{
+              textTransform: "none",
+              borderRadius: 999,
+              fontWeight: 600,
+            }}
+          >
+            Unirme
+          </Button>
+        </Box>
+      )}
     </AppBar>
   );
 };

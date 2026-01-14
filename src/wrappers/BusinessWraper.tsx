@@ -7,7 +7,7 @@ import BusinessTabsWrapper from "./BusinessTabsWrapper";
 const BusinessWraper: React.FC = () => {
   return (
     <App>
-      <div>
+      <div className="w-100">
         {/* Solo se ejecuta en cliente */}
         <BusinessTabsWrapper client:only="react" />
       </div>

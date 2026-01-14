@@ -5,45 +5,90 @@ import type { FC } from "react";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
+
+  const registroUrl =
+    import.meta.env.MODE === "production"
+      ? "https://ad-local-gamma.vercel.app/registro"
+      : "http://localhost:5173/registro";
+
   return (
     <Box
       component="footer"
-      sx={{ bgcolor: "primary.main", color: "primary.contrastText" }}
+      sx={{
+        mt: 8,
+        backdropFilter: "blur(14px)",
+        background: "rgba(20,20,20,0.85)",
+        color: "#fff",
+        borderTop: "1px solid rgba(255,255,255,0.1)",
+      }}
     >
-      <div className="container-lg py-4">
-        <div className="row gy-3 align-items-center text-center text-lg-start">
-          <div className="col-12 col-lg-6">
-            <Typography variant="body1">
-              ¿Quieres unirte como negocio? {" "}
-              <a
-                href={
-                  import.meta.env.MODE === "production"
-                    ? "https://ad-local-gamma.vercel.app/registro"
-                    : "http://localhost:5173/registro"
-                }
-              >
-                Da clic aquí
-              </a>
-            </Typography>
-          </div>
+      <Box
+        sx={{
+          maxWidth: 1200,
+          mx: "auto",
+          px: 2,
+          py: 4,
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 3,
+          alignItems: { xs: "center", md: "center" },
+          justifyContent: "space-between",
+          textAlign: { xs: "center", md: "left" },
+        }}
+      >
+        {/* CTA */}
+        <Typography fontSize={15} sx={{ opacity: 0.95 }}>
+          ¿Quieres unirte como negocio?{" "}
+          <Link
+            href={registroUrl}
+            underline="none"
+            sx={{
+              ml: 0.5,
+              fontWeight: 600,
+              color: "primary.light",
+              "&:hover": { textDecoration: "underline" },
+            }}
+          >
+            Da clic aquí
+          </Link>
+        </Typography>
 
-          <div className="col-12 col-lg-3 d-flex justify-content-center justify-content-lg-start gap-2">
-            <IconButton sx={{ color: "primary.contrastText" }}>
-              <FacebookIcon />
-            </IconButton>
-            <IconButton sx={{ color: "primary.contrastText" }}>
-              <InstagramIcon />
-            </IconButton>
-          </div>
+        {/* Social */}
+        <Box display="flex" gap={1}>
+          <IconButton
+            aria-label="Facebook"
+            sx={{
+              color: "#fff",
+              bgcolor: "rgba(255,255,255,0.1)",
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.2)",
+              },
+            }}
+          >
+            <FacebookIcon />
+          </IconButton>
 
-          <div className="col-12 col-lg-3 text-center text-lg-end">
-            <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
-              © {year} Da VinciX Code Labs. <br /> Todos los derechos
-              reservados.
-            </Typography>
-          </div>
-        </div>
-      </div>
+          <IconButton
+            aria-label="Instagram"
+            sx={{
+              color: "#fff",
+              bgcolor: "rgba(255,255,255,0.1)",
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.2)",
+              },
+            }}
+          >
+            <InstagramIcon />
+          </IconButton>
+        </Box>
+
+        {/* Copyright */}
+        <Typography fontSize={13} sx={{ opacity: 0.7 }}>
+          © {year} Da VinciX Code Labs
+          <br />
+          Todos los derechos reservados.
+        </Typography>
+      </Box>
     </Box>
   );
 };

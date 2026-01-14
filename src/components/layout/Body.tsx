@@ -1,4 +1,3 @@
-
 import { Box } from "@mui/material";
 import type { ReactNode } from "react";
 
@@ -8,10 +7,27 @@ interface BodyProps {
 
 const Body: React.FC<BodyProps> = ({ children }) => {
   return (
-    <Box className="flex-grow-1 d-flex">
-      <div className="container-lg py-4 d-flex flex-column flex-grow-1">
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 1200,
+          px: { xs: 2, sm: 3 },
+          py: { xs: 3, sm: 4 },
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}
+      >
         {children}
-      </div>
+      </Box>
     </Box>
   );
 };
