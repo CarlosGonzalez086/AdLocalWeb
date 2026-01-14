@@ -4,7 +4,6 @@ import {
   CircularProgress,
   Button,
   Stack,
-  Grid,
 } from "@mui/material";
 import Slider from "react-slick";
 import ComercioCard from "./ComercioCard";
@@ -12,6 +11,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const tabs = [
   { label: "Destacados", key: "destacados" },
@@ -28,7 +28,7 @@ export const coffee = {
 
 type TabKey = "destacados" | "populares" | "recientes" | "cercanos";
 
-interface BusinessTabsProps {
+interface Props {
   comercios: ComercioDtoListItem[];
   loading?: boolean;
   error?: string | null;
@@ -36,7 +36,7 @@ interface BusinessTabsProps {
   setActiveTab?: Dispatch<SetStateAction<TabKey>>;
 }
 
-const BusinessTabs: React.FC<BusinessTabsProps> = ({
+const BusinessTabs: React.FC<Props> = ({
   comercios,
   loading = false,
   error = null,
@@ -44,6 +44,8 @@ const BusinessTabs: React.FC<BusinessTabsProps> = ({
   setActiveTab: setActiveTabProp,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(activeTabProp);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     setActiveTab(activeTabProp);
@@ -62,108 +64,155 @@ const BusinessTabs: React.FC<BusinessTabsProps> = ({
     slidesToScroll: 1,
     arrows: true,
     responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 3 } },
-      { breakpoint: 900, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } },
+      {
+        breakpoint: 1200,
+        settings: { slidesToShow: 3 },
+      },
+      {
+        breakpoint: 900,
+        settings: { slidesToShow: 2 },
+      },
     ],
   };
 
   if (error) {
-    return (
-      <Typography textAlign="center" mt={4}>
-        {error}
-      </Typography>
-    );
+    return <Typography textAlign="center">{error}</Typography>;
   }
 
   return (
-    <Box>
-      {/* Tabs estilo iOS */}
-      <Stack
-        direction="row"
-        spacing={1}
-        justifyContent="center"
-        mb={4}
-        sx={{
-          bgcolor: coffee.light,
-          p: 1,
-          borderRadius: 999,
-          width: "fit-content",
-          mx: "auto",
-        }}
-      >
-        {tabs.map((t) => {
-          const isActive = activeTab === t.key;
-          return (
-            <Button
-              key={t.key}
-              onClick={() => handleTabClick(t.key as TabKey)}
-              disableElevation
-              sx={{
-                textTransform: "none",
-                fontWeight: 600,
-                borderRadius: 999,
-                px: 3,
-                color: isActive ? "#fff" : coffee.main,
-                backgroundColor: isActive ? coffee.main : "transparent",
-                transition: "all 0.25s ease",
-                "&:hover": {
-                  backgroundColor: isActive ? coffee.dark : coffee.light,
-                },
-              }}
-            >
-              {t.label}
-            </Button>
-          );
-        })}
-      </Stack>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ overflowX: "auto", mt: 1, mb: 3 }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            bgcolor: "#f7f2ee",
+            p: 1,
+            borderRadius: 999,
+            width: "fit-content",
+            mx: "auto",
+          }}
+        >
+          {tabs.map((t) => {
+            const isActive = activeTab === t.key;
+            return (
+              <Button
+                key={t.key}
+                onClick={() => handleTabClick(t.key as TabKey)}
+                sx={{
+                  whiteSpace: "nowrap",
+                  borderRadius: 999,
+                  px: 3,
+                  fontWeight: 600,
+                  textTransform: "none",
+                  color: isActive ? "#fff" : coffee.main,
+                  backgroundColor: isActive ? coffee.main : "transparent",
+                }}
+              >
+                {t.label}
+              </Button>
+            );
+          })}
+        </Stack>
+      </Box>
 
       {/* Loading */}
       {loading && (
         <Box
           minHeight="50vh"
           display="flex"
-          flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          gap={2}
         >
-          <CircularProgress size={52} sx={{ color: coffee.main }} />
-          <Typography fontWeight={600} color="text.secondary">
-            Cargando comercios…
-          </Typography>
+          <CircularProgress sx={{ color: coffee.main }} />
         </Box>
       )}
 
-      {/* Contenido */}
+      {/* Content */}
       {!loading && comercios.length > 0 && (
         <>
-          {activeTab === "destacados" ? (
-            <Slider {...carouselSettings}>
-              {comercios.map((c) => (
-                <Box key={c.id} px={1}>
-                  <ComercioCard comercio={c} />
-                </Box>
-              ))}
-            </Slider>
-          ) : (
-            <Box className="container-fluid">
-              <div className="row g-3">
-                {comercios.map((c) => (
-                  <div key={c.id} className="col-12 col-sm-6 col-md-4">
-                    <ComercioCard comercio={c} />
+          {activeTab == "destacados" ? (
+            <Box sx={{ width: "100%", px: { xs: 1, sm: 2 } }}>
+              {isMobile ? (
+                <Box
+                  sx={{
+                    px: { xs: 1, sm: 3 },
+                    maxHeight: {
+                      xs: "calc(3 * 320px)",
+                      sm: "calc(3 * 320px)",
+                      md: "calc(4 * 320px)",
+                    },
+
+                    overflowY: "auto",
+                    WebkitOverflowScrolling: "touch",
+                    "&::-webkit-scrollbar": {
+                      width: 6,
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      borderRadius: 8,
+                    },
+                  }}
+                >
+                  <div className="container-fluid">
+                    <div className="row g-3">
+                      {comercios.map((c) => (
+                        <div
+                          key={c.id}
+                          className="col-12 col-sm-6 col-md-4 col-lg-3"
+                        >
+                          <ComercioCard comercio={c} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                </Box>
+              ) : (
+                <Slider {...carouselSettings}>
+                  {comercios.map((c) => (
+                    <Box key={c.id} px={1}>
+                      <ComercioCard comercio={c} />
+                    </Box>
+                  ))}
+                </Slider>
+              )}
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                px: { xs: 1, sm: 3 },
+                maxHeight: {
+                  xs: "calc(3 * 320px)",
+                  sm: "calc(3 * 320px)",
+                  md: "calc(4 * 320px)",
+                },
+
+                overflowY: "auto",
+                WebkitOverflowScrolling: "touch",
+                "&::-webkit-scrollbar": {
+                  width: 6,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgba(0,0,0,0.2)",
+                  borderRadius: 8,
+                },
+              }}
+            >
+              <div className="container-fluid">
+                <div className="row g-3">
+                  {comercios.map((c) => (
+                    <div
+                      key={c.id}
+                      className="col-12 col-sm-6 col-md-4 col-lg-3"
+                    >
+                      <ComercioCard comercio={c} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </Box>
           )}
         </>
-      )}
-
-      {!loading && comercios.length === 0 && (
-        <Typography textAlign="center" mt={4}>
-          No hay comercios disponibles
-        </Typography>
       )}
     </Box>
   );

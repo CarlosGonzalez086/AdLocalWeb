@@ -26,19 +26,25 @@ export default function ComercioCard({ comercio }: Props) {
           borderRadius: 4,
           overflow: "hidden",
           position: "relative",
-          transition: "all 0.35s ease",
-          background: "rgba(255,255,255,0.85)",
-          backdropFilter: "blur(14px)",
-          boxShadow: "0 8px 22px rgba(0,0,0,0.08)",
+          background: "rgba(255,255,255,0.72)",
+          backdropFilter: "blur(18px)",
+          boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+          transition: "transform 0.35s ease, box-shadow 0.35s ease",
           "&:hover": {
-            transform: "translateY(-8px)",
-            boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
+            transform: "translateY(-6px)",
+            boxShadow: "0 14px 32px rgba(0,0,0,0.16)",
           },
+          width: "100%",
+          maxWidth: { xs: "100%", sm: 360 },
+          height: 300, 
+          display: "flex",
+          flexDirection: "column",
+          mx: "auto",
         }}
       >
         <Box
           sx={{
-            height: 120,
+            height: 110,
             background: `linear-gradient(135deg, ${comercio.colorPrimario}, ${comercio.colorSecundario})`,
             display: "flex",
             justifyContent: "center",
@@ -49,63 +55,62 @@ export default function ComercioCard({ comercio }: Props) {
         >
           <Avatar
             src={comercio.logoUrl}
+            alt={comercio.nombre}
             sx={{
-              width: 90,
-              height: 90,
-              border: "4px solid #fff",
+              width: 84,
+              height: 84,
+              border: "3px solid #fff",
               backgroundColor: "#fff",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+              boxShadow: "0 6px 16px rgba(0,0,0,0.22)",
               position: "absolute",
-              bottom: -45,
+              bottom: -42,
             }}
           />
         </Box>
 
-        <CardContent sx={{ pt: 6 }}>
-          <Stack spacing={1} alignItems="center">
+        <CardContent sx={{ pt: 6, pb: 3 }}>
+          <Stack spacing={1.1} alignItems="center">
             <Typography
-              variant="h6"
               fontWeight={700}
               textAlign="center"
               sx={{
                 color: comercio.colorPrimario,
-                lineHeight: 1.2,
-                fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+                lineHeight: 1.25,
+                fontSize: { xs: "0.95rem", sm: "1.05rem", md: "1.1rem" },
               }}
             >
               {comercio.nombre}
             </Typography>
 
             <Typography
-              variant="body2"
               color="text.secondary"
               textAlign="center"
               sx={{
                 px: 1,
-                lineHeight: 1.4,
-                fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" },
+                lineHeight: 1.45,
+                fontSize: "0.78rem",
               }}
             >
               {comercio.direccion}
             </Typography>
 
             <Chip
-              label="Ver más detalles"
-              icon={<ArrowForwardIosIcon fontSize="small" />}
+              label="Ver detalles"
+              icon={<ArrowForwardIosIcon fontSize="inherit" />}
               sx={{
                 mt: 1.5,
+                height: 34,
                 px: 2,
-                py: 1,
                 fontWeight: 600,
-                fontSize: "0.8rem",
-                borderRadius: 50,
-                backgroundColor: comercio.colorSecundario,
+                fontSize: "0.75rem",
+                borderRadius: 999,
+                backgroundColor: comercio.colorPrimario,
                 color: "#fff",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                transition: "all 0.3s ease",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.18)",
+                transition: "all 0.25s ease",
                 "&:hover": {
-                  opacity: 0.95,
-                  transform: "scale(1.08)",
+                  transform: "scale(1.06)",
+                  boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
                 },
               }}
             />

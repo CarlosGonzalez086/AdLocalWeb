@@ -3,7 +3,7 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
-  output: "server", // necesario para SSR
-  adapter: vercel({ edge: false }), // serverless tradicional
+  output: "server", 
+  adapter: vercel({ edge: false }), 
   integrations: [react({ client: "load" })],
 });

@@ -19,12 +19,12 @@ const App: React.FC<AppProps> = ({ children }) => {
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
+          width: "100%",
+          overflowX: "hidden",
         }}
       >
         <Header />
-
         <Body>{children}</Body>
-
         <Footer />
       </Box>
     </ThemeProvider>

@@ -18,7 +18,6 @@ const Body: React.FC<BodyProps> = ({ children }) => {
       <Box
         sx={{
           width: "100%",
-          maxWidth: 1200,
           px: { xs: 2, sm: 3 },
           py: { xs: 3, sm: 4 },
           display: "flex",
