@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+
+import { useEffect, useState } from "react";
 import BusinessTabs from "../components/business/BusinessTabs";
 import { comercioPublicApi, type ComercioDtoListItem } from "../services/comercioPublicApi";
 

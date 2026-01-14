@@ -1,19 +1,16 @@
 import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
 const BASE_URL =
-  typeof window === "undefined"
-    ? // SSR (server) en Astro/Vercel
-      import.meta.env.PUBLIC_BACKEND_PROD_URL ?? import.meta.env.PUBLIC_BACKEND_URL_LOCAL
-    : // Cliente
-      import.meta.env.PUBLIC_BACKEND_URL + "/comercios";
-    
+  import.meta.env.MODE === "production"
+    ? "https://adlocalapi.onrender.com/api"
+    : "http://localhost:8080/api";
+
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL + "/comercios",
   headers: {
     "Content-Type": "application/json",
   },
 });
-console.log(BASE_URL);
 
 api.interceptors.response.use(
   (r) => r,
