@@ -1,24 +1,33 @@
-import React, { useEffect } from "react";
+import React from "react";
 import App from "../components/App";
-import Comercio from "../components/business/Comercio";
-// Bootstrap y global CSS pueden ir aquí (ok para SSR)
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/global.css";
 
-interface ComercioWraperProps {
-  children?: React.ReactNode;
-  id: number;
-}
-
-const ComercioWraper: React.FC<ComercioWraperProps> = ({ children, id }) => {
+// ⚡ Wrapper que solo carga Comercio en cliente
+const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
   return (
     <App>
-      <div>
-        {/* Comercio solo cliente */}
-        <Comercio id={id} client:only="react" />
-      </div>
+      <React.Suspense fallback={<div>Cargando comercio...</div>}>
+        <ComercioLoader id={id} />
+      </React.Suspense>
     </App>
   );
 };
 
 export default ComercioWraper;
+
+// ----------------------
+// Carga dinámica solo en cliente
+// ----------------------
+const ComercioLoader = ({ id }: { id: number }) => {
+  const [ComercioComponent, setComercioComponent] = React.useState<React.FC<{ id: number }> | null>(null);
+
+  React.useEffect(() => {
+    import("../components/business/Comercio").then((mod) => {
+      setComercioComponent(() => mod.default);
+    });
+  }, []);
+
+  if (!ComercioComponent) return <div>Cargando...</div>;
+  return <ComercioComponent id={id} />;
+};
