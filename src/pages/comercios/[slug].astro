@@ -3,7 +3,9 @@ import ComercioWraper from "../../wrappers/ComercioWraper";
 
 export const prerender = false;
 const { slug } = Astro.params;
+const parts = slug?.split("_");
 const id = Number(slug?.split("_")[0]);
+const nombre = parts?.slice(1).join("_").replace(/_/g, " ");
 
 if (isNaN(id)) return Astro.redirect("/");
 ---
@@ -12,7 +14,7 @@ if (isNaN(id)) return Astro.redirect("/");
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Comercio</title>
+    <title>{nombre}</title>
     <link
       rel="icon"
       type="image/jpeg"
