@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { comercioPublicApi, type ComercioDtoListItem } from "../services/comercioPublicApi";
+import {
+  comercioPublicApi,
+  type ComercioDtoListItem,
+} from "../services/comercioPublicApi";
 import Swal from "sweetalert2";
 
 export const useComercioPublico = () => {
@@ -85,6 +88,34 @@ export const useComercioPublico = () => {
     }
   };
 
+  //Cargar comercios por filtros de estado y municipio
+const cargarPorFiltros = async (
+  estadoId: number = 0,
+  municipioId: number = 0,
+  ordenSeleccionado: "alfabetico" | "recientes" | "antiguos",
+) => {
+  setLoading(true);
+  try {
+    const { data } = await comercioPublicApi.getByFiltros(
+      estadoId,
+      municipioId,
+      ordenSeleccionado
+    );
+    if (data.codigo != "200") {
+      Swal.fire("Error", data.mensaje, "error");
+      setComercios([]);
+      return;
+    }
+    setComercios(data.respuesta || []);
+  } catch (error) {
+    console.error(error);
+    Swal.fire("Error", "No se pudieron cargar los comercios", "error");
+    setComercios([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
   useEffect(() => {
     cargarPopulares();
   }, []);
@@ -96,5 +127,6 @@ export const useComercioPublico = () => {
     cargarRecientes,
     cargarCercanos,
     cargarPorId,
+    cargarPorFiltros,
   };
 };

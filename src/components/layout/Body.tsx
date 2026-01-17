@@ -11,22 +11,16 @@ const Body: React.FC<BodyProps> = ({ children }) => {
       component="main"
       sx={{
         flexGrow: 1,
+        overflowY: "auto",
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
+        width: "100%",
+        px: { xs: 2, sm: 3 },
+        py: { xs: 3, sm: 4 },
+        backgroundColor: "#fdf6f0",
       }}
     >
-      <Box
-        sx={{
-          width: "100%",
-          px: { xs: 2, sm: 3 },
-          py: { xs: 3, sm: 4 },
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-        }}
-      >
-        {children}
-      </Box>
+      {children}
     </Box>
   );
 };

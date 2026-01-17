@@ -20,13 +20,19 @@ const Header: React.FC = () => {
       ? "https://ad-local-gamma.vercel.app/registro"
       : "http://localhost:5173/registro";
 
+  const busquedaAvanzadaUrl =
+    import.meta.env.MODE === "production"
+      ? "https://ad-local-web.vercel.app/comercios/busqueda-avanzada"
+      : "http://localhost:3000/comercios/busqueda-avanzada";
+
   return (
     <AppBar
       position="sticky"
       elevation={0}
       sx={{
+
         backdropFilter: "blur(14px)",
-        background: "rgba(255,255,255,0.75)",
+        background: "rgba(243, 233, 222, 0.75)",
         borderBottom: "1px solid rgba(0,0,0,0.08)",
         color: "#111",
       }}
@@ -74,6 +80,15 @@ const Header: React.FC = () => {
               Inicio
             </Button>
 
+            {/* NUEVO: Botón búsqueda avanzada */}
+            <Button
+              color="inherit"
+              sx={{ textTransform: "none", fontWeight: 500 }}
+              onClick={() => location.assign(busquedaAvanzadaUrl)}
+            >
+              Búsqueda Avanzada
+            </Button>
+
             <Button
               variant="contained"
               color="primary"
@@ -94,24 +109,35 @@ const Header: React.FC = () => {
 
       {/* Mobile */}
       {isMobile && (
-        <Box
-          px={2}
-          pb={2}
-          display="flex"
-          gap={1.5}
-        >
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{
-              textTransform: "none",
-              borderRadius: 999,
-              fontWeight: 500,
-            }}
-            onClick={() => location.assign("/")}
-          >
-            Inicio
-          </Button>
+        <Box px={2} pb={2} display="flex" gap={1.5} flexDirection="column">
+          <Box display="flex" gap={1.5}>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{
+                textTransform: "none",
+                borderRadius: 999,
+                fontWeight: 500,
+              }}
+              onClick={() => location.assign("/")}
+            >
+              Inicio
+            </Button>
+
+            {/* NUEVO: Botón búsqueda avanzada */}
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{
+                textTransform: "none",
+                borderRadius: 999,
+                fontWeight: 500,
+              }}
+              onClick={() => location.assign(busquedaAvanzadaUrl)}
+            >
+              Búsqueda Avanzada
+            </Button>
+          </Box>
 
           <Button
             fullWidth

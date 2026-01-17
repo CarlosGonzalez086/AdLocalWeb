@@ -26,7 +26,7 @@ import type {
 
 import ProductoCard from "./ProductoCard";
 import { DIAS_SEMANA_MAP, estaAbiertoAhora } from "../../utils/generals";
-import React, { lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 
 const MapaComercioLazy = React.lazy(() => import("./MapaComercio.client"));
 
@@ -136,7 +136,15 @@ export default function ComercioDetalle({
       <Stack spacing={2} px={4} py={4}>
         <Stack direction="row" spacing={1}>
           <LocationOnIcon />
-          <Typography>{comercio?.direccion}</Typography>
+          <Typography>
+            {" "}
+            {comercio?.direccion +
+              "," +
+              comercio?.municipioNombre +
+              "," +
+              comercio?.estadoNombre +
+              "."}
+          </Typography>
         </Stack>
 
         {comercio?.telefono && (
@@ -392,7 +400,7 @@ export default function ComercioDetalle({
           onClick={() =>
             window.open(
               `https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`,
-              "_blank"
+              "_blank",
             )
           }
         >

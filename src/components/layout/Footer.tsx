@@ -15,7 +15,6 @@ const Footer: FC = () => {
     <Box
       component="footer"
       sx={{
-        mt: 8,
         backdropFilter: "blur(14px)",
         background: "rgba(20,20,20,0.85)",
         color: "#fff",

@@ -35,8 +35,8 @@ export default function ComercioCard({ comercio }: Props) {
             boxShadow: "0 14px 32px rgba(0,0,0,0.16)",
           },
           width: "100%",
-          maxWidth: { xs: "100%", sm: 360 },
-          height: 300, 
+          maxWidth: { xs: "100%", sm: 320 },
+          height: 300,
           display: "flex",
           flexDirection: "column",
           mx: "auto",
@@ -91,7 +91,12 @@ export default function ComercioCard({ comercio }: Props) {
                 fontSize: "0.78rem",
               }}
             >
-              {comercio.direccion}
+              {comercio.direccion +
+                "," +
+                comercio.municipioNombre +
+                "," +
+                comercio.estadoNombre +
+                "."}
             </Typography>
 
             <Chip

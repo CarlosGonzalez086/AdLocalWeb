@@ -15,13 +15,15 @@ const api = axios.create({
 api.interceptors.response.use(
   (r) => r,
   (e) => {
+    console.log(e);
+
     const message =
       e.response?.data?.mensaje ||
       e.response?.data?.message ||
       "Error en la petición";
 
     throw new Error(message);
-  }
+  },
 );
 
 export interface HorarioComercioDto {
@@ -48,6 +50,8 @@ export interface ComercioDtoListItem {
   colorSecundario?: string;
   activo: boolean;
   fechaCreacion: string;
+  estadoNombre: string;
+  municipioNombre: string;
 }
 
 export interface ComercioDto {
@@ -66,6 +70,8 @@ export interface ComercioDto {
   activo?: boolean;
   horarios?: HorarioComercioDto[];
   productos?: ProductoServicioDto[];
+  estadoNombre: string;
+  municipioNombre: string;
 }
 
 export interface ProductoServicioDto {
@@ -112,4 +118,12 @@ export const comercioPublicApi = {
     }),
 
   getById: (id: number) => api.get<ApiResponse<ComercioDto>>(`/${id}`),
+  getByFiltros: (
+    estadoId: number = 0,
+    municipioId: number = 0,
+    orden: "alfabetico" | "recientes" | "antiguos" = "alfabetico",
+  ) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("por-filtros", {
+      params: { estadoId, municipioId, orden },
+    }),
 };

@@ -20,7 +20,7 @@ const App: React.FC<AppProps> = ({ children }) => {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          overflowX: "hidden",
+          overflow: "hidden",
         }}
       >
         <Header />
@@ -32,3 +32,4 @@ const App: React.FC<AppProps> = ({ children }) => {
 };
 
 export default App;
+

@@ -21,7 +21,7 @@ const tabs = [
 ];
 
 export const coffee = {
-  main: "#5B3A29",
+  main: "#8a583e",
   dark: "#3A2419",
   light: "#E8D8C8",
 };
@@ -86,7 +86,7 @@ const BusinessTabs: React.FC<Props> = ({
           direction="row"
           spacing={1}
           sx={{
-            bgcolor: "#f7f2ee",
+            bgcolor: "#f7ede6",
             p: 1,
             borderRadius: 999,
             width: "fit-content",
