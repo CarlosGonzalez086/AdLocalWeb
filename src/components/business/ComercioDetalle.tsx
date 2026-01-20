@@ -10,6 +10,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Rating,
 } from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -18,6 +19,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import StarIcon from "@mui/icons-material/Star";
 
 import type {
   ComercioDto,
@@ -114,6 +116,27 @@ export default function ComercioDetalle({
         <Typography variant="h4" fontWeight="bold" color="#fff">
           {comercio?.nombre}
         </Typography>
+
+        <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Rating
+            value={comercio?.calificacion ?? 0}
+            precision={0.5}
+            readOnly
+            size="small"
+            icon={<StarIcon fontSize="inherit" />}
+            emptyIcon={<StarIcon fontSize="inherit" />}
+            sx={{
+              color: "#F5B301",
+            }}
+          />
+          <Typography
+            color="#fff"
+            className="mt-1"
+            sx={{ fontSize: "0.72rem" }}
+          >
+            ({comercio?.calificacion ?? 0})
+          </Typography>
+        </Stack>
 
         {comercio?.descripcion && (
           <Typography color="#eee" mt={1}>
@@ -270,8 +293,8 @@ export default function ComercioDetalle({
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                px: 3,
-                py: 1.5,
+                px: { xs: 2, sm: 3 },
+                py: { xs: 1.5, sm: 2 },
                 minHeight: 56,
                 "& .MuiAccordionSummary-content": {
                   alignItems: "center",
@@ -279,13 +302,16 @@ export default function ComercioDetalle({
                 },
               }}
             >
-              <Typography fontWeight={600} fontSize="1.1rem">
+              <Typography
+                fontWeight={600}
+                fontSize={{ xs: "1rem", sm: "1.1rem" }}
+              >
                 Horarios de atención
               </Typography>
             </AccordionSummary>
 
-            <AccordionDetails sx={{ px: 3, pb: 2 }}>
-              <Stack spacing={1}>
+            <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 2 }}>
+              <Stack spacing={{ xs: 1.5, sm: 1.2 }}>
                 {horarios
                   .sort((a, b) => a.dia - b.dia)
                   .map((h) => (
@@ -293,28 +319,41 @@ export default function ComercioDetalle({
                       key={h.dia}
                       sx={{
                         display: "flex",
+                        flexDirection: { xs: "column", sm: "row" },
                         justifyContent: "space-between",
-                        alignItems: "center",
-                        px: 2,
-                        py: 1,
+                        alignItems: { xs: "flex-start", sm: "center" },
+                        gap: { xs: 0.5, sm: 1 },
+                        px: { xs: 2, sm: 2.5 },
+                        py: { xs: 1.5, sm: 1 },
                         borderRadius: 2,
                         backgroundColor: h.abierto ? "#fef7f0" : "#fafafa",
                       }}
                     >
-                      <Typography fontWeight={500}>
+                      {/* Día */}
+                      <Typography fontWeight={600}>
                         {DIAS_SEMANA_MAP[h.dia]}
                       </Typography>
+
+                      {/* Horario / Estado */}
                       {h.abierto ? (
-                        <Typography variant="body2">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "text.secondary",
+                            fontWeight: 500,
+                          }}
+                        >
                           {h.horaAperturaFormateada} – {h.horaCierreFormateada}
                         </Typography>
                       ) : (
                         <Chip
                           label="Cerrado"
                           size="small"
-                          color="default"
                           variant="outlined"
-                          sx={{ fontWeight: 500 }}
+                          sx={{
+                            fontWeight: 500,
+                            alignSelf: { xs: "flex-start", sm: "center" },
+                          }}
                         />
                       )}
                     </Box>
@@ -327,7 +366,7 @@ export default function ComercioDetalle({
         <Accordion
           sx={{
             borderRadius: 3,
-            mb: 2,
+            mb: 3,
             boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
             background: "rgba(255,255,255,0.9)",
             backdropFilter: "blur(12px)",
@@ -341,8 +380,8 @@ export default function ComercioDetalle({
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              px: 3,
-              py: 1.5,
+              px: { xs: 2, sm: 3 },
+              py: { xs: 1.5, sm: 2 },
               minHeight: 56,
               "& .MuiAccordionSummary-content": {
                 alignItems: "center",
@@ -350,18 +389,31 @@ export default function ComercioDetalle({
               },
             }}
           >
-            <Typography fontWeight={600} fontSize="1rem">
+            <Typography
+              fontWeight={600}
+              fontSize={{ xs: "0.95rem", sm: "1rem" }}
+            >
               Productos
             </Typography>
           </AccordionSummary>
 
-          <AccordionDetails sx={{ px: 3, pb: 2 }}>
+          <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 2 }}>
             {loadingProducts ? (
-              <Typography>Cargando…</Typography>
+              <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
+                Cargando productos…
+              </Typography>
             ) : productos.length === 0 ? (
-              <Typography>No hay productos.</Typography>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  color: "text.secondary",
+                  py: 2,
+                }}
+              >
+                No hay productos disponibles.
+              </Typography>
             ) : (
-              <Stack spacing={2}>
+              <Stack spacing={{ xs: 1.8, sm: 2.2 }}>
                 {productos.map((p) => (
                   <ProductoCard key={p.id} producto={p} />
                 ))}

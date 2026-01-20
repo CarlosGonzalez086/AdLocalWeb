@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   Skeleton,
   Chip,
+  Stack,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
@@ -38,8 +39,8 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
       position="sticky"
       elevation={0}
       sx={{
-        backdropFilter: "blur(14px)",
-        background: "rgba(255,255,255,0.75)",
+        backdropFilter: "blur(12px)",
+        backgroundColor: "rgba(255,255,255,0.85)",
         borderBottom: "1px solid rgba(0,0,0,0.08)",
         color: "#111",
       }}
@@ -50,21 +51,23 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
           mx: "auto",
           width: "100%",
           px: 2,
+          minHeight: isMobile ? 64 : 72,
         }}
       >
-        <Box display="flex" alignItems="center" gap={1.5} flexGrow={1}>
+        <Stack direction="row" alignItems="center" spacing={1.5} flexGrow={1}>
           <Box
             component="img"
             src={LOGO_URL}
             alt="ADLocal"
             sx={{
-              height: 36,
-              width: 36,
+              height: 38,
+              width: 38,
               borderRadius: "50%",
               cursor: "pointer",
             }}
             onClick={() => location.assign("/")}
           />
+
           <Typography fontWeight={700} fontSize={18}>
             ADLocal
           </Typography>
@@ -72,27 +75,28 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
           {loading ? (
             <Skeleton
               variant="rounded"
-              width={120}
-              height={28}
+              width={110}
+              height={26}
               sx={{ borderRadius: 999 }}
             />
-          ) : municipio ? (
-            <Chip
-              icon={<LocationOnIcon />}
-              label={municipio}
-              size="small"
-              sx={{
-                borderRadius: 999,
-                fontWeight: 500,
-                backgroundColor: "rgba(0,0,0,0.05)",
-              }}
-            />
-          ) : null}
-        </Box>
+          ) : (
+            municipio && (
+              <Chip
+                icon={<LocationOnIcon fontSize="small" />}
+                label={municipio}
+                size="small"
+                sx={{
+                  borderRadius: 999,
+                  fontWeight: 500,
+                  backgroundColor: "rgba(0,0,0,0.06)",
+                }}
+              />
+            )
+          )}
+        </Stack>
 
-        {/* Desktop */}
         {!isMobile && (
-          <Box display="flex" gap={1.5}>
+          <Stack direction="row" spacing={1}>
             <Button
               color="inherit"
               sx={{ textTransform: "none", fontWeight: 500 }}
@@ -101,7 +105,6 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
               Inicio
             </Button>
 
-            {/* NUEVO: Botón búsqueda avanzada */}
             <Button
               color="inherit"
               sx={{ textTransform: "none", fontWeight: 500 }}
@@ -112,66 +115,66 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
 
             <Button
               variant="contained"
-              color="primary"
               href={registroUrl}
               sx={{
                 textTransform: "none",
                 borderRadius: 999,
                 px: 3,
                 fontWeight: 600,
-                boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
+                boxShadow: "0 8px 20px rgba(0,0,0,0.18)",
               }}
             >
               Unirme como negocio
             </Button>
-          </Box>
+          </Stack>
         )}
       </Toolbar>
 
-      {/* Mobile */}
       {isMobile && (
-        <Box px={2} pb={2} display="flex" gap={1.5} flexDirection="column">
-          <Box display="flex" gap={1.5}>
+        <Box px={2} pb={2}>
+          <Stack spacing={1.5}>
+            <Stack direction="row" spacing={1}>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 999,
+                  fontWeight: 500,
+                }}
+                onClick={() => location.assign("/")}
+              >
+                Inicio
+              </Button>
+
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 999,
+                  fontWeight: 500,
+                }}
+                onClick={() => location.assign(busquedaAvanzadaUrl)}
+              >
+                Buscar
+              </Button>
+            </Stack>
+
             <Button
               fullWidth
-              variant="outlined"
+              variant="contained"
+              href={registroUrl}
               sx={{
                 textTransform: "none",
                 borderRadius: 999,
-                fontWeight: 500,
+                fontWeight: 600,
+                py: 1.2,
               }}
-              onClick={() => location.assign("/")}
             >
-              Inicio
+              Unirme como negocio
             </Button>
-
-            {/* NUEVO: Botón búsqueda avanzada */}
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{
-                textTransform: "none",
-                borderRadius: 999,
-                fontWeight: 500,
-              }}
-              onClick={() => location.assign(busquedaAvanzadaUrl)}
-            >
-              Búsqueda Avanzada
-            </Button>
-          </Box>
-
-          <Button
-            fullWidth
-            variant="contained"
-            href={registroUrl}
-            sx={{
-              textTransform: "none",
-              borderRadius: 999,
-              fontWeight: 600,
-            }}
-          >
-            Unirme
-          </Button>
+          </Stack>
         </Box>
       )}
     </AppBar>

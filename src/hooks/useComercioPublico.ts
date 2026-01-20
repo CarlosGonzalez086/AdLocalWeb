@@ -92,7 +92,7 @@ export const useComercioPublico = () => {
 const cargarPorFiltros = async (
   estadoId: number = 0,
   municipioId: number = 0,
-  ordenSeleccionado: "alfabetico" | "recientes" | "antiguos",
+  ordenSeleccionado: "alfabetico" | "recientes" | "antiguos" | "populares",
 ) => {
   setLoading(true);
   try {

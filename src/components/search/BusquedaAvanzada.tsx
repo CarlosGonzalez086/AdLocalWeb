@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Drawer,
@@ -10,6 +10,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
@@ -25,11 +26,11 @@ const coffee = {
 };
 
 const BusquedaAvanzada: React.FC = () => {
-  const [idState, setIdState] = useState<number>(0);
-  const [idMunicipality, setIdMunicipality] = useState<number>(0);
-  const [orden, setOrden] = useState<"alfabetico" | "recientes" | "antiguos">(
-    "alfabetico",
-  );
+  const [idState, setIdState] = useState(0);
+  const [idMunicipality, setIdMunicipality] = useState(0);
+  const [orden, setOrden] = useState<
+    "alfabetico" | "recientes" | "antiguos" | "populares"
+  >("alfabetico");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const theme = useTheme();
@@ -37,156 +38,174 @@ const BusquedaAvanzada: React.FC = () => {
 
   const { comercios, loading, cargarPorFiltros } = useComercioPublico();
 
-  const toggleDrawer = () => setMobileOpen(!mobileOpen);
-
   const sidebarContent = (
     <Box
       sx={{
-        bgcolor: coffee.light,
         height: "100%",
-        width: "100%",
-        minWidth: 250,
-        padding: 2,
-        boxShadow: 3,
+        px: { xs: 2, sm: 3 },
+        py: 3,
+        background: "rgba(255,255,255,0.9)",
+        backdropFilter: "blur(18px)",
+        borderRight: "1px solid rgba(0,0,0,0.06)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-
-        "@media (max-width: 600px)": { minHeight: "60vh" },
-        "@media (min-width: 601px) and (max-width: 960px)": {
-          minHeight: "75vh",
-        },
-        "@media (min-width: 961px)": { minHeight: "75vh" },
+        gap: 3,
       }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <SelectEstadoAutocomplete
-          value={idState}
-          onChange={(estadoId) => setIdState(estadoId)}
-        />
-        <SelectMunicipioAutocomplete
-          estadoId={idState}
-          value={idMunicipality}
-          onChange={(id) => setIdMunicipality(id)}
-        />
-        <FormControl fullWidth>
-          <InputLabel id="orden-label">Orden</InputLabel>
-          <Select
-            labelId="orden-label"
-            value={orden}
-            label="Orden"
-            onChange={(e) => {
-              const nuevoOrden = e.target.value as
+      <Typography
+        fontWeight={700}
+        fontSize="1.05rem"
+        sx={{ color: coffee.main }}
+      >
+        Filtros
+      </Typography>
+
+      <SelectEstadoAutocomplete
+        value={idState}
+        onChange={(estadoId) => setIdState(estadoId)}
+      />
+
+      <SelectMunicipioAutocomplete
+        estadoId={idState}
+        value={idMunicipality}
+        onChange={(id) => setIdMunicipality(id)}
+      />
+
+      <FormControl fullWidth>
+        <InputLabel>Orden</InputLabel>
+        <Select
+          value={orden}
+          label="Orden"
+          onChange={(e) =>
+            setOrden(
+              e.target.value as
                 | "alfabetico"
                 | "recientes"
-                | "antiguos";
-              setOrden(nuevoOrden);
-            }}
-          >
-            <MenuItem value="alfabetico">Alfabético A-Z</MenuItem>
-            <MenuItem value="recientes">Más recientes</MenuItem>
-            <MenuItem value="antiguos">Más antiguos</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
-      <div className="w-100">
-        <Button
-          variant="contained"
-          sx={{ bgcolor: coffee.main, "&:hover": { bgcolor: coffee.dark } }}
-          onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
-          fullWidth
-          className="mb-3"
+                | "antiguos"
+                | "populares",
+            )
+          }
         >
-          Aplicar Filtros
-        </Button>
+          <MenuItem value="alfabetico">Alfabético A–Z</MenuItem>
+          <MenuItem value="recientes">Más recientes</MenuItem>
+          <MenuItem value="antiguos">Más antiguos</MenuItem>
+          <MenuItem value="populares">Más populares</MenuItem>
+        </Select>
+      </FormControl>
+
+      <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
-          variant="contained"
-          sx={{ bgcolor: coffee.main, "&:hover": { bgcolor: coffee.dark } }}
+          fullWidth
+          onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
+          sx={{
+            py: 1.4,
+            borderRadius: 3,
+            fontWeight: 600,
+            background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
+            color: "#fff",
+            boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+          }}
+        >
+          Aplicar filtros
+        </Button>
+
+        <Button
+          fullWidth
+          variant="outlined"
           onClick={() => {
             setIdState(0);
             setIdMunicipality(0);
             setOrden("alfabetico");
             cargarPorFiltros(0, 0, "alfabetico");
           }}
-          fullWidth
-          className="mb-3"
+          sx={{
+            borderRadius: 3,
+            fontWeight: 600,
+            color: coffee.main,
+            borderColor: coffee.main,
+          }}
         >
-          Borrar Filtros
+          Limpiar
         </Button>
-      </div>
+      </Box>
     </Box>
   );
 
   return (
-    <div className="w-100 h-100">
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          minHeight: "100%",
-        }}
-      >
-        {!isMobile && (
-          <Box
-            sx={{
-              flexBasis: { xs: "100%", sm: "25%", md: "25%", xl: "15%" },
-              height: "100%",
-            }}
-          >
-            {sidebarContent}
-          </Box>
-        )}
-        {isMobile && (
-          <>
+    <Box display="flex" minHeight="100%">
+      {!isMobile && (
+        <Box
+          sx={{
+            width: { md: 280, lg: 300 },
+            flexShrink: 0,
+            height:{md:450,lg:650}
+          }}
+        >
+          {sidebarContent}
+        </Box>
+      )}
+
+      {isMobile && (
+        <>
+          {isMobile && !mobileOpen && (
             <IconButton
-              onClick={toggleDrawer}
+              onClick={() => setMobileOpen(true)}
               sx={{
                 position: "fixed",
-                left: 0,
-                top: "50%",
-                transform: "translateY(-50%)",
+                bottom: 24,
+                right: 24,
                 bgcolor: coffee.main,
                 color: "#fff",
-                zIndex: 1200,
-                borderRadius: 4,
-                width: 40,
-                height: 40,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                zIndex: 1300,
+                boxShadow: "0 10px 28px rgba(0,0,0,0.3)",
                 "&:hover": { bgcolor: coffee.dark },
               }}
             >
               <Menu />
             </IconButton>
-
-            <Drawer anchor="left" open={mobileOpen} onClose={toggleDrawer}>
-              {sidebarContent}
-            </Drawer>
-          </>
-        )}
-        <Box
-          sx={{
-            padding: 1,
-            flexGrow: 1,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
-        >
-          {loading ? (
-            <p>Cargando comercios...</p>
-          ) : (
-            comercios.map((c) => (
-              <Box key={c.id} px={1}>
-                <ComercioCard comercio={c} />
-              </Box>
-            ))
           )}
-        </Box>
+          <Drawer
+            anchor="bottom"
+            open={mobileOpen}
+            onClose={() => setMobileOpen(false)}
+            PaperProps={{
+              sx: {
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                maxHeight: "85vh",
+              },
+            }}
+          >
+            {sidebarContent}
+          </Drawer>
+        </>
+      )}
+
+      <Box
+        sx={{
+          flexGrow: 1,
+          px: { xs: 1.5, sm: 3 },
+          py: 2,
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            lg: "repeat(3, 1fr)",
+            xl: "repeat(4, 1fr)",
+          },
+          gap: 2.5,
+        }}
+      >
+        {loading ? (
+          <Typography>Cargando comercios…</Typography>
+        ) : (
+          comercios.map((c) => <ComercioCard key={c.id} comercio={c} />)
+        )}
       </Box>
-    </div>
+    </Box>
   );
 };
 

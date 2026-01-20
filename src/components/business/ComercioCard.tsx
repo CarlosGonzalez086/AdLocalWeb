@@ -6,10 +6,12 @@ import {
   Stack,
   Chip,
   Box,
+  Rating,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { slugifyConId } from "../../utils/generals";
+import StarIcon from "@mui/icons-material/Star";
 
 interface Props {
   comercio: ComercioDtoListItem;
@@ -81,6 +83,23 @@ export default function ComercioCard({ comercio }: Props) {
             >
               {comercio.nombre}
             </Typography>
+
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              <Rating
+                value={comercio.promedioCalificacion ?? 0}
+                precision={0.5}
+                readOnly
+                size="small"
+                icon={<StarIcon fontSize="inherit" />}
+                emptyIcon={<StarIcon fontSize="inherit" />}
+                sx={{
+                  color: "#F5B301",
+                }}
+              />
+              <Typography className="mt-1"  sx={{ fontSize: "0.72rem", color: "text.secondary" }}>
+                ({comercio.promedioCalificacion ?? 0})
+              </Typography>
+            </Stack>
 
             <Typography
               color="text.secondary"

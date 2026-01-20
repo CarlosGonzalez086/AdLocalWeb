@@ -64,6 +64,7 @@ export interface ComercioDtoListItem {
   fechaCreacion: string;
   estadoNombre: string;
   municipioNombre: string;
+  promedioCalificacion: number;
 }
 
 export interface ComercioDto {
@@ -84,30 +85,23 @@ export interface ComercioDto {
   productos?: ProductoServicioDto[];
   estadoNombre: string;
   municipioNombre: string;
+  calificacion:number;
 }
 
 export interface ProductoServicioDto {
   id?: number;
-
   idComercio: number;
   idUsuario: number;
-
   nombre: string;
   descripcion?: string;
-
   logoUrl?: string;
-
   tipo: number;
-
   precio?: number;
   stock?: number;
-
   activo: boolean;
   eliminado?: boolean;
   visible?: boolean;
-
   codigoInterno?: string;
-
   fechaCreacion?: string;
   fechaActualizacion?: string;
   fechaEliminado?: string;
@@ -133,7 +127,7 @@ export const comercioPublicApi = {
   getByFiltros: (
     estadoId: number = 0,
     municipioId: number = 0,
-    orden: "alfabetico" | "recientes" | "antiguos" = "alfabetico",
+    orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
   ) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("por-filtros", {
       params: { estadoId, municipioId, orden },
