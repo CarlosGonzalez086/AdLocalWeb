@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
 import type { ComercioDto } from "../services/comercioPublicApi";
+import * as turf from "@turf/turf";
+import type { Feature, Polygon, MultiPolygon, FeatureCollection } from "geojson";
+import { arcgisToGeoJSON } from "@esri/arcgis-to-geojson-utils";
 
 export const DIAS_SEMANA_MAP: Record<number, string> = {
   0: "Domingo",
@@ -63,4 +66,80 @@ export const formatHoraSimple = (hora?: string) => {
   }
 
   return parsed.isValid() ? parsed.format("HH:mm") : "--";
+}
+
+export function getMunicipioFromLatLng(
+  lat: number,
+  lng: number,
+  municipios: GeoJSON.FeatureCollection
+): string | null {
+
+  const pt = turf.point([lng, lat]);
+
+  for (const feature of municipios.features) {
+
+    if (
+      feature.geometry.type === "Polygon" ||
+      feature.geometry.type === "MultiPolygon"
+    ) {
+      if (turf.booleanPointInPolygon(pt, feature as Feature<Polygon | MultiPolygon>)) {
+        return feature.properties?.NOM_MUN ?? null;
+      }
+    }
+  }
+
+  return null;
+}
+
+export function esriToGeoJSON(esriData: any): FeatureCollection {
+  if (!esriData || !Array.isArray(esriData.features)) {
+    console.warn("ESRI inválido:", esriData);
+    return {
+      type: "FeatureCollection",
+      features: [],
+    };
+  }
+
+  return {
+    type: "FeatureCollection",
+    features: esriData.features.map((f: any) => {
+      const geo = arcgisToGeoJSON(f);
+      geo.properties = {
+        NOMGEO: f.attributes?.NOMGEO ?? null,
+        CVE_ENT: f.attributes?.CVE_ENT ?? null,
+        CVE_MUN: f.attributes?.CVE_MUN ?? null,
+      };
+      return geo;
+    }),
+  };
+}
+
+
+export function obtenerUbicacion(): Promise<{
+  lat: number;
+  lng: number;
+}> {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocalización no soportada"));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      },
+      (error) => {
+        reject(error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  });
 }

@@ -90,13 +90,31 @@ const BusquedaAvanzada: React.FC = () => {
         </FormControl>
       </Box>
 
-      <Button
-        variant="contained"
-        sx={{ bgcolor: coffee.main, "&:hover": { bgcolor: coffee.dark } }}
-        onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
-      >
-        Aplicar Filtros
-      </Button>
+      <div className="w-100">
+        <Button
+          variant="contained"
+          sx={{ bgcolor: coffee.main, "&:hover": { bgcolor: coffee.dark } }}
+          onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
+          fullWidth
+          className="mb-3"
+        >
+          Aplicar Filtros
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ bgcolor: coffee.main, "&:hover": { bgcolor: coffee.dark } }}
+          onClick={() => {
+            setIdState(0);
+            setIdMunicipality(0);
+            setOrden("alfabetico");
+            cargarPorFiltros(0, 0, "alfabetico");
+          }}
+          fullWidth
+          className="mb-3"
+        >
+          Borrar Filtros
+        </Button>
+      </div>
     </Box>
   );
 

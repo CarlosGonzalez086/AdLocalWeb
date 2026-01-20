@@ -13,8 +13,6 @@ export const SelectMunicipioAutocomplete = ({
   value,
   onChange,
 }: Props) => {
-    console.log(estadoId);
-    console.log(value);
     
   const { municipalities, loading, getMunicipalitiesByState } = useLocations();
 

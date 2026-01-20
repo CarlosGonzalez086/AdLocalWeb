@@ -27,6 +27,7 @@ import type {
 import ProductoCard from "./ProductoCard";
 import { DIAS_SEMANA_MAP, estaAbiertoAhora } from "../../utils/generals";
 import React, { Suspense } from "react";
+import CalificacionesComentarios from "./CalificacionesComentarios";
 
 const MapaComercioLazy = React.lazy(() => import("./MapaComercio.client"));
 
@@ -387,6 +388,48 @@ export default function ComercioDetalle({
             </Suspense>
           </Box>
         )}
+        <Divider />
+        <Accordion
+          sx={{
+            borderRadius: 3,
+            mb: 2,
+            boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+            background: "rgba(255,255,255,0.9)",
+            backdropFilter: "blur(12px)",
+            "&:before": { display: "none" },
+            transition: "all 0.3s ease",
+            "&:hover": {
+              boxShadow: "0 12px 24px rgba(0,0,0,0.12)",
+            },
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={{
+              px: 3,
+              py: 1.5,
+              minHeight: 56,
+              "& .MuiAccordionSummary-content": {
+                alignItems: "center",
+                gap: 1,
+              },
+            }}
+          >
+            <Typography fontWeight={600} fontSize="1rem">
+              Calificaciones y Comentarios
+            </Typography>
+          </AccordionSummary>
+
+          <AccordionDetails sx={{ px: 3, pb: 2 }}>
+            <CalificacionesComentarios
+              colorPrimario={colorPrimario}
+              colorSecundario={colorSecundario}
+              idComercio={Number(comercio?.id)}
+            />
+          </AccordionDetails>
+        </Accordion>
+
+        <Divider />
 
         <Button
           fullWidth

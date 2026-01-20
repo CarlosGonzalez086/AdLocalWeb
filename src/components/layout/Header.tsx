@@ -6,12 +6,20 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  Skeleton,
+  Chip,
 } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const LOGO_URL =
   "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  municipio: string | null;
+  loading: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -23,16 +31,15 @@ const Header: React.FC = () => {
   const busquedaAvanzadaUrl =
     import.meta.env.MODE === "production"
       ? "https://ad-local-web.vercel.app/comercios/busqueda-avanzada"
-      : "http://localhost:3000/comercios/busqueda-avanzada";
+      : "/comercios/busqueda-avanzada";
 
   return (
     <AppBar
       position="sticky"
       elevation={0}
       sx={{
-
         backdropFilter: "blur(14px)",
-        background: "rgba(243, 233, 222, 0.75)",
+        background: "rgba(255,255,255,0.75)",
         borderBottom: "1px solid rgba(0,0,0,0.08)",
         color: "#111",
       }}
@@ -45,15 +52,7 @@ const Header: React.FC = () => {
           px: 2,
         }}
       >
-        {/* Logo */}
-        <Box
-          display="flex"
-          alignItems="center"
-          gap={1.5}
-          flexGrow={1}
-          sx={{ cursor: "pointer" }}
-          onClick={() => location.assign("/")}
-        >
+        <Box display="flex" alignItems="center" gap={1.5} flexGrow={1}>
           <Box
             component="img"
             src={LOGO_URL}
@@ -62,11 +61,33 @@ const Header: React.FC = () => {
               height: 36,
               width: 36,
               borderRadius: "50%",
+              cursor: "pointer",
             }}
+            onClick={() => location.assign("/")}
           />
           <Typography fontWeight={700} fontSize={18}>
             ADLocal
           </Typography>
+
+          {loading ? (
+            <Skeleton
+              variant="rounded"
+              width={120}
+              height={28}
+              sx={{ borderRadius: 999 }}
+            />
+          ) : municipio ? (
+            <Chip
+              icon={<LocationOnIcon />}
+              label={municipio}
+              size="small"
+              sx={{
+                borderRadius: 999,
+                fontWeight: 500,
+                backgroundColor: "rgba(0,0,0,0.05)",
+              }}
+            />
+          ) : null}
         </Box>
 
         {/* Desktop */}

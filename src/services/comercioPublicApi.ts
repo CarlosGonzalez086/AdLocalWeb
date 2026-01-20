@@ -5,6 +5,18 @@ const BASE_URL =
     ? "https://adlocalapi.onrender.com/api"
     : "http://localhost:8080/api";
 
+const municipioActual: string | null = (() => {
+  const raw = localStorage.getItem("municipioActual");
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as { municipio?: string | null };
+    return parsed?.municipio ?? null;
+  } catch {
+    return null;
+  }
+})();
+
+
 const api = axios.create({
   baseURL: BASE_URL + "/comercios",
   headers: {
@@ -104,17 +116,17 @@ export interface ProductoServicioDto {
 export const comercioPublicApi = {
   getPopulares: () =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "populares" },
+      params: { tipo: "populares", municipio: municipioActual },
     }),
 
   getRecientes: () =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "recientes" },
+      params: { tipo: "recientes", municipio: municipioActual },
     }),
 
   getCercanos: (lat: number, lng: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "cercanos", lat, lng },
+      params: { tipo: "cercanos", lat, lng, municipio: municipioActual },
     }),
 
   getById: (id: number) => api.get<ApiResponse<ComercioDto>>(`/${id}`),

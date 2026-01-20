@@ -12,6 +12,7 @@ import "slick-carousel/slick/slick-theme.css";
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
+import { getMunicipioFromLatLng } from "../../utils/generals";
 
 const tabs = [
   { label: "Destacados", key: "destacados" },
