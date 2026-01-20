@@ -63,12 +63,12 @@ const CalificacionesComentarios = ({
   };
 
   return (
-    <Container maxWidth="md" sx={{ px: { xs: 1.5, sm: 2, md: 3 }, py: 3 }}>
+    <>
       <Card
         className="mb-4 shadow-sm"
         sx={{
           borderRadius: 3,
-          p: { xs: 2, sm: 3 },
+          p: { xs: 1, sm: 2 },
           background: "linear-gradient(145deg, #fff, #f8f8f8)",
         }}
       >
@@ -210,7 +210,7 @@ const CalificacionesComentarios = ({
           </Card>
         ))
       )}
-    </Container>
+    </>
   );
 };
 
