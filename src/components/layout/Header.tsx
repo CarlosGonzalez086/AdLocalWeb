@@ -11,6 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import type { FC } from "react";
 
 const LOGO_URL =
   "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
@@ -20,7 +21,7 @@ interface HeaderProps {
   loading: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
+const Header: FC<HeaderProps> = ({ municipio, loading }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -39,9 +40,10 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
       position="sticky"
       elevation={0}
       sx={{
-        backdropFilter: "blur(12px)",
-        backgroundColor: "rgba(255,255,255,0.85)",
-        borderBottom: "1px solid rgba(0,0,0,0.08)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        backgroundColor: "rgba(255,255,255,0.72)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
         color: "#111",
       }}
     >
@@ -54,21 +56,27 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
           minHeight: isMobile ? 64 : 72,
         }}
       >
-        <Stack direction="row" alignItems="center" spacing={1.5} flexGrow={1}>
+        {/* Logo + nombre + municipio */}
+        <Stack direction="row" alignItems="center" spacing={1.4} flexGrow={1}>
           <Box
             component="img"
             src={LOGO_URL}
             alt="ADLocal"
             sx={{
-              height: 38,
-              width: 38,
+              height: 36,
+              width: 36,
               borderRadius: "50%",
               cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             }}
             onClick={() => location.assign("/")}
           />
 
-          <Typography fontWeight={700} fontSize={18}>
+          <Typography
+            fontWeight={600}
+            fontSize={17}
+            letterSpacing="-0.01em"
+          >
             ADLocal
           </Typography>
 
@@ -88,18 +96,31 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
                 sx={{
                   borderRadius: 999,
                   fontWeight: 500,
+                  fontSize: "0.75rem",
+                  px: 1,
                   backgroundColor: "rgba(0,0,0,0.06)",
+                  backdropFilter: "blur(6px)",
                 }}
               />
             )
           )}
         </Stack>
 
+        {/* Desktop actions */}
         {!isMobile && (
           <Stack direction="row" spacing={1}>
             <Button
               color="inherit"
-              sx={{ textTransform: "none", fontWeight: 500 }}
+              sx={{
+                textTransform: "none",
+                fontWeight: 500,
+                borderRadius: 999,
+                px: 2,
+                transition: "all .25s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.05)",
+                },
+              }}
               onClick={() => location.assign("/")}
             >
               Inicio
@@ -107,10 +128,19 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
 
             <Button
               color="inherit"
-              sx={{ textTransform: "none", fontWeight: 500 }}
+              sx={{
+                textTransform: "none",
+                fontWeight: 500,
+                borderRadius: 999,
+                px: 2,
+                transition: "all .25s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.05)",
+                },
+              }}
               onClick={() => location.assign(busquedaAvanzadaUrl)}
             >
-              Búsqueda Avanzada
+              Búsqueda avanzada
             </Button>
 
             <Button
@@ -121,7 +151,13 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
                 borderRadius: 999,
                 px: 3,
                 fontWeight: 600,
-                boxShadow: "0 8px 20px rgba(0,0,0,0.18)",
+                background:
+                  "linear-gradient(135deg, #007AFF, #005FCC)",
+                boxShadow: "0 10px 24px rgba(0,122,255,0.35)",
+                "&:hover": {
+                  boxShadow:
+                    "0 12px 28px rgba(0,122,255,0.45)",
+                },
               }}
             >
               Unirme como negocio
@@ -130,9 +166,10 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
         )}
       </Toolbar>
 
+      {/* Mobile actions */}
       {isMobile && (
         <Box px={2} pb={2}>
-          <Stack spacing={1.5}>
+          <Stack spacing={1.4}>
             <Stack direction="row" spacing={1}>
               <Button
                 fullWidth
@@ -141,6 +178,10 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
                   textTransform: "none",
                   borderRadius: 999,
                   fontWeight: 500,
+                  borderColor: "rgba(0,0,0,0.15)",
+                  "&:hover": {
+                    backgroundColor: "rgba(0,0,0,0.04)",
+                  },
                 }}
                 onClick={() => location.assign("/")}
               >
@@ -154,6 +195,10 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
                   textTransform: "none",
                   borderRadius: 999,
                   fontWeight: 500,
+                  borderColor: "rgba(0,0,0,0.15)",
+                  "&:hover": {
+                    backgroundColor: "rgba(0,0,0,0.04)",
+                  },
                 }}
                 onClick={() => location.assign(busquedaAvanzadaUrl)}
               >
@@ -170,6 +215,9 @@ const Header: React.FC<HeaderProps> = ({ municipio, loading }) => {
                 borderRadius: 999,
                 fontWeight: 600,
                 py: 1.2,
+                background:
+                  "linear-gradient(135deg, #007AFF, #005FCC)",
+                boxShadow: "0 10px 24px rgba(0,122,255,0.35)",
               }}
             >
               Unirme como negocio

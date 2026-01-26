@@ -28,7 +28,7 @@ const BusinessTabsWrapper: React.FC = () => {
               async (pos) => {
                 response = await comercioPublicApi.getCercanos(
                   pos.coords.latitude,
-                  pos.coords.longitude
+                  pos.coords.longitude,
                 );
                 setComercios(response.data.respuesta ?? []);
                 resolve();
@@ -37,12 +37,14 @@ const BusinessTabsWrapper: React.FC = () => {
                 response = await comercioPublicApi.getPopulares();
                 setComercios(response.data.respuesta ?? []);
                 resolve();
-              }
+              },
             );
           });
         } else {
           switch (activeTab) {
             case "destacados":
+              response = await comercioPublicApi.getDestacados();
+              break;
             case "populares":
               response = await comercioPublicApi.getPopulares();
               break;

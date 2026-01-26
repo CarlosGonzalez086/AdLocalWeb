@@ -16,7 +16,6 @@ const municipioActual: string | null = (() => {
   }
 })();
 
-
 const api = axios.create({
   baseURL: BASE_URL + "/comercios",
   headers: {
@@ -65,6 +64,7 @@ export interface ComercioDtoListItem {
   estadoNombre: string;
   municipioNombre: string;
   promedioCalificacion: number;
+  badge: string;
 }
 
 export interface ComercioDto {
@@ -85,7 +85,8 @@ export interface ComercioDto {
   productos?: ProductoServicioDto[];
   estadoNombre: string;
   municipioNombre: string;
-  calificacion:number;
+  calificacion: number;
+  badge: string;
 }
 
 export interface ProductoServicioDto {
@@ -108,6 +109,10 @@ export interface ProductoServicioDto {
 }
 
 export const comercioPublicApi = {
+  getDestacados: () =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: { tipo: "destacados", municipio: municipioActual },
+    }),
   getPopulares: () =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
       params: { tipo: "populares", municipio: municipioActual },

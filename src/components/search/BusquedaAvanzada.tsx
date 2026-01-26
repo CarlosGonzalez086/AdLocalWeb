@@ -138,7 +138,7 @@ const BusquedaAvanzada: React.FC = () => {
           sx={{
             width: { md: 280, lg: 300 },
             flexShrink: 0,
-            height:{md:450,lg:650}
+            height: { md: 450, lg: 650 },
           }}
         >
           {sidebarContent}
@@ -186,23 +186,24 @@ const BusquedaAvanzada: React.FC = () => {
 
       <Box
         sx={{
-          flexGrow: 1,
-          px: { xs: 1.5, sm: 3 },
-          py: 2,
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            sm: "repeat(2, 1fr)",
-            lg: "repeat(3, 1fr)",
-            xl: "repeat(4, 1fr)",
-          },
-          gap: 2.5,
+          width: "100%",
         }}
       >
         {loading ? (
           <Typography>Cargando comercios…</Typography>
         ) : (
-          comercios.map((c) => <ComercioCard key={c.id} comercio={c} />)
+          <div className="container-fluid">
+            <div className="row g-4 align-items-stretch">
+              {comercios.map((c) => (
+                <div
+                  key={c.id}
+                  className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
+                >
+                  <ComercioCard comercio={c}  />
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </Box>
     </Box>

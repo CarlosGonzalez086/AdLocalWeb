@@ -58,19 +58,49 @@ const BusinessTabs: React.FC<Props> = ({
 
   const carouselSettings = {
     dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
+    infinite: true,
+    speed: 520,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: true,
+    swipeToSlide: true,
+    draggable: true,
+    touchThreshold: 12,
+    easing: "cubic-bezier(.4,0,.2,1)",
+    adaptiveHeight: false,
+
     responsive: [
       {
-        breakpoint: 1200,
-        settings: { slidesToShow: 3 },
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 4,
+        },
       },
       {
-        breakpoint: 900,
-        settings: { slidesToShow: 2 },
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1.3,
+          arrows: false,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1.1,
+          arrows: false,
+        },
       },
     ],
   };
@@ -141,7 +171,6 @@ const BusinessTabs: React.FC<Props> = ({
                       sm: "calc(3 * 320px)",
                       md: "calc(4 * 320px)",
                     },
-
                     overflowY: "auto",
                     WebkitOverflowScrolling: "touch",
                     "&::-webkit-scrollbar": {
@@ -154,11 +183,11 @@ const BusinessTabs: React.FC<Props> = ({
                   }}
                 >
                   <div className="container-fluid">
-                    <div className="row g-3">
+                    <div className="row g-4 align-items-stretch">
                       {comercios.map((c) => (
                         <div
                           key={c.id}
-                          className="col-12 col-sm-6 col-md-4 col-lg-3"
+                          className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
                         >
                           <ComercioCard comercio={c} />
                         </div>
@@ -167,11 +196,11 @@ const BusinessTabs: React.FC<Props> = ({
                   </div>
                 </Box>
               ) : (
-                <Slider {...carouselSettings}>
+                <Slider {...carouselSettings} className="w-100">
                   {comercios.map((c) => (
-                    <Box key={c.id} px={1}>
+                    <div key={c.id} className="px-2 d-flex">
                       <ComercioCard comercio={c} />
-                    </Box>
+                    </div>
                   ))}
                 </Slider>
               )}
@@ -198,11 +227,11 @@ const BusinessTabs: React.FC<Props> = ({
               }}
             >
               <div className="container-fluid">
-                <div className="row g-3">
+                <div className="row g-4 align-items-stretch">
                   {comercios.map((c) => (
                     <div
                       key={c.id}
-                      className="col-12 col-sm-6 col-md-4 col-lg-3"
+                      className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
                     >
                       <ComercioCard comercio={c} />
                     </div>

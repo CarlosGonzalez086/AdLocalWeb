@@ -17,7 +17,7 @@ const Body: React.FC<BodyProps> = ({ children }) => {
         width: "100%",
         px: { xs: 2, sm: 3 },
         py: { xs: 3, sm: 4 },
-        backgroundColor: "#fdf6f0",
+        backgroundColor: "#fff",
       }}
     >
       {children}
