@@ -143,3 +143,17 @@ export function obtenerUbicacion(): Promise<{
     );
   });
 }
+
+
+export async function getPublicIp(): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    if (!res.ok) return null;
+
+    const data: { ip: string } = await res.json();
+    return data.ip;
+  } catch (error) {
+    console.error("Error obteniendo IP:", error);
+    return null;
+  }
+}

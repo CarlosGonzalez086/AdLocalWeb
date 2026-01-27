@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   comercioPublicApi,
@@ -6,6 +5,7 @@ import {
 } from "../../services/comercioPublicApi";
 import ComercioDetalle from "./ComercioDetalle";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
 
 interface ComercioProps {
   id: number;
@@ -15,6 +15,8 @@ const Comercio: React.FC<ComercioProps> = ({ id }) => {
   const [comercio, setComercio] = useState<ComercioDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useRegistrarVisita(id);
 
   const fetchComercio = async () => {
     try {
