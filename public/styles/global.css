@@ -21,3 +21,7 @@ body {
 .container-fluid {
   box-sizing: border-box;
 }
+.swal2-container {
+  z-index: 2000 !important;
+}
+

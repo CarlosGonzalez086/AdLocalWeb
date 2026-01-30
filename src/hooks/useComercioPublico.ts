@@ -9,7 +9,6 @@ export const useComercioPublico = () => {
   const [comercios, setComercios] = useState<ComercioDtoListItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Cargar comercios populares por defecto
   const cargarPopulares = async () => {
     setLoading(true);
     try {
@@ -21,15 +20,21 @@ export const useComercioPublico = () => {
       }
       setComercios(data.respuesta || []);
     } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "No se pudieron cargar los comercios", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Algo salió mal",
+        text: "No pudimos cargar los comercios en este momento. Revisa tu conexión e inténtalo nuevamente.",
+        confirmButtonText: "Reintentar",
+        confirmButtonColor: "#007AFF",
+        backdrop: "rgba(0,0,0,0.4)",
+      });
+
       setComercios([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Cargar comercios recientes
   const cargarRecientes = async () => {
     setLoading(true);
     try {
@@ -42,14 +47,21 @@ export const useComercioPublico = () => {
       setComercios(data.respuesta || []);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "No se pudieron cargar los comercios", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Algo salió mal",
+        text: "No pudimos cargar los comercios en este momento. Revisa tu conexión e inténtalo nuevamente.",
+        confirmButtonText: "Reintentar",
+        confirmButtonColor: "#007AFF",
+        backdrop: "rgba(0,0,0,0.4)",
+      });
+
       setComercios([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Cargar comercios cercanos
   const cargarCercanos = async (lat: number, lng: number) => {
     setLoading(true);
     try {
@@ -62,14 +74,21 @@ export const useComercioPublico = () => {
       setComercios(data.respuesta || []);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "No se pudieron cargar los comercios", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Algo salió mal",
+        text: "No pudimos cargar los comercios en este momento. Revisa tu conexión e inténtalo nuevamente.",
+        confirmButtonText: "Reintentar",
+        confirmButtonColor: "#007AFF",
+        backdrop: "rgba(0,0,0,0.4)",
+      });
+
       setComercios([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Cargar un comercio por ID
   const cargarPorId = async (id: number) => {
     setLoading(true);
     try {
@@ -81,40 +100,55 @@ export const useComercioPublico = () => {
       return data.respuesta || null;
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "No se pudo cargar el comercio", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Algo salió mal",
+        text: "No pudimos cargar el comercio en este momento. Revisa tu conexión e inténtalo nuevamente.",
+        confirmButtonText: "Reintentar",
+        confirmButtonColor: "#007AFF",
+        backdrop: "rgba(0,0,0,0.4)",
+      });
+
       return null;
     } finally {
       setLoading(false);
     }
   };
 
-  //Cargar comercios por filtros de estado y municipio
-const cargarPorFiltros = async (
-  estadoId: number = 0,
-  municipioId: number = 0,
-  ordenSeleccionado: "alfabetico" | "recientes" | "antiguos" | "populares",
-) => {
-  setLoading(true);
-  try {
-    const { data } = await comercioPublicApi.getByFiltros(
-      estadoId,
-      municipioId,
-      ordenSeleccionado
-    );
-    if (data.codigo != "200") {
-      Swal.fire("Error", data.mensaje, "error");
+  const cargarPorFiltros = async (
+    estadoId: number = 0,
+    municipioId: number = 0,
+    ordenSeleccionado: "alfabetico" | "recientes" | "antiguos" | "populares",
+  ) => {
+    setLoading(true);
+    try {
+      const { data } = await comercioPublicApi.getByFiltros(
+        estadoId,
+        municipioId,
+        ordenSeleccionado,
+      );
+      if (data.codigo != "200") {
+        Swal.fire("Error", data.mensaje, "error");
+        setComercios([]);
+        return;
+      }
+      setComercios(data.respuesta || []);
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Algo salió mal",
+        text: "No pudimos cargar los comercios en este momento. Revisa tu conexión e inténtalo nuevamente.",
+        confirmButtonText: "Reintentar",
+        confirmButtonColor: "#007AFF",
+        backdrop: "rgba(0,0,0,0.4)",
+      });
+
       setComercios([]);
-      return;
+    } finally {
+      setLoading(false);
     }
-    setComercios(data.respuesta || []);
-  } catch (error) {
-    console.error(error);
-    Swal.fire("Error", "No se pudieron cargar los comercios", "error");
-    setComercios([]);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   useEffect(() => {
     cargarPopulares();

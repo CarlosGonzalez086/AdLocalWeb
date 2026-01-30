@@ -105,10 +105,6 @@ const BusinessTabs: React.FC<Props> = ({
     ],
   };
 
-  if (error) {
-    return <Typography textAlign="center">{error}</Typography>;
-  }
-
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ overflowX: "auto", mt: 1, mb: 3 }}>
@@ -155,6 +151,25 @@ const BusinessTabs: React.FC<Props> = ({
           justifyContent="center"
         >
           <CircularProgress sx={{ color: coffee.main }} />
+        </Box>
+      )}
+      {(!loading && error && comercios.length == 0) && (
+        <Box
+          sx={{
+            mt: 2,
+            px: 2.5,
+            py: 1.5,
+            borderRadius: 3,
+            bgcolor: "rgba(255,59,48,0.08)",
+            color: "#FF3B30",
+            textAlign: "center",
+            fontSize: "0.95rem",
+            fontWeight: 500,
+          }}
+        >
+          Algo salió mal 😕
+          <br />
+          Verifica tu conexión e inténtalo nuevamente.
         </Box>
       )}
 

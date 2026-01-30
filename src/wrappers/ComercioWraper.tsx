@@ -4,7 +4,7 @@ import React from "react";
 const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
   return (
     <App>
-      <React.Suspense fallback={<div>Cargando comercio...</div>}>
+      <React.Suspense>
         <div className="w-100 h-100 p-3">
           <ComercioLoader id={id} />
         </div>
@@ -26,6 +26,6 @@ const ComercioLoader = ({ id }: { id: number }) => {
     });
   }, []);
 
-  if (!ComercioComponent) return <div>Cargando...</div>;
+  if (!ComercioComponent) return <div></div>;
   return <ComercioComponent id={id} />;
 };

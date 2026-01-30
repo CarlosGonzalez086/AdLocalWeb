@@ -26,11 +26,10 @@ const api = axios.create({
 api.interceptors.response.use(
   (r) => r,
   (e) => {
-    console.log(e);
-
     const message =
       e.response?.data?.mensaje ||
       e.response?.data?.message ||
+      e.cod ||
       "Error en la petición";
 
     throw new Error(message);
@@ -65,7 +64,7 @@ export interface ComercioDtoListItem {
   municipioNombre: string;
   promedioCalificacion: number;
   badge: string;
-  distanciaKm:number;
+  distanciaKm: number;
 }
 
 export interface ComercioDto {
