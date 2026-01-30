@@ -65,6 +65,7 @@ export interface ComercioDtoListItem {
   municipioNombre: string;
   promedioCalificacion: number;
   badge: string;
+  distanciaKm:number;
 }
 
 export interface ComercioDto {

@@ -32,7 +32,7 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
   const busquedaAvanzadaUrl =
     import.meta.env.MODE === "production"
-      ? "https://ad-local-web.vercel.app/comercios/busqueda-avanzada"
+      ? "https://www.adlocal.store/comercios/busqueda-avanzada"
       : "/comercios/busqueda-avanzada";
 
   return (

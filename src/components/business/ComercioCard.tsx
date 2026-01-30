@@ -201,6 +201,21 @@ export default function ComercioCard({ comercio }: Props) {
               {`${comercio.direccion}, ${comercio.municipioNombre}, ${comercio.estadoNombre}.`}
             </Typography>
 
+            {comercio.distanciaKm > 0 && (
+              <Typography
+                color="text.secondary"
+                textAlign="center"
+                sx={{
+                  px: 1.5,
+                  maxWidth: 260,
+                  lineHeight: 1.45,
+                  fontSize: "0.75rem",
+                }}
+              >
+                📍 A {comercio.distanciaKm} km de ti
+              </Typography>
+            )}
+
             <Chip
               label="Ver detalles"
               icon={<ArrowForwardIosIcon fontSize="inherit" />}
