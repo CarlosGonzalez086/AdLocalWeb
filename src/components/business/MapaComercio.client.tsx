@@ -30,14 +30,14 @@ const MapaComercio: React.FC<Props> = ({ lat, lng }) => {
     <MapContainer
       center={[lat, lng]}
       zoom={16}
-      style={{ height: 300, width: "100%" }}
       scrollWheelZoom={false}
       zoomControl={false}
       dragging={false}
       doubleClickZoom={false}
       touchZoom={false}
       keyboard={false}
-      boxZoom={false}
+      boxZoom={false}    
+      className="w-100 h-100"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={[lat, lng]} icon={materialIcon} />

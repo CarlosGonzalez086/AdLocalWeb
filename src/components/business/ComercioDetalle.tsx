@@ -499,23 +499,28 @@ export default function ComercioDetalle({
         {horarios?.length > 0 && (
           <Accordion
             sx={{
-              borderRadius: { xs: 2.5, sm: 3 },
-              mb: { xs: 2, sm: 3 },
-              overflow: "hidden",
+              borderRadius: { xs: 3, sm: 4 },
+              mb: { xs: 2.5, sm: 3 },
 
-              background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(14px)",
+              background: "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(18px) saturate(180%)",
+              WebkitBackdropFilter: "blur(18px) saturate(180%)",
 
               boxShadow: {
-                xs: "0 4px 14px rgba(0,0,0,0.06)",
-                sm: "0 8px 22px rgba(0,0,0,0.08)",
+                xs: "0 6px 20px rgba(0,0,0,0.08)",
+                sm: "0 10px 30px rgba(0,0,0,0.1)",
               },
 
+              border: "1px solid rgba(255,255,255,0.6)",
+              overflow: "hidden",
+
               "&:before": { display: "none" },
-              transition: "all 0.35s cubic-bezier(.4,0,.2,1)",
+
+              transition: "all .4s cubic-bezier(.4,0,.2,1)",
 
               "&:hover": {
-                boxShadow: "0 14px 28px rgba(0,0,0,0.12)",
+                boxShadow: "0 16px 40px rgba(0,0,0,0.14)",
+                transform: "translateY(-1px)",
               },
             }}
           >
@@ -730,7 +735,7 @@ export default function ComercioDetalle({
           <Box
             sx={{
               mt: { xs: 2.5, sm: 3.5 },
-              p: { xs: 1, sm: 1.5 },
+              padding: "1rem",
               borderRadius: { xs: 3, sm: 4 },
 
               background: "rgba(255,255,255,0.88)",
@@ -768,7 +773,7 @@ export default function ComercioDetalle({
                   sx={{
                     width: "100%",
                     height: { xs: 220, sm: 280, md: 340 },
-                    borderRadius: { xs: 2.5, sm: 3 },
+
                     overflow: "hidden",
                   }}
                 >
@@ -783,15 +788,15 @@ export default function ComercioDetalle({
         <Accordion
           sx={{
             borderRadius: { xs: 3, sm: 4 },
-            mb: { xs: 2, sm: 3 },
+            mb: { xs: 2.5, sm: 3 },
 
-            background: "rgba(255,255,255,0.88)",
-            backdropFilter: "blur(16px) saturate(180%)",
-            WebkitBackdropFilter: "blur(16px) saturate(180%)",
+            background: "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(18px) saturate(180%)",
+            WebkitBackdropFilter: "blur(18px) saturate(180%)",
 
             boxShadow: {
-              xs: "0 6px 18px rgba(0,0,0,0.08)",
-              sm: "0 12px 28px rgba(0,0,0,0.14)",
+              xs: "0 6px 20px rgba(0,0,0,0.08)",
+              sm: "0 10px 30px rgba(0,0,0,0.1)",
             },
 
             border: "1px solid rgba(255,255,255,0.6)",
@@ -799,11 +804,11 @@ export default function ComercioDetalle({
 
             "&:before": { display: "none" },
 
-            transition: "all 0.35s cubic-bezier(.4,0,.2,1)",
+            transition: "all .4s cubic-bezier(.4,0,.2,1)",
 
             "&:hover": {
-              boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
-              transform: "translateY(-2px)",
+              boxShadow: "0 16px 40px rgba(0,0,0,0.14)",
+              transform: "translateY(-1px)",
             },
           }}
         >
@@ -811,22 +816,28 @@ export default function ComercioDetalle({
             expandIcon={<ExpandMoreIcon />}
             sx={{
               px: { xs: 2, sm: 3 },
-              py: { xs: 1.5, sm: 2 },
+              py: { xs: 1.7, sm: 2 },
 
-              minHeight: { xs: 52, sm: 60 },
+              minHeight: 58,
 
               "& .MuiAccordionSummary-content": {
                 alignItems: "center",
                 gap: 1.2,
-                my: 0.5,
+              },
+
+              "& .MuiSvgIcon-root": {
+                fontSize: "1.2rem",
+                color: "text.secondary",
+                transition: "transform .3s ease",
               },
             }}
           >
             <Typography
-              fontWeight={600}
               sx={{
-                fontSize: { xs: "0.95rem", sm: "1.05rem" },
+                fontWeight: 700,
+                fontSize: { xs: "1rem", sm: "1.05rem" },
                 letterSpacing: "0.2px",
+                lineHeight: 1.35,
               }}
             >
               Calificaciones y comentarios
