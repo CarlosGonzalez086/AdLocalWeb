@@ -109,23 +109,46 @@ export interface ProductoServicioDto {
 }
 
 export const comercioPublicApi = {
-  getDestacados: () =>
+  getDestacados: (page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "destacados", municipio: municipioActual },
-    }),
-  getPopulares: () =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "populares", municipio: municipioActual },
-    }),
-
-  getRecientes: () =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "recientes", municipio: municipioActual },
+      params: {
+        tipo: "destacados",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
     }),
 
-  getCercanos: (lat: number, lng: number) =>
+  getPopulares: (page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "cercanos", lat, lng, municipio: municipioActual },
+      params: {
+        tipo: "populares",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
+    }),
+
+  getRecientes: (page: number, pageSize: number) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: {
+        tipo: "recientes",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
+    }),
+
+  getCercanos: (lat: number, lng: number, page: number, pageSize: number) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: {
+        tipo: "cercanos",
+        lat,
+        lng,
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
     }),
 
   getById: (id: number) => api.get<ApiResponse<ComercioDto>>(`/${id}`),
@@ -133,8 +156,10 @@ export const comercioPublicApi = {
     estadoId: number = 0,
     municipioId: number = 0,
     orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
+    page: number = 1,
+    pageSize: number = 8,
   ) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("por-filtros", {
-      params: { estadoId, municipioId, orden },
+    api.get<ApiResponse<any>>("por-filtros", {
+      params: { estadoId, municipioId, orden, page, pageSize },
     }),
 };

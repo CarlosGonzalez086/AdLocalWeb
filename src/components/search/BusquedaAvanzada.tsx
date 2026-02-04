@@ -36,7 +36,8 @@ const BusquedaAvanzada: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { comercios, loading, cargarPorFiltros } = useComercioPublico();
+  const { comercios, loading, hasMore, cargarPorFiltros } =
+    useComercioPublico();
 
   const sidebarContent = (
     <Box
@@ -96,7 +97,7 @@ const BusquedaAvanzada: React.FC = () => {
       <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
           fullWidth
-          onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
+          onClick={() => cargarPorFiltros(idState, idMunicipality, orden, true)}
           sx={{
             py: 1.4,
             borderRadius: 3,
@@ -116,7 +117,7 @@ const BusquedaAvanzada: React.FC = () => {
             setIdState(0);
             setIdMunicipality(0);
             setOrden("alfabetico");
-            cargarPorFiltros(0, 0, "alfabetico");
+            cargarPorFiltros(0, 0, "alfabetico", true);
           }}
           sx={{
             borderRadius: 3,
@@ -199,11 +200,28 @@ const BusquedaAvanzada: React.FC = () => {
                   key={c.id}
                   className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
                 >
-                  <ComercioCard comercio={c}  />
+                  <ComercioCard comercio={c} />
                 </div>
               ))}
             </div>
           </div>
+        )}
+        {hasMore && !loading && (
+          <Box textAlign="center" mt={4}>
+            <Button
+              onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
+              sx={{
+                px: 4,
+                py: 1.4,
+                borderRadius: 999,
+                fontWeight: 600,
+                background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
+                color: "#fff",
+              }}
+            >
+              Cargar más comercios
+            </Button>
+          </Box>
         )}
       </Box>
     </Box>

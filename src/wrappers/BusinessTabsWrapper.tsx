@@ -5,16 +5,25 @@ import {
   type ComercioDtoListItem,
 } from "../services/comercioPublicApi";
 
+const PAGE_SIZE = 10;
+
 const BusinessTabsWrapper: React.FC = () => {
   const [comercios, setComercios] = useState<ComercioDtoListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
   const [activeTab, setActiveTab] = useState<
     "destacados" | "populares" | "recientes" | "cercanos"
   >("destacados");
-  const fetchComercios = async () => {
+
+  const fetchComercios = async (reset = false) => {
     try {
       setLoading(true);
+      setError(null);
+
+      const currentPage = reset ? 1 : page;
       let response;
 
       if (
@@ -23,57 +32,69 @@ const BusinessTabsWrapper: React.FC = () => {
         navigator.geolocation
       ) {
         response = await new Promise<any>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-              try {
-                const resp = await comercioPublicApi.getCercanos(
-                  pos.coords.latitude,
-                  pos.coords.longitude,
-                );
-                resolve(resp);
-              } catch (apiError) {
-                reject(apiError);
-              }
-            },
-            (geoError) => {
-              reject(geoError);
-            },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-            },
-          );
-        });
+          navigator.geolocation.getCurrentPosition(async (pos) => {
+            try {
+              const resp = await comercioPublicApi.getCercanos(
+                pos.coords.latitude,
+                pos.coords.longitude,
+                currentPage,
+                PAGE_SIZE,
+              );
 
-        setComercios(response.data.respuesta ?? []);
+              resolve(resp);
+            } catch (e) {
+              reject(e);
+            }
+          }, reject);
+        });
       } else {
         switch (activeTab) {
           case "destacados":
-            response = await comercioPublicApi.getDestacados();
+            response = await comercioPublicApi.getDestacados(
+              currentPage,
+              PAGE_SIZE,
+            );
             break;
           case "populares":
-            response = await comercioPublicApi.getPopulares();
+            response = await comercioPublicApi.getPopulares(
+              currentPage,
+              PAGE_SIZE,
+            );
             break;
           case "recientes":
-            response = await comercioPublicApi.getRecientes();
+            response = await comercioPublicApi.getRecientes(
+              currentPage,
+              PAGE_SIZE,
+            );
             break;
         }
-
-        setComercios(response?.data.respuesta ?? []);
       }
+
+      const nuevos: ComercioDtoListItem[] = response.data.respuesta.items ?? [];
+
+      setComercios((prev) => (reset ? nuevos : [...prev, ...nuevos]));
+
+      setHasMore(nuevos.length === PAGE_SIZE);
+      setPage(currentPage + 1);
     } catch (err) {
-      console.error("Error fetchComercios:", err);
-      setError(
-        "No pudimos obtener los comercios cercanos. Revisa tu conexión o permisos de ubicación.",
-      );
+      console.error(err);
+      setError("No se pudieron cargar los comercios");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchComercios();
+    setPage(1);
+    setHasMore(true);
+    fetchComercios(true);
   }, [activeTab]);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      fetchComercios();
+    }
+  };
 
   return (
     <BusinessTabs
@@ -82,6 +103,8 @@ const BusinessTabsWrapper: React.FC = () => {
       error={error}
       activeTab={activeTab}
       setActiveTab={setActiveTab}
+      hasMore={hasMore}
+      onLoadMore={handleLoadMore}
     />
   );
 };
