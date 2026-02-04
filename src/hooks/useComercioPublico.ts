@@ -107,7 +107,6 @@ export const useComercioPublico = () => {
         currentPage,
         8,
       );
-
       if (data.codigo !== "200") {
         Swal.fire("Error", data.mensaje, "error");
         return;
