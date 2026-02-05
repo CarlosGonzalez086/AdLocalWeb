@@ -69,38 +69,41 @@ const BusinessTabs: React.FC<Props> = ({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          bgcolor: "#f7ede6",
-          p: 1,
-          borderRadius: 999,
-          width: "fit-content",
-          mx: "auto",
-          mb: 3,
-        }}
-      >
-        {tabs.map((t) => {
-          const isActive = activeTab === t.key;
-          return (
-            <Button
-              key={t.key}
-              onClick={() => handleTabClick(t.key as TabKey)}
-              sx={{
-                borderRadius: 999,
-                px: 3,
-                fontWeight: 600,
-                textTransform: "none",
-                color: isActive ? "#fff" : coffee.main,
-                backgroundColor: isActive ? coffee.main : "transparent",
-              }}
-            >
-              {t.label}
-            </Button>
-          );
-        })}
-      </Stack>
+      <Box sx={{ overflowX: "auto", mt: 1, mb: 3 }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            bgcolor: "#f7ede6",
+            p: 1,
+            borderRadius: 999,
+            width: "fit-content",
+            mx: "auto",
+            mb: 3,
+          }}
+        >
+          {tabs.map((t) => {
+            const isActive = activeTab === t.key;
+            return (
+              <Button
+                key={t.key}
+                onClick={() => handleTabClick(t.key as TabKey)}
+                sx={{
+                  whiteSpace: "nowrap",
+                  borderRadius: 999,
+                  px: 3,
+                  fontWeight: 600,
+                  textTransform: "none",
+                  color: isActive ? "#fff" : coffee.main,
+                  backgroundColor: isActive ? coffee.main : "transparent",
+                }}
+              >
+                {t.label}
+              </Button>
+            );
+          })}
+        </Stack>
+      </Box>
 
       {loading && comercios.length === 0 && (
         <Box textAlign="center" py={6}>
