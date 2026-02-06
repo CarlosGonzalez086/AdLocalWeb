@@ -216,7 +216,7 @@ const BusquedaAvanzada: React.FC = () => {
         {hasMore && !loading && (
           <Box textAlign="center" mt={4}>
             <Button
-              onClick={() => cargarPorFiltros(idState, idMunicipality, orden)}
+              onClick={() => cargarPorFiltros(idState, idMunicipality,idTipoComercio, orden)}
               sx={{
                 px: 4,
                 py: 1.4,
