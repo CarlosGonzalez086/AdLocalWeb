@@ -18,6 +18,7 @@ import { SelectEstadoAutocomplete } from "../Locations/SelectEstadoAutocomplete"
 import { SelectMunicipioAutocomplete } from "../Locations/SelectMunicipioAutocomplete";
 import { useComercioPublico } from "../../hooks/useComercioPublico";
 import ComercioCard from "../business/ComercioCard";
+import { SelectTipoComercioAutocomplete } from "../business/SelectTipoComercioAutocomplete";
 
 const coffee = {
   main: "#5B3A29",
@@ -28,6 +29,7 @@ const coffee = {
 const BusquedaAvanzada: React.FC = () => {
   const [idState, setIdState] = useState(0);
   const [idMunicipality, setIdMunicipality] = useState(0);
+  const [idTipoComercio, setIdTipoComercio] = useState(0);
   const [orden, setOrden] = useState<
     "alfabetico" | "recientes" | "antiguos" | "populares"
   >("alfabetico");
@@ -71,6 +73,10 @@ const BusquedaAvanzada: React.FC = () => {
         value={idMunicipality}
         onChange={(id) => setIdMunicipality(id)}
       />
+      <SelectTipoComercioAutocomplete
+        value={idTipoComercio}
+        onChange={(id) => setIdTipoComercio(id)}
+      />
 
       <FormControl fullWidth>
         <InputLabel>Orden</InputLabel>
@@ -97,7 +103,7 @@ const BusquedaAvanzada: React.FC = () => {
       <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
           fullWidth
-          onClick={() => cargarPorFiltros(idState, idMunicipality, orden, true)}
+          onClick={() => cargarPorFiltros(idState, idMunicipality,idTipoComercio, orden, true)}
           sx={{
             py: 1.4,
             borderRadius: 3,
@@ -117,7 +123,7 @@ const BusquedaAvanzada: React.FC = () => {
             setIdState(0);
             setIdMunicipality(0);
             setOrden("alfabetico");
-            cargarPorFiltros(0, 0, "alfabetico", true);
+            cargarPorFiltros(0, 0,0, "alfabetico", true);
           }}
           sx={{
             borderRadius: 3,

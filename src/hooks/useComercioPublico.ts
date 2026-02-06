@@ -88,6 +88,7 @@ export const useComercioPublico = () => {
   const cargarPorFiltros = async (
     estadoId = 0,
     municipioId = 0,
+    idTipoComercio = 0,
     orden: "alfabetico" | "recientes" | "antiguos" | "populares",
     reset = false,
   ) => {
@@ -103,6 +104,7 @@ export const useComercioPublico = () => {
       const { data } = await comercioPublicApi.getByFiltros(
         estadoId,
         municipioId,
+        idTipoComercio,
         orden,
         currentPage,
         8,

@@ -15,7 +15,7 @@ const BusinessTabsWrapper: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const [activeTab, setActiveTab] = useState<
-    "destacados" | "populares" | "recientes" | "cercanos"
+    "destacados" | "populares" | "recientes" | "cercanos" | "sugeridos"
   >("destacados");
 
   const fetchComercios = async (reset = false) => {
@@ -63,6 +63,12 @@ const BusinessTabsWrapper: React.FC = () => {
             break;
           case "recientes":
             response = await comercioPublicApi.getRecientes(
+              currentPage,
+              PAGE_SIZE,
+            );
+            break;
+          case "sugeridos":
+            response = await comercioPublicApi.getSugeridos(
               currentPage,
               PAGE_SIZE,
             );

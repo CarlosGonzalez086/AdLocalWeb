@@ -9,6 +9,7 @@ import { useTheme, useMediaQuery } from "@mui/material";
 
 const tabs = [
   { label: "Destacados", key: "destacados" },
+  { label: "Sugeridos", key: "sugeridos" },
   { label: "Populares", key: "populares" },
   { label: "Más recientes", key: "recientes" },
   { label: "Cercanos", key: "cercanos" },
@@ -19,7 +20,12 @@ export const coffee = {
   dark: "#3A2419",
 };
 
-type TabKey = "destacados" | "populares" | "recientes" | "cercanos";
+type TabKey =
+  | "destacados"
+  | "populares"
+  | "recientes"
+  | "cercanos"
+  | "sugeridos";
 
 interface Props {
   comercios: ComercioDtoListItem[];

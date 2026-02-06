@@ -139,6 +139,16 @@ export const comercioPublicApi = {
       },
     }),
 
+  getSugeridos: (page: number, pageSize: number) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: {
+        tipo: "sugeridos",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
+    }),
+
   getCercanos: (lat: number, lng: number, page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
       params: {
@@ -155,11 +165,12 @@ export const comercioPublicApi = {
   getByFiltros: (
     estadoId: number = 0,
     municipioId: number = 0,
+    idTipoComercio: number = 0,
     orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
     page: number = 1,
     pageSize: number = 8,
   ) =>
     api.get<ApiResponse<any>>("por-filtros", {
-      params: { estadoId, municipioId, orden, page, pageSize },
+      params: { estadoId, municipioId, idTipoComercio, orden, page, pageSize },
     }),
 };
