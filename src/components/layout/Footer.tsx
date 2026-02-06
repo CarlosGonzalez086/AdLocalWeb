@@ -85,12 +85,19 @@ const Footer: FC = () => {
               <InstagramIcon />
             </IconButton>
           </Stack>
-
-          <Typography fontSize={13} sx={{ opacity: 0.65 }}>
-            © {year} Da VinciX Code Labs
-            <br />
-            Todos los derechos reservados.
-          </Typography>
+          <Link
+            href="https://carlosgonzalez086.github.io/DaVincixCode/"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              fontSize={13}
+              sx={{ opacity: 0.65, color: "primary.light" }}
+            >
+              © {year} Da VinciX Code Labs
+              <br />
+              Todos los derechos reservados.
+            </Typography>
+          </Link>
         </Stack>
 
         <Divider
