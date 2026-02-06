@@ -122,6 +122,7 @@ const BusquedaAvanzada: React.FC = () => {
           onClick={() => {
             setIdState(0);
             setIdMunicipality(0);
+            setIdTipoComercio(0);
             setOrden("alfabetico");
             cargarPorFiltros(0, 0,0, "alfabetico", true);
           }}
