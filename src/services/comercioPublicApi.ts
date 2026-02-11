@@ -87,6 +87,8 @@ export interface ComercioDto {
   municipioNombre: string;
   calificacion: number;
   badge: string;
+  tipoComercioId: number;
+  tipoComercio: string;
 }
 
 export interface ProductoServicioDto {
