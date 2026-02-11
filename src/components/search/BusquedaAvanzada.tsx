@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
@@ -103,7 +104,15 @@ const BusquedaAvanzada: React.FC = () => {
       <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
           fullWidth
-          onClick={() => cargarPorFiltros(idState, idMunicipality,idTipoComercio, orden, true)}
+          onClick={() =>
+            cargarPorFiltros(
+              idState,
+              idMunicipality,
+              idTipoComercio,
+              orden,
+              true,
+            )
+          }
           sx={{
             py: 1.4,
             borderRadius: 3,
@@ -124,7 +133,7 @@ const BusquedaAvanzada: React.FC = () => {
             setIdMunicipality(0);
             setIdTipoComercio(0);
             setOrden("alfabetico");
-            cargarPorFiltros(0, 0,0, "alfabetico", true);
+            cargarPorFiltros(0, 0, 0, "alfabetico", true);
           }}
           sx={{
             borderRadius: 3,
@@ -198,7 +207,25 @@ const BusquedaAvanzada: React.FC = () => {
         }}
       >
         {loading ? (
-          <Typography>Cargando comercios…</Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap={1.2}
+            py={4}
+          >
+            <CircularProgress size={18} thickness={4} />
+            <Typography
+              sx={{
+                fontSize: "0.9rem",
+                fontWeight: 500,
+                color: "text.secondary",
+                letterSpacing: "0.02em",
+              }}
+            >
+              Cargando comercios
+            </Typography>
+          </Box>
         ) : (
           <div className="container-fluid">
             <div className="row g-4 align-items-stretch">
@@ -216,7 +243,9 @@ const BusquedaAvanzada: React.FC = () => {
         {hasMore && !loading && (
           <Box textAlign="center" mt={4}>
             <Button
-              onClick={() => cargarPorFiltros(idState, idMunicipality,idTipoComercio, orden)}
+              onClick={() =>
+                cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden)
+              }
               sx={{
                 px: 4,
                 py: 1.4,
