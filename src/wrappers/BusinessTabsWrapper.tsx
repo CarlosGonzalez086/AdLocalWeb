@@ -68,10 +68,22 @@ const BusinessTabsWrapper: React.FC = () => {
             );
             break;
           case "sugeridos":
-            response = await comercioPublicApi.getSugeridos(
-              currentPage,
-              PAGE_SIZE,
-            );
+            response = await new Promise<any>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(async (pos) => {
+                try {
+                  const resp = await comercioPublicApi.getSugeridos(
+                    pos.coords.latitude,
+                    pos.coords.longitude,
+                    currentPage,
+                    PAGE_SIZE,
+                  );
+
+                  resolve(resp);
+                } catch (e) {
+                  reject(e);
+                }
+              }, reject);
+            });
             break;
         }
       }

@@ -141,10 +141,12 @@ export const comercioPublicApi = {
       },
     }),
 
-  getSugeridos: (page: number, pageSize: number) =>
+  getSugeridos: (lat: number, lng: number, page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
       params: {
         tipo: "sugeridos",
+        lat,
+        lng,
         municipio: municipioActual,
         page,
         pageSize,
