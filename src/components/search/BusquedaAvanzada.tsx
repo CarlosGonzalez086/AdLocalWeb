@@ -7,13 +7,18 @@ import {
   useMediaQuery,
   useTheme,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Typography,
   CircularProgress,
+  Select,
+  MenuItem,
+  InputAdornment,
 } from "@mui/material";
-import { Menu } from "@mui/icons-material";
+import {
+  Menu,
+  TuneRounded,
+  CloseRounded,
+  SortRounded,
+} from "@mui/icons-material";
 
 import { SelectEstadoAutocomplete } from "../Locations/SelectEstadoAutocomplete";
 import { SelectMunicipioAutocomplete } from "../Locations/SelectMunicipioAutocomplete";
@@ -27,13 +32,24 @@ const coffee = {
   light: "#f3e9de",
 };
 
+const fieldSx = {
+  "& .MuiOutlinedInput-root": {
+    borderRadius: "12px",
+    bgcolor: "#fff",
+    "& fieldset": { borderColor: "#E0E0E0" },
+    "&:hover fieldset": { borderColor: "#BDBDBD" },
+    "&.Mui-focused fieldset": { borderColor: "#5B3A29" },
+  },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#5B3A29" },
+};
+
+type OrdenType = "alfabetico" | "recientes" | "antiguos" | "populares";
+
 const BusquedaAvanzada: React.FC = () => {
   const [idState, setIdState] = useState(0);
   const [idMunicipality, setIdMunicipality] = useState(0);
   const [idTipoComercio, setIdTipoComercio] = useState(0);
-  const [orden, setOrden] = useState<
-    "alfabetico" | "recientes" | "antiguos" | "populares"
-  >("alfabetico");
+  const [orden, setOrden] = useState<OrdenType>("alfabetico");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const theme = useTheme();
@@ -42,84 +58,106 @@ const BusquedaAvanzada: React.FC = () => {
   const { comercios, loading, hasMore, cargarPorFiltros } =
     useComercioPublico();
 
+  const handleLimpiar = () => {
+    setIdState(0);
+    setIdMunicipality(0);
+    setIdTipoComercio(0);
+    setOrden("alfabetico");
+    cargarPorFiltros(0, 0, 0, "alfabetico", true);
+  };
+
+  const handleAplicar = () => {
+    cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden, true);
+    if (isMobile) setMobileOpen(false);
+  };
+
   const sidebarContent = (
     <Box
       sx={{
         height: "100%",
-        px: { xs: 2, sm: 3 },
+        px: { xs: 2.5, sm: 3 },
         py: 3,
-        background: "rgba(255,255,255,0.9)",
+        background: "rgba(255,255,255,0.95)",
         backdropFilter: "blur(18px)",
         borderRight: "1px solid rgba(0,0,0,0.06)",
         display: "flex",
         flexDirection: "column",
-        gap: 3,
+        gap: 2.5,
       }}
     >
-      <Typography
-        fontWeight={700}
-        fontSize="1.05rem"
-        sx={{ color: coffee.main }}
-      >
-        Filtros
-      </Typography>
+      {/* Header filtros */}
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box display="flex" alignItems="center" gap={1}>
+          <TuneRounded sx={{ color: coffee.main, fontSize: 20 }} />
+          <Typography
+            fontWeight={700}
+            fontSize="1rem"
+            sx={{ color: coffee.main }}
+          >
+            Filtros
+          </Typography>
+        </Box>
+        {isMobile && (
+          <IconButton size="small" onClick={() => setMobileOpen(false)}>
+            <CloseRounded sx={{ fontSize: 20, color: "text.secondary" }} />
+          </IconButton>
+        )}
+      </Box>
 
-      <SelectEstadoAutocomplete
-        value={idState}
-        onChange={(estadoId) => setIdState(estadoId)}
-      />
+      {/* Campos */}
+      <Box display="flex" flexDirection="column" gap={2}>
+        <SelectEstadoAutocomplete
+          value={idState}
+          onChange={(estadoId) => setIdState(estadoId)}
+        />
 
-      <SelectMunicipioAutocomplete
-        estadoId={idState}
-        value={idMunicipality}
-        onChange={(id) => setIdMunicipality(id)}
-      />
-      <SelectTipoComercioAutocomplete
-        value={idTipoComercio}
-        onChange={(id) => setIdTipoComercio(id)}
-      />
+        <SelectMunicipioAutocomplete
+          estadoId={idState}
+          value={idMunicipality}
+          onChange={(id) => setIdMunicipality(id)}
+        />
 
-      <FormControl fullWidth>
-        <InputLabel>Orden</InputLabel>
-        <Select
-          value={orden}
-          label="Orden"
-          onChange={(e) =>
-            setOrden(
-              e.target.value as
-                | "alfabetico"
-                | "recientes"
-                | "antiguos"
-                | "populares",
-            )
-          }
-        >
-          <MenuItem value="alfabetico">Alfabético A–Z</MenuItem>
-          <MenuItem value="recientes">Más recientes</MenuItem>
-          <MenuItem value="antiguos">Más antiguos</MenuItem>
-          <MenuItem value="populares">Más populares</MenuItem>
-        </Select>
-      </FormControl>
+        <SelectTipoComercioAutocomplete
+          value={idTipoComercio}
+          onChange={(id) => setIdTipoComercio(id)}
+        />
 
+        <FormControl fullWidth sx={fieldSx}>
+          <Select
+            value={orden}
+            onChange={(e) => setOrden(e.target.value as OrdenType)}
+            displayEmpty
+            startAdornment={
+              <InputAdornment position="start">
+                <SortRounded sx={{ color: "#9E9E9E", fontSize: 20 }} />
+              </InputAdornment>
+            }
+          >
+            <MenuItem value="alfabetico">Alfabético A–Z</MenuItem>
+            <MenuItem value="recientes">Más recientes</MenuItem>
+            <MenuItem value="antiguos">Más antiguos</MenuItem>
+            <MenuItem value="populares">Más populares</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      {/* Botones */}
       <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
           fullWidth
-          onClick={() =>
-            cargarPorFiltros(
-              idState,
-              idMunicipality,
-              idTipoComercio,
-              orden,
-              true,
-            )
-          }
+          onClick={handleAplicar}
           sx={{
             py: 1.4,
-            borderRadius: 3,
-            fontWeight: 600,
+            borderRadius: 999,
+            fontWeight: 700,
+            fontSize: "0.9rem",
+            textTransform: "none",
             background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
             color: "#fff",
-            boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+            boxShadow: "0 6px 18px rgba(91,58,41,0.30)",
+            "&:hover": {
+              boxShadow: "0 8px 24px rgba(91,58,41,0.40)",
+            },
           }}
         >
           Aplicar filtros
@@ -128,21 +166,21 @@ const BusquedaAvanzada: React.FC = () => {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => {
-            setIdState(0);
-            setIdMunicipality(0);
-            setIdTipoComercio(0);
-            setOrden("alfabetico");
-            cargarPorFiltros(0, 0, 0, "alfabetico", true);
-          }}
+          onClick={handleLimpiar}
           sx={{
-            borderRadius: 3,
+            borderRadius: 999,
             fontWeight: 600,
+            fontSize: "0.9rem",
+            textTransform: "none",
             color: coffee.main,
             borderColor: coffee.main,
+            "&:hover": {
+              bgcolor: coffee.light,
+              borderColor: coffee.dark,
+            },
           }}
         >
-          Limpiar
+          Limpiar filtros
         </Button>
       </Box>
     </Box>
@@ -150,40 +188,45 @@ const BusquedaAvanzada: React.FC = () => {
 
   return (
     <Box display="flex" minHeight="100%">
+      {/* Sidebar desktop */}
       {!isMobile && (
         <Box
           sx={{
-            width: { md: 280, lg: 300 },
+            width: { md: 270, lg: 290 },
             flexShrink: 0,
-            height: { md: 450, lg: 650 },
+            height: { md: 480, lg: 620 },
+            borderRadius: 4,
+            overflow: "hidden",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.07)",
+            mr: 3,
           }}
         >
           {sidebarContent}
         </Box>
       )}
 
+      {/* FAB + Drawer mobile */}
       {isMobile && (
         <>
-          {isMobile && !mobileOpen && (
-            <IconButton
-              onClick={() => setMobileOpen(true)}
-              sx={{
-                position: "fixed",
-                bottom: 24,
-                right: 24,
-                bgcolor: coffee.main,
-                color: "#fff",
-                width: 56,
-                height: 56,
-                borderRadius: "50%",
-                zIndex: 1300,
-                boxShadow: "0 10px 28px rgba(0,0,0,0.3)",
-                "&:hover": { bgcolor: coffee.dark },
-              }}
-            >
-              <Menu />
-            </IconButton>
-          )}
+          <IconButton
+            onClick={() => setMobileOpen(true)}
+            sx={{
+              position: "fixed",
+              bottom: 24,
+              right: 24,
+              bgcolor: coffee.main,
+              color: "#fff",
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              zIndex: 1300,
+              boxShadow: "0 10px 28px rgba(91,58,41,0.40)",
+              "&:hover": { bgcolor: coffee.dark },
+            }}
+          >
+            <Menu />
+          </IconButton>
+
           <Drawer
             anchor="bottom"
             open={mobileOpen}
@@ -192,7 +235,8 @@ const BusquedaAvanzada: React.FC = () => {
               sx: {
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
-                maxHeight: "85vh",
+                maxHeight: "88vh",
+                bgcolor: "transparent",
               },
             }}
           >
@@ -201,34 +245,51 @@ const BusquedaAvanzada: React.FC = () => {
         </>
       )}
 
-      <Box
-        sx={{
-          width: "100%",
-        }}
-      >
+      {/* Contenido principal */}
+      <Box sx={{ width: "100%", minWidth: 0 }}>
         {loading ? (
           <Box
             display="flex"
             alignItems="center"
             justifyContent="center"
-            gap={1.2}
-            py={4}
+            gap={1.5}
+            py={6}
           >
-            <CircularProgress size={18} thickness={4} />
+            <CircularProgress
+              size={20}
+              thickness={4}
+              sx={{ color: coffee.main }}
+            />
             <Typography
               sx={{
                 fontSize: "0.9rem",
                 fontWeight: 500,
                 color: "text.secondary",
-                letterSpacing: "0.02em",
               }}
             >
-              Cargando comercios
+              Cargando comercios...
+            </Typography>
+          </Box>
+        ) : comercios.length === 0 ? (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            py={8}
+            gap={1}
+          >
+            <Typography fontSize="2rem">🔍</Typography>
+            <Typography fontWeight={600} color="text.secondary">
+              No se encontraron comercios
+            </Typography>
+            <Typography fontSize="0.85rem" color="text.disabled">
+              Intenta ajustar los filtros
             </Typography>
           </Box>
         ) : (
-          <div className="container-fluid">
-            <div className="row g-4 align-items-stretch">
+          <div className="container-fluid px-0">
+            <div className="row g-3 align-items-stretch">
               {comercios.map((c) => (
                 <div
                   key={c.id}
@@ -240,6 +301,7 @@ const BusquedaAvanzada: React.FC = () => {
             </div>
           </div>
         )}
+
         {hasMore && !loading && (
           <Box textAlign="center" mt={4}>
             <Button
@@ -247,12 +309,18 @@ const BusquedaAvanzada: React.FC = () => {
                 cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden)
               }
               sx={{
-                px: 4,
+                px: 5,
                 py: 1.4,
                 borderRadius: 999,
-                fontWeight: 600,
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                textTransform: "none",
                 background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
                 color: "#fff",
+                boxShadow: "0 6px 18px rgba(91,58,41,0.28)",
+                "&:hover": {
+                  boxShadow: "0 8px 24px rgba(91,58,41,0.38)",
+                },
               }}
             >
               Cargar más comercios
