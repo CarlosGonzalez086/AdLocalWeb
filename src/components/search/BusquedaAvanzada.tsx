@@ -85,7 +85,6 @@ const BusquedaAvanzada: React.FC = () => {
         gap: 2.5,
       }}
     >
-      {/* Header filtros */}
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box display="flex" alignItems="center" gap={1}>
           <TuneRounded sx={{ color: coffee.main, fontSize: 20 }} />
@@ -104,7 +103,6 @@ const BusquedaAvanzada: React.FC = () => {
         )}
       </Box>
 
-      {/* Campos */}
       <Box display="flex" flexDirection="column" gap={2}>
         <SelectEstadoAutocomplete
           value={idState}
@@ -141,7 +139,6 @@ const BusquedaAvanzada: React.FC = () => {
         </FormControl>
       </Box>
 
-      {/* Botones */}
       <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
         <Button
           fullWidth
@@ -188,7 +185,6 @@ const BusquedaAvanzada: React.FC = () => {
 
   return (
     <Box display="flex" minHeight="100%">
-      {/* Sidebar desktop */}
       {!isMobile && (
         <Box
           sx={{
@@ -205,7 +201,6 @@ const BusquedaAvanzada: React.FC = () => {
         </Box>
       )}
 
-      {/* FAB + Drawer mobile */}
       {isMobile && (
         <>
           <IconButton
@@ -245,7 +240,6 @@ const BusquedaAvanzada: React.FC = () => {
         </>
       )}
 
-      {/* Contenido principal */}
       <Box sx={{ width: "100%", minWidth: 0 }}>
         {loading ? (
           <Box

@@ -78,13 +78,11 @@ const BusinessTabs: React.FC<Props> = ({
   return (
     <Box sx={{ width: "100%" }}>
 
-      {/* Tabs pill */}
       <Box
         sx={{
           overflowX: "auto",
           mt: 1,
           mb: 3,
-          /* oculta scrollbar pero permite scroll */
           "&::-webkit-scrollbar": { display: "none" },
           scrollbarWidth: "none",
         }}
@@ -131,7 +129,6 @@ const BusinessTabs: React.FC<Props> = ({
         </Stack>
       </Box>
 
-      {/* Loading inicial */}
       {loading && comercios.length === 0 && (
         <Box
           display="flex"
@@ -147,7 +144,7 @@ const BusinessTabs: React.FC<Props> = ({
         </Box>
       )}
 
-      {/* Error */}
+
       {!loading && error && comercios.length === 0 && (
         <Box textAlign="center" py={6}>
           <Typography fontSize="2rem">😕</Typography>
@@ -157,7 +154,7 @@ const BusinessTabs: React.FC<Props> = ({
         </Box>
       )}
 
-      {/* Sin resultados */}
+
       {!loading && !error && comercios.length === 0 && (
         <Box textAlign="center" py={6}>
           <Typography fontSize="2rem">🏪</Typography>
@@ -167,7 +164,7 @@ const BusinessTabs: React.FC<Props> = ({
         </Box>
       )}
 
-      {/* Comercios */}
+
       {comercios.length > 0 && (
         <>
           {activeTab === "destacados" && !isMobile ? (
@@ -210,7 +207,7 @@ const BusinessTabs: React.FC<Props> = ({
             </Box>
           )}
 
-          {/* Cargar más */}
+
           {hasMore && (
             <Box textAlign="center" mt={5}>
               <Button

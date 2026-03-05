@@ -74,7 +74,6 @@ const CalificacionesComentarios = ({
 
   return (
     <>
-      {/* FORMULARIO */}
       <Card
         elevation={0}
         sx={{
@@ -140,7 +139,6 @@ const CalificacionesComentarios = ({
             }}
           />
 
-          {/* Rating */}
           <Box
             sx={{
               display: "flex",
@@ -185,7 +183,6 @@ const CalificacionesComentarios = ({
         </Stack>
       </Card>
 
-      {/* HEADER comentarios */}
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography fontWeight={700} fontSize="0.95rem" color={colorPrimario}>
           💬 Comentarios
@@ -217,7 +214,6 @@ const CalificacionesComentarios = ({
         </Button>
       </Stack>
 
-      {/* LISTA */}
       {loading ? (
         <Box textAlign="center" py={4}>
           <Typography color="text.secondary" fontSize="0.875rem">
@@ -252,7 +248,6 @@ const CalificacionesComentarios = ({
                 }}
               >
                 <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                  {/* Avatar inicial */}
                   <Avatar
                     sx={{
                       width: 36,
@@ -295,7 +290,6 @@ const CalificacionesComentarios = ({
             ))}
           </Stack>
 
-          {/* PAGINACIÓN */}
           {totalPages > 1 && (
             <Box display="flex" justifyContent="center" mt={3}>
               <Pagination

@@ -88,22 +88,28 @@ export default function ComercioDetalle({
 
     const BADGE_CONFIG = {
       premium: {
-        label: "Premium", icon: "👑",
+        label: "Premium",
+        icon: "👑",
         background: "linear-gradient(135deg, #FFD700, #FFB300)",
         color: "#1c1c1e",
-        boxShadow: "0 8px 22px rgba(255,193,7,0.45), inset 0 1px 0 rgba(255,255,255,0.5)",
+        boxShadow:
+          "0 8px 22px rgba(255,193,7,0.45), inset 0 1px 0 rgba(255,255,255,0.5)",
       },
       recomendado: {
-        label: "Recomendado", icon: "⭐",
+        label: "Recomendado",
+        icon: "⭐",
         background: "linear-gradient(135deg, #FF9800, #FB8C00)",
         color: "#fff",
-        boxShadow: "0 8px 20px rgba(255,152,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
+        boxShadow:
+          "0 8px 20px rgba(255,152,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
       },
       esencial: {
-        label: "Esencial", icon: "✨",
+        label: "Esencial",
+        icon: "✨",
         background: "rgba(255,255,255,0.82)",
         color: "#111",
-        boxShadow: "0 6px 16px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.4)",
+        boxShadow:
+          "0 6px 16px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.4)",
       },
     };
 
@@ -155,10 +161,11 @@ export default function ComercioDetalle({
     >
       {renderBadge(comercio?.badge)}
 
-      {/* Botón volver */}
       <Button
         startIcon={<ArrowBackIcon sx={{ fontSize: 18 }} />}
-        onClick={() => typeof window !== "undefined" && window.location.assign("/")}
+        onClick={() =>
+          typeof window !== "undefined" && window.location.assign("/")
+        }
         sx={{
           position: "absolute",
           top: { xs: 12, sm: 16 },
@@ -187,7 +194,6 @@ export default function ComercioDetalle({
         Volver
       </Button>
 
-      {/* HEADER */}
       <Box
         sx={{
           width: "100%",
@@ -228,8 +234,19 @@ export default function ComercioDetalle({
           {comercio?.nombre}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mt: 0.5 }}>
-          <Typography sx={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.9)", fontWeight: 700 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={{ mt: 0.5 }}
+        >
+          <Typography
+            sx={{
+              fontSize: "0.85rem",
+              color: "rgba(255,255,255,0.9)",
+              fontWeight: 700,
+            }}
+          >
             {comercio?.calificacion ?? 0}
           </Typography>
           <Rating
@@ -277,10 +294,7 @@ export default function ComercioDetalle({
         )}
       </Box>
 
-      {/* INFO + SECCIONES */}
       <Stack spacing={2} px={{ xs: 2.5, sm: 4 }} py={{ xs: 3, sm: 4 }}>
-
-        {/* Info de contacto */}
         <Box
           sx={{
             borderRadius: 4,
@@ -294,8 +308,13 @@ export default function ComercioDetalle({
         >
           <Stack spacing={1.8}>
             <Stack direction="row" spacing={1.2} alignItems="flex-start">
-              <LocationOnIcon sx={{ fontSize: 20, mt: "2px", color: "text.disabled" }} />
-              <Typography variant="body2" sx={{ lineHeight: 1.5, fontWeight: 500 }}>
+              <LocationOnIcon
+                sx={{ fontSize: 20, mt: "2px", color: "text.disabled" }}
+              />
+              <Typography
+                variant="body2"
+                sx={{ lineHeight: 1.5, fontWeight: 500 }}
+              >
                 {`${comercio?.direccion}, ${comercio?.municipioNombre}, ${comercio?.estadoNombre}.`}
               </Typography>
             </Stack>
@@ -351,7 +370,6 @@ export default function ComercioDetalle({
 
         <Divider sx={{ opacity: 0.5 }} />
 
-        {/* Carrusel imágenes */}
         {comercio?.imagenes && comercio.imagenes.length > 0 && (
           <>
             <Typography fontWeight={700} fontSize="1rem" sx={{ px: 0.5 }}>
@@ -366,8 +384,15 @@ export default function ComercioDetalle({
                 border: "1px solid rgba(0,0,0,0.06)",
               }}
             >
-              <div id="carouselComercio" className="carousel slide" data-bs-ride="carousel">
-                <div className="carousel-indicators" style={{ marginBottom: 8 }}>
+              <div
+                id="carouselComercio"
+                className="carousel slide"
+                data-bs-ride="carousel"
+              >
+                <div
+                  className="carousel-indicators"
+                  style={{ marginBottom: 8 }}
+                >
                   {comercio.imagenes.map((_, idx) => (
                     <button
                       key={idx}
@@ -377,23 +402,55 @@ export default function ComercioDetalle({
                       className={idx === 0 ? "active" : ""}
                       aria-current={idx === 0 ? "true" : undefined}
                       aria-label={`Slide ${idx + 1}`}
-                      style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.8)" }}
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                      }}
                     />
                   ))}
                 </div>
                 <div className="carousel-inner">
                   {comercio.imagenes.map((img, idx) => (
-                    <div key={idx} className={`carousel-item ${idx === 0 ? "active" : ""}`} style={{ height: 260 }}>
-                      <img src={img} alt={`Imagen ${idx + 1}`} className="d-block w-100" style={{ height: "100%", objectFit: "cover" }} />
+                    <div
+                      key={idx}
+                      className={`carousel-item ${idx === 0 ? "active" : ""}`}
+                      style={{ height: 260 }}
+                    >
+                      <img
+                        src={img}
+                        alt={`Imagen ${idx + 1}`}
+                        className="d-block w-100"
+                        style={{ height: "100%", objectFit: "cover" }}
+                      />
                     </div>
                   ))}
                 </div>
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselComercio" data-bs-slide="prev">
-                  <span className="carousel-control-prev-icon" aria-hidden="true" style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }} />
+                <button
+                  className="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#carouselComercio"
+                  data-bs-slide="prev"
+                >
+                  <span
+                    className="carousel-control-prev-icon"
+                    aria-hidden="true"
+                    style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
+                  />
                   <span className="visually-hidden">Anterior</span>
                 </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselComercio" data-bs-slide="next">
-                  <span className="carousel-control-next-icon" aria-hidden="true" style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }} />
+                <button
+                  className="carousel-control-next"
+                  type="button"
+                  data-bs-target="#carouselComercio"
+                  data-bs-slide="next"
+                >
+                  <span
+                    className="carousel-control-next-icon"
+                    aria-hidden="true"
+                    style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
+                  />
                   <span className="visually-hidden">Siguiente</span>
                 </button>
               </div>
@@ -403,16 +460,23 @@ export default function ComercioDetalle({
           </>
         )}
 
-        {/* Horarios */}
         {horarios?.length > 0 && (
           <Accordion sx={accordionSx}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={accordionSummarySx}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={accordionSummarySx}
+            >
               <AccessTimeIcon sx={{ fontSize: 18, color: colorPrimario }} />
-              <Typography fontWeight={700} fontSize={{ xs: "0.95rem", sm: "1rem" }}>
+              <Typography
+                fontWeight={700}
+                fontSize={{ xs: "0.95rem", sm: "1rem" }}
+              >
                 Horarios de atención
               </Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2.5 } }}>
+            <AccordionDetails
+              sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2.5 } }}
+            >
               <Stack spacing={1}>
                 {horarios
                   .sort((a, b) => a.dia - b.dia)
@@ -437,7 +501,13 @@ export default function ComercioDetalle({
                         {DIAS_SEMANA_MAP[h.dia]}
                       </Typography>
                       {h.abierto ? (
-                        <Typography sx={{ fontSize: "0.82rem", color: "text.secondary", fontWeight: 500 }}>
+                        <Typography
+                          sx={{
+                            fontSize: "0.82rem",
+                            color: "text.secondary",
+                            fontWeight: 500,
+                          }}
+                        >
                           {h.horaAperturaFormateada} – {h.horaCierreFormateada}
                         </Typography>
                       ) : (
@@ -455,17 +525,31 @@ export default function ComercioDetalle({
           </Accordion>
         )}
 
-        {/* Productos/Servicios */}
         <Accordion sx={accordionSx}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={accordionSummarySx}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={accordionSummarySx}
+          >
             <CategoryIcon sx={{ fontSize: 18, color: colorPrimario }} />
-            <Typography fontWeight={700} fontSize={{ xs: "0.95rem", sm: "1rem" }}>
+            <Typography
+              fontWeight={700}
+              fontSize={{ xs: "0.95rem", sm: "1rem" }}
+            >
               Productos / Servicios
             </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ px: { xs: 1.5, sm: 3 }, pb: { xs: 2.5, sm: 3 } }}>
+          <AccordionDetails
+            sx={{ px: { xs: 1.5, sm: 3 }, pb: { xs: 2.5, sm: 3 } }}
+          >
             {loadingProducts ? (
-              <Typography sx={{ textAlign: "center", color: "text.secondary", fontSize: "0.875rem", py: 3 }}>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  color: "text.secondary",
+                  fontSize: "0.875rem",
+                  py: 3,
+                }}
+              >
                 Cargando productos…
               </Typography>
             ) : productos.length === 0 ? (
@@ -495,7 +579,6 @@ export default function ComercioDetalle({
           </AccordionDetails>
         </Accordion>
 
-        {/* Mapa */}
         {comercio?.lat && comercio?.lng && (
           <Box
             sx={{
@@ -522,7 +605,15 @@ export default function ComercioDetalle({
               }
             >
               {typeof window !== "undefined" && (
-                <Box sx={{ width: "100%", height: { xs: 220, sm: 280, md: 340 } }}>
+                <Box
+                  sx={{ width: "100%", height: { xs: 220, sm: 280, md: 340 } }}
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`,
+                      "_blank",
+                    )
+                  }
+                >
                   <MapaComercioLazy lat={comercio.lat} lng={comercio.lng} />
                 </Box>
               )}
@@ -530,15 +621,22 @@ export default function ComercioDetalle({
           </Box>
         )}
 
-        {/* Calificaciones */}
         <Accordion sx={accordionSx}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={accordionSummarySx}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={accordionSummarySx}
+          >
             <StarIcon sx={{ fontSize: 18, color: "#F5B301" }} />
-            <Typography fontWeight={700} fontSize={{ xs: "0.95rem", sm: "1rem" }}>
+            <Typography
+              fontWeight={700}
+              fontSize={{ xs: "0.95rem", sm: "1rem" }}
+            >
               Calificaciones y comentarios
             </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2.5, sm: 3 } }}>
+          <AccordionDetails
+            sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2.5, sm: 3 } }}
+          >
             <CalificacionesComentarios
               colorPrimario={colorPrimario}
               colorSecundario={colorSecundario}
@@ -547,11 +645,13 @@ export default function ComercioDetalle({
           </AccordionDetails>
         </Accordion>
 
-        {/* Botón mapa */}
         <Button
           fullWidth
           onClick={() =>
-            window.open(`https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`, "_blank")
+            window.open(
+              `https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`,
+              "_blank",
+            )
           }
           sx={{
             mt: 1,

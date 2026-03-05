@@ -69,7 +69,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
         gap: 1,
       }}
     >
-      {/* Header drawer */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
         <Stack direction="row" alignItems="center" spacing={1.2}>
           <Box
@@ -102,7 +101,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
         />
       )}
 
-      {/* Nav items */}
       <Button
         fullWidth
         startIcon={<HomeRoundedIcon />}
@@ -177,7 +175,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
           minHeight: { xs: 60, md: 70 },
         }}
       >
-        {/* Logo + nombre + municipio */}
         <Stack direction="row" alignItems="center" spacing={1.4} flexGrow={1}>
           <Box
             component="img"
@@ -226,7 +223,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
           )}
         </Stack>
 
-        {/* Desktop nav */}
         {!isMobile && (
           <Stack direction="row" spacing={0.5} alignItems="center">
             <Button
@@ -270,7 +266,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
           </Stack>
         )}
 
-        {/* Mobile hamburger */}
         {isMobile && (
           <IconButton
             onClick={() => setDrawerOpen(true)}
@@ -286,7 +281,7 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
         )}
       </Toolbar>
 
-      {/* Mobile Drawer */}
+
       <Drawer
         anchor="right"
         open={drawerOpen}

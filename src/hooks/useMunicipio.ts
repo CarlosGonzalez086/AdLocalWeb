@@ -13,7 +13,7 @@ interface MunicipioCache {
   timestamp: number;
 }
 
-const CACHE_TIME = 1000 * 60 * 10; // 10 minutos
+const CACHE_TIME = 1000 * 60 * 10;
 
 const obtenerUbicacion = (): Promise<Ubicacion> =>
   new Promise((resolve, reject) => {
@@ -37,7 +37,6 @@ const obtenerUbicacion = (): Promise<Ubicacion> =>
 
 const obtenerMunicipioDesdeGeocode = (results: any[]): string | null => {
   for (const r of results) {
-    // ❌ Ignorar resultados solo plus_code
     if (r.types?.includes("plus_code")) continue;
 
     for (const comp of r.address_components) {
@@ -59,7 +58,6 @@ export const useMunicipio = () => {
   useEffect(() => {
     const detectarMunicipio = async () => {
       try {
-        // 📦 Intentar cache primero
         const cacheRaw = localStorage.getItem("municipioActual");
         if (cacheRaw) {
           const cache: MunicipioCache = JSON.parse(cacheRaw);
@@ -70,8 +68,6 @@ export const useMunicipio = () => {
             return;
           }
         }
-
-        // 📍 Obtener ubicación
         const coords = await obtenerUbicacion();
         console.log(coords);
 
@@ -84,7 +80,7 @@ export const useMunicipio = () => {
             params: {
               latlng: `${coords.lat},${coords.lng}`,
               key: API_KEY,
-              language: "es", // 🔥 importante
+              language: "es",
               result_type: "locality|administrative_area_level_2",
             },
           },

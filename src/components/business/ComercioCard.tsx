@@ -119,7 +119,6 @@ export default function ComercioCard({ comercio }: Props) {
       >
         {renderBadge(comercio.badge)}
 
-        {/* IMAGEN / HEADER con gradiente encima */}
         <Box
           sx={{
             height: { xs: 160, sm: 180 },
@@ -127,7 +126,6 @@ export default function ComercioCard({ comercio }: Props) {
             overflow: "hidden",
           }}
         >
-          {/* Imagen de fondo usando colorPrimario como fallback */}
           <Box
             sx={{
               width: "100%",
@@ -138,7 +136,6 @@ export default function ComercioCard({ comercio }: Props) {
             }}
           />
 
-          {/* Gradiente oscuro inferior */}
           <Box
             sx={{
               position: "absolute",
@@ -148,7 +145,6 @@ export default function ComercioCard({ comercio }: Props) {
             }}
           />
 
-          {/* Avatar sobre la imagen */}
           <Avatar
             src={comercio.logoUrl}
             alt={comercio.nombre}
@@ -164,7 +160,6 @@ export default function ComercioCard({ comercio }: Props) {
             }}
           />
 
-          {/* Nombre encima de la imagen */}
           <Typography
             fontWeight={700}
             sx={{
@@ -182,7 +177,7 @@ export default function ComercioCard({ comercio }: Props) {
           </Typography>
         </Box>
 
-        {/* CONTENT */}
+
         <CardContent
           sx={{
             pt: 1.5,
@@ -194,7 +189,7 @@ export default function ComercioCard({ comercio }: Props) {
           }}
         >
           <Stack spacing={1}>
-            {/* Descripción / dirección */}
+
             <Typography
               color="text.secondary"
               sx={{
@@ -209,7 +204,7 @@ export default function ComercioCard({ comercio }: Props) {
               {`${comercio.direccion}, ${comercio.municipioNombre}, ${comercio.estadoNombre}.`}
             </Typography>
 
-            {/* Rating + distancia */}
+
             <Stack
               direction="row"
               alignItems="center"
@@ -264,7 +259,6 @@ export default function ComercioCard({ comercio }: Props) {
             </Stack>
           </Stack>
 
-          {/* Botón */}
           <Box mt={1.5}>
             <Box
               sx={{

@@ -41,7 +41,6 @@ const Footer: FC = () => {
           alignItems={{ xs: "center", md: "flex-start" }}
           justifyContent="space-between"
         >
-          {/* Columna 1 — Brand */}
           <Stack spacing={1.5} alignItems={{ xs: "center", md: "flex-start" }}>
             <Stack direction="row" alignItems="center" spacing={1.2}>
               <Box
@@ -66,8 +65,6 @@ const Footer: FC = () => {
             >
               Conectando negocios locales con su comunidad.
             </Typography>
-
-            {/* Redes sociales */}
             <Stack direction="row" spacing={0.8} mt={0.5}>
               <IconButton
                 aria-label="Facebook"
@@ -112,8 +109,6 @@ const Footer: FC = () => {
               </IconButton>
             </Stack>
           </Stack>
-
-          {/* Columna 2 — CTA */}
           <Stack
             spacing={1.5}
             alignItems="center"
@@ -157,7 +152,6 @@ const Footer: FC = () => {
             </Button>
           </Stack>
 
-          {/* Columna 3 — Créditos */}
           <Stack spacing={1} alignItems={{ xs: "center", md: "flex-end" }}>
             <Link
               href="https://carlosgonzalez086.github.io/DaVincixCode/"
