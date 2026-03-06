@@ -34,7 +34,14 @@ const Footer: FC = () => {
         borderTop: "1px solid rgba(255,255,255,0.07)",
       }}
     >
-      <Box sx={{ maxWidth: 1200, mx: "auto", px: { xs: 3, sm: 4 }, py: { xs: 4, md: 5 } }}>
+      <Box
+        sx={{
+          maxWidth: 1200,
+          mx: "auto",
+          px: { xs: 3, sm: 4 },
+          py: { xs: 4, md: 5 },
+        }}
+      >
         <Stack
           direction={{ xs: "column", md: "row" }}
           spacing={{ xs: 4, md: 0 }}
@@ -54,14 +61,23 @@ const Footer: FC = () => {
                   boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
                 }}
               />
-              <Typography fontWeight={700} fontSize={16} letterSpacing="-0.01em">
+              <Typography
+                fontWeight={700}
+                fontSize={16}
+                letterSpacing="-0.01em"
+              >
                 ADLocal
               </Typography>
             </Stack>
 
             <Typography
               fontSize={13}
-              sx={{ opacity: 0.5, maxWidth: 200, lineHeight: 1.5, textAlign: { xs: "center", md: "left" } }}
+              sx={{
+                opacity: 0.5,
+                maxWidth: 200,
+                lineHeight: 1.5,
+                textAlign: { xs: "center", md: "left" },
+              }}
             >
               Conectando negocios locales con su comunidad.
             </Typography>
@@ -83,6 +99,7 @@ const Footer: FC = () => {
                     transform: "translateY(-2px)",
                   },
                 }}
+                href="https://www.facebook.com/profile.php?id=61588323283229"
               >
                 <FacebookIcon sx={{ fontSize: 18 }} />
               </IconButton>
@@ -125,7 +142,10 @@ const Footer: FC = () => {
             <Typography fontWeight={700} fontSize="0.95rem">
               ¿Tienes un negocio?
             </Typography>
-            <Typography fontSize={13} sx={{ opacity: 0.55, maxWidth: 220, lineHeight: 1.5 }}>
+            <Typography
+              fontSize={13}
+              sx={{ opacity: 0.55, maxWidth: 220, lineHeight: 1.5 }}
+            >
               Únete a ADLocal y llega a más clientes en tu comunidad
             </Typography>
             <Button
@@ -164,7 +184,10 @@ const Footer: FC = () => {
               <Typography
                 fontSize={13}
                 fontWeight={600}
-                sx={{ color: "rgba(255,255,255,0.55)", textAlign: { xs: "center", md: "right" } }}
+                sx={{
+                  color: "rgba(255,255,255,0.55)",
+                  textAlign: { xs: "center", md: "right" },
+                }}
               >
                 Da VinciX Code Labs
               </Typography>
@@ -178,7 +201,9 @@ const Footer: FC = () => {
           </Stack>
         </Stack>
 
-        <Divider sx={{ mt: { xs: 4, md: 4 }, borderColor: "rgba(255,255,255,0.07)" }} />
+        <Divider
+          sx={{ mt: { xs: 4, md: 4 }, borderColor: "rgba(255,255,255,0.07)" }}
+        />
 
         <Typography
           fontSize={11}
