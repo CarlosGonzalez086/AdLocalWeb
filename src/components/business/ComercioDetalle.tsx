@@ -1,32 +1,23 @@
 import {
-  Box,
-  Typography,
-  Avatar,
-  Stack,
-  Button,
-  Divider,
-  Link,
-  Chip,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
+  Rating,
 } from "@mui/material";
-
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import EmailIcon from "@mui/icons-material/Email";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import React, { Suspense, type CSSProperties } from "react";
 
 import type {
   ComercioDto,
   ProductoServicioDto,
 } from "../../services/comercioPublicApi";
 
-import ProductoCard from "./ProductoCard";
 import { DIAS_SEMANA_MAP, estaAbiertoAhora } from "../../utils/generals";
-import React, { lazy, Suspense } from "react";
+
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import CalificacionesComentarios from "./CalificacionesComentarios";
+import ProductoCard from "./ProductoCard";
+
+import styles from "../../styles/ComercioDetalle.module.css";
 
 const MapaComercioLazy = React.lazy(() => import("./MapaComercio.client"));
 
@@ -36,369 +27,594 @@ interface Props {
   loadingProducts?: boolean;
 }
 
+interface DetailCSSProperties extends CSSProperties {
+  "--business-primary": string;
+  "--business-secondary": string;
+}
+
+type BadgeType = "premium" | "recomendado" | "esencial";
+
+interface BadgeConfig {
+  label: string;
+  icon: string;
+  className: string;
+}
+
+const getBadgeConfig = (badge?: string): BadgeConfig | null => {
+  if (!badge) {
+    return null;
+  }
+
+  const normalizedBadge = badge.trim().toLowerCase();
+
+  const badgeType: BadgeType = normalizedBadge.includes("premium")
+    ? "premium"
+    : normalizedBadge.includes("recomendado")
+      ? "recomendado"
+      : "esencial";
+
+  const configurations: Record<BadgeType, BadgeConfig> = {
+    premium: {
+      label: "Premium",
+      icon: "workspace_premium",
+      className: styles.badgePremium,
+    },
+    recomendado: {
+      label: "Recomendado",
+      icon: "recommend",
+      className: styles.badgeRecommended,
+    },
+    esencial: {
+      label: "Esencial",
+      icon: "verified",
+      className: styles.badgeEssential,
+    },
+  };
+
+  return configurations[badgeType];
+};
+
 export default function ComercioDetalle({
   comercio,
   productos,
   loadingProducts = false,
 }: Props) {
-  const abiertoAhora = comercio?.horarios
-    ? estaAbiertoAhora(comercio.horarios)
-    : false;
+  if (!comercio) {
+    return (
+      <section className={styles.notFound}>
+        <div className={styles.notFoundIcon}>
+          <MaterialSymbol icon="storefront" size="large" />
+        </div>
 
-  const colorPrimario = comercio?.colorPrimario ?? "#6f4e37";
-  const colorSecundario = comercio?.colorSecundario ?? "#3e2723";
-  const horarios = comercio?.horarios || [];
+        <h1 className={styles.notFoundTitle}>Comercio no disponible</h1>
+
+        <p className={styles.notFoundDescription}>
+          No fue posible encontrar la información del comercio solicitado.
+        </p>
+
+        <a href="/" className={styles.notFoundButton}>
+          <MaterialSymbol icon="arrow_back" size="small" />
+
+          <span>Regresar al inicio</span>
+        </a>
+      </section>
+    );
+  }
+
+  const colorPrimario = comercio.colorPrimario || "#6f4e37";
+
+  const colorSecundario = comercio.colorSecundario || "#3e2723";
+
+  const detailStyles: DetailCSSProperties = {
+    "--business-primary": colorPrimario,
+    "--business-secondary": colorSecundario,
+  };
+
+  const horarios = [...(comercio.horarios ?? [])].sort((a, b) => a.dia - b.dia);
+
+  const abiertoAhora = horarios.length > 0 ? estaAbiertoAhora(horarios) : false;
+
+  const badgeConfig = getBadgeConfig(comercio.badge);
+
+  const calificacion = Number(comercio.calificacion ?? 0);
+
+  const latitude = Number(comercio.lat);
+  const longitude = Number(comercio.lng);
+
+  const hasLocation = Number.isFinite(latitude) && Number.isFinite(longitude);
+
+  const address = [
+    comercio.direccion,
+    comercio.municipioNombre,
+    comercio.estadoNombre,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const whatsappNumber = comercio.telefono?.replace(/\D/g, "") ?? "";
+
+  const initial = comercio.nombre?.trim().charAt(0).toUpperCase() || "A";
+
+  const carouselId = `carouselComercio-${comercio.id}`;
+
+  const carouselTarget = `#${carouselId}`;
+
+  const handleOpenMap = () => {
+    if (!hasLocation) {
+      return;
+    }
+
+    window.open(
+      `https://www.google.com/maps?q=${latitude},${longitude}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        maxWidth: { xs: "100%", sm: 600, md: 900 },
-        width: "100%",
-        mx: "auto",
-        borderRadius: { xs: 2, sm: 3, md: 4 },
-        boxShadow: {
-          xs: "0 4px 12px rgba(0,0,0,0.1)",
-          sm: "0 6px 20px rgba(0,0,0,0.15)",
-        },
-        backgroundColor: "#fff",
-        overflow: "hidden",
-      }}
-    >
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() =>
-          typeof window !== "undefined" && window.location.assign("/")
-        }
-        sx={{
-          position: "absolute",
-          top: 16,
-          left: 16,
-          zIndex: 10,
-          backgroundColor: "rgba(255,255,255,0.9)",
-          color: "#333",
-          fontWeight: "bold",
-          "&:hover": {
-            backgroundColor: "#fff",
-          },
-        }}
-      >
-        Volver
-      </Button>
+    <article className={styles.detail} style={detailStyles}>
+      <header className={styles.hero}>
+        <button
+          type="button"
+          className={styles.backButton}
+          onClick={() => window.location.assign("/")}
+        >
+          <MaterialSymbol icon="arrow_back" size="small" />
 
-      <Box
-        sx={{
-          background: `linear-gradient(135deg, ${colorPrimario}, ${colorSecundario})`,
-          width: "100%",
-          px: { xs: 2, sm: 4, md: 6 },
-          py: { xs: 4, sm: 5, md: 6 },
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Avatar
-          src={comercio?.logoBase64}
-          sx={{
-            width: 120,
-            height: 120,
-            mx: "auto",
-            mb: 2,
-            border: "3px solid #fff",
-          }}
-        />
+          <span>Volver</span>
+        </button>
 
-        <Typography variant="h4" fontWeight="bold" color="#fff">
-          {comercio?.nombre}
-        </Typography>
+        {badgeConfig && (
+          <div className={[styles.badge, badgeConfig.className].join(" ")}>
+            <MaterialSymbol icon={badgeConfig.icon} size="small" filled />
 
-        {comercio?.descripcion && (
-          <Typography color="#eee" mt={1}>
-            {comercio.descripcion}
-          </Typography>
+            <span>{badgeConfig.label}</span>
+          </div>
         )}
 
-        {comercio?.horarios && (
-          <Chip
-            icon={<AccessTimeIcon />}
-            label={abiertoAhora ? "Abierto ahora" : "Cerrado ahora"}
-            sx={{
-              mt: 2,
-              backgroundColor: abiertoAhora ? "#4caf50" : "#f44336",
-              color: "#fff",
-            }}
-          />
-        )}
-      </Box>
+        <div className={styles.heroContent}>
+          <div className={styles.logoContainer}>
+            {comercio.logoBase64 ? (
+              <img
+                src={comercio.logoBase64}
+                alt={`Logotipo de ${comercio.nombre}`}
+                className={styles.logo}
+              />
+            ) : (
+              <span className={styles.logoInitial}>{initial}</span>
+            )}
+          </div>
 
-      <Stack spacing={2} px={4} py={4}>
-        <Stack direction="row" spacing={1}>
-          <LocationOnIcon />
-          <Typography>{comercio?.direccion}</Typography>
-        </Stack>
+          <h1 className={styles.businessName}>{comercio.nombre}</h1>
 
-        {comercio?.telefono && (
-          <Stack direction="row" spacing={1}>
-            <WhatsAppIcon sx={{ color: "#25D366" }} />
-            <Link
-              href={`https://wa.me/${comercio.telefono}`}
-              target="_blank"
-              underline="none"
+          <div className={styles.ratingContainer}>
+            <span className={styles.ratingValue}>
+              {calificacion.toFixed(1)}
+            </span>
+
+            <Rating
+              value={calificacion}
+              precision={0.5}
+              readOnly
+              size="small"
+              icon={<MaterialSymbol icon="star" size="small" filled />}
+              emptyIcon={<MaterialSymbol icon="star" size="small" filled />}
+              className={styles.rating}
+              aria-label={`Calificación ${calificacion.toFixed(1)} de 5`}
+            />
+          </div>
+
+          {comercio.descripcion && (
+            <p className={styles.description}>{comercio.descripcion}</p>
+          )}
+
+          {horarios.length > 0 && (
+            <span
+              className={[
+                styles.openStatus,
+                abiertoAhora
+                  ? styles.openStatusActive
+                  : styles.openStatusClosed,
+              ].join(" ")}
             >
-              {comercio.telefono}
-            </Link>
-          </Stack>
-        )}
+              <MaterialSymbol icon="schedule" size="small" />
 
-        {comercio?.email && (
-          <Stack direction="row" spacing={1}>
-            <EmailIcon />
-            <Link href={`mailto:${comercio.email}`} underline="none">
-              {comercio.email}
-            </Link>
-          </Stack>
-        )}
+              <span>{abiertoAhora ? "Abierto ahora" : "Cerrado ahora"}</span>
+            </span>
+          )}
+        </div>
+      </header>
 
-        <Divider />
+      <div className={styles.body}>
+        <section
+          className={styles.contactCard}
+          aria-label="Información de contacto"
+        >
+          <div className={styles.contactItem}>
+            <span className={styles.contactIcon}>
+              <MaterialSymbol icon="location_on" size="medium" filled />
+            </span>
 
-        {comercio?.imagenes && comercio.imagenes.length > 0 && (
-          <>
-            <Typography variant="h6" fontWeight="bold" mt={3} mb={1}>
-              Imágenes del negocio
-            </Typography>
-            <Box
-              sx={{
-                mt: 6,
-                mx: 3,
-                borderRadius: 3,
-                overflow: "hidden",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              }}
-            >
+            <div className={styles.contactContent}>
+              <span className={styles.contactLabel}>Dirección</span>
+
+              <p className={styles.contactText}>
+                {address ? `${address}.` : "Dirección no disponible."}
+              </p>
+            </div>
+          </div>
+
+          {comercio.telefono && (
+            <div className={styles.contactItem}>
+              <span
+                className={[styles.contactIcon, styles.whatsappIcon].join(" ")}
+              >
+                <MaterialSymbol icon="chat" size="medium" filled />
+              </span>
+
+              <div className={styles.contactContent}>
+                <span className={styles.contactLabel}>WhatsApp</span>
+
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.contactLink}
+                >
+                  {comercio.telefono}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {comercio.email && (
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>
+                <MaterialSymbol icon="mail" size="medium" />
+              </span>
+
+              <div className={styles.contactContent}>
+                <span className={styles.contactLabel}>Correo electrónico</span>
+
+                <a
+                  href={`mailto:${comercio.email}`}
+                  className={styles.contactLink}
+                >
+                  {comercio.email}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {comercio.tipoComercio && (
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>
+                <MaterialSymbol icon="category" size="medium" />
+              </span>
+
+              <div className={styles.contactContent}>
+                <span className={styles.contactLabel}>Categoría</span>
+
+                <p className={styles.contactText}>{comercio.tipoComercio}</p>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {comercio.imagenes && comercio.imagenes.length > 0 && (
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionIcon}>
+                <MaterialSymbol icon="photo_library" size="medium" />
+              </span>
+
+              <div>
+                <h2 className={styles.sectionTitle}>Imágenes del negocio</h2>
+
+                <p className={styles.sectionDescription}>
+                  Conoce las instalaciones y servicios del comercio.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.gallery}>
               <div
-                id="carouselComercio"
-                className="carousel slide"
+                id={carouselId}
+                className={`${styles.carousel} carousel slide`}
                 data-bs-ride="carousel"
               >
-                <div className="carousel-indicators">
-                  {comercio.imagenes.map((_, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      data-bs-target="#carouselComercio"
-                      data-bs-slide-to={idx}
-                      className={idx === 0 ? "active" : ""}
-                      aria-current={idx === 0 ? "true" : undefined}
-                      aria-label={`Slide ${idx + 1}`}
-                    ></button>
-                  ))}
-                </div>
+                {comercio.imagenes.length > 1 && (
+                  <div
+                    className={`${styles.carouselIndicators} carousel-indicators`}
+                  >
+                    {comercio.imagenes.map((_, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        data-bs-target={carouselTarget}
+                        data-bs-slide-to={index}
+                        className={index === 0 ? "active" : ""}
+                        aria-current={index === 0 ? "true" : undefined}
+                        aria-label={`Mostrar imagen ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 <div className="carousel-inner">
-                  {comercio.imagenes.map((img, idx) => (
+                  {comercio.imagenes.map((image, index) => (
                     <div
-                      key={idx}
-                      className={`carousel-item ${idx === 0 ? "active" : ""}`}
-                      style={{ height: 250 }}
+                      key={`${image}-${index}`}
+                      className={[
+                        styles.carouselItem,
+                        "carousel-item",
+                        index === 0 ? "active" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                     >
                       <img
-                        src={img}
-                        className="d-block w-100"
-                        alt={`Imagen ${idx + 1}`}
-                        style={{ objectFit: "cover", height: "100%" }}
+                        src={image}
+                        alt={`Imagen ${index + 1} de ${comercio.nombre}`}
+                        className={styles.carouselImage}
+                        loading={index === 0 ? "eager" : "lazy"}
                       />
                     </div>
                   ))}
                 </div>
 
-                <button
-                  className="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#carouselComercio"
-                  data-bs-slide="prev"
-                >
-                  <span
-                    className="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span className="visually-hidden">Previous</span>
-                </button>
-                <button
-                  className="carousel-control-next"
-                  type="button"
-                  data-bs-target="#carouselComercio"
-                  data-bs-slide="next"
-                >
-                  <span
-                    className="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span className="visually-hidden">Next</span>
-                </button>
+                {comercio.imagenes.length > 1 && (
+                  <>
+                    <button
+                      className={`${styles.carouselControl} carousel-control-prev`}
+                      type="button"
+                      data-bs-target={carouselTarget}
+                      data-bs-slide="prev"
+                      aria-label="Imagen anterior"
+                    >
+                      <span
+                        className="carousel-control-prev-icon"
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    <button
+                      className={`${styles.carouselControl} carousel-control-next`}
+                      type="button"
+                      data-bs-target={carouselTarget}
+                      data-bs-slide="next"
+                      aria-label="Imagen siguiente"
+                    >
+                      <span
+                        className="carousel-control-next-icon"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </>
+                )}
               </div>
-            </Box>
-            <Divider />
-          </>
+            </div>
+          </section>
         )}
 
-        {horarios?.length > 0 && (
-          <Accordion
-            sx={{
-              borderRadius: 3,
-              mb: 3,
-              boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
-              background: "rgba(255,255,255,0.9)",
-              backdropFilter: "blur(12px)",
-              "&:before": { display: "none" },
-              transition: "all 0.3s ease",
-              "&:hover": {
-                boxShadow: "0 12px 24px rgba(0,0,0,0.12)",
-              },
-            }}
-          >
+        {horarios.length > 0 && (
+          <Accordion className={styles.accordion} elevation={0} disableGutters>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{
-                px: 3,
-                py: 1.5,
-                minHeight: 56,
-                "& .MuiAccordionSummary-content": {
-                  alignItems: "center",
-                  gap: 1,
-                },
-              }}
+              className={styles.accordionSummary}
+              expandIcon={<MaterialSymbol icon="expand_more" size="medium" />}
             >
-              <Typography fontWeight={600} fontSize="1.1rem">
-                Horarios de atención
-              </Typography>
+              <span className={styles.accordionIcon}>
+                <MaterialSymbol icon="schedule" size="medium" />
+              </span>
+
+              <div>
+                <h2 className={styles.accordionTitle}>Horarios de atención</h2>
+
+                <p className={styles.accordionDescription}>
+                  Consulta los días y horarios disponibles.
+                </p>
+              </div>
             </AccordionSummary>
 
-            <AccordionDetails sx={{ px: 3, pb: 2 }}>
-              <Stack spacing={1}>
-                {horarios
-                  .sort((a, b) => a.dia - b.dia)
-                  .map((h) => (
-                    <Box
-                      key={h.dia}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        px: 2,
-                        py: 1,
-                        borderRadius: 2,
-                        backgroundColor: h.abierto ? "#fef7f0" : "#fafafa",
-                      }}
-                    >
-                      <Typography fontWeight={500}>
-                        {DIAS_SEMANA_MAP[h.dia]}
-                      </Typography>
-                      {h.abierto ? (
-                        <Typography variant="body2">
-                          {h.horaAperturaFormateada} – {h.horaCierreFormateada}
-                        </Typography>
-                      ) : (
-                        <Chip
-                          label="Cerrado"
-                          size="small"
-                          color="default"
-                          variant="outlined"
-                          sx={{ fontWeight: 500 }}
-                        />
-                      )}
-                    </Box>
-                  ))}
-              </Stack>
+            <AccordionDetails className={styles.accordionDetails}>
+              <div className={styles.scheduleList}>
+                {horarios.map((horario) => (
+                  <div
+                    key={horario.dia}
+                    className={[
+                      styles.scheduleRow,
+                      horario.abierto
+                        ? styles.scheduleRowOpen
+                        : styles.scheduleRowClosed,
+                    ].join(" ")}
+                  >
+                    <span className={styles.scheduleDay}>
+                      {DIAS_SEMANA_MAP[horario.dia]}
+                    </span>
+
+                    {horario.abierto ? (
+                      <span className={styles.scheduleTime}>
+                        {horario.horaAperturaFormateada}
+                        <span className={styles.scheduleSeparator}>–</span>
+                        {horario.horaCierreFormateada}
+                      </span>
+                    ) : (
+                      <span className={styles.closedBadge}>Cerrado</span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </AccordionDetails>
           </Accordion>
         )}
 
-        <Accordion
-          sx={{
-            borderRadius: 3,
-            mb: 2,
-            boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
-            background: "rgba(255,255,255,0.9)",
-            backdropFilter: "blur(12px)",
-            "&:before": { display: "none" },
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0 12px 24px rgba(0,0,0,0.12)",
-            },
-          }}
-        >
+        <Accordion className={styles.accordion} elevation={0} disableGutters>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            sx={{
-              px: 3,
-              py: 1.5,
-              minHeight: 56,
-              "& .MuiAccordionSummary-content": {
-                alignItems: "center",
-                gap: 1,
-              },
-            }}
+            className={styles.accordionSummary}
+            expandIcon={<MaterialSymbol icon="expand_more" size="medium" />}
           >
-            <Typography fontWeight={600} fontSize="1rem">
-              Productos
-            </Typography>
+            <span className={styles.accordionIcon}>
+              <MaterialSymbol icon="inventory_2" size="medium" />
+            </span>
+
+            <div>
+              <h2 className={styles.accordionTitle}>Productos y servicios</h2>
+
+              <p className={styles.accordionDescription}>
+                Explora lo que este comercio tiene para ofrecer.
+              </p>
+            </div>
           </AccordionSummary>
 
-          <AccordionDetails sx={{ px: 3, pb: 2 }}>
+          <AccordionDetails
+            className={[styles.accordionDetails, styles.productsDetails].join(
+              " ",
+            )}
+          >
             {loadingProducts ? (
-              <Typography>Cargando…</Typography>
+              <div className={styles.loadingState}>
+                <MaterialSymbol
+                  icon="progress_activity"
+                  size="medium"
+                  className={styles.loadingIcon}
+                />
+
+                <span>Cargando productos...</span>
+              </div>
             ) : productos.length === 0 ? (
-              <Typography>No hay productos.</Typography>
+              <div className={styles.emptyProducts}>
+                <div className={styles.emptyProductsIcon}>
+                  <MaterialSymbol icon="inventory_2" size="large" />
+                </div>
+
+                <p className={styles.emptyProductsTitle}>
+                  No hay productos disponibles
+                </p>
+
+                <p className={styles.emptyProductsDescription}>
+                  Este comercio todavía no ha publicado productos o servicios.
+                </p>
+              </div>
             ) : (
-              <Stack spacing={2}>
-                {productos.map((p) => (
-                  <ProductoCard key={p.id} producto={p} />
+              <div className={styles.productsList}>
+                {productos.map((producto) => (
+                  <div key={producto.id} className={styles.productItem}>
+                    <ProductoCard producto={producto} />
+                  </div>
                 ))}
-              </Stack>
+              </div>
             )}
           </AccordionDetails>
         </Accordion>
 
-        {comercio?.lat && comercio?.lng && (
-          <Box
-            sx={{
-              mt: 3,
-              p: 1,
-              borderRadius: 3,
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-            }}
-          >
-            <Suspense fallback={<div>Cargando mapa…</div>}>
-              {typeof window !== "undefined" && (
-                <MapaComercioLazy lat={comercio.lat} lng={comercio.lng} />
-              )}
-            </Suspense>
-          </Box>
+        {hasLocation && (
+          <section className={styles.mapSection}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionIcon}>
+                <MaterialSymbol icon="map" size="medium" />
+              </span>
+
+              <div>
+                <h2 className={styles.sectionTitle}>Ubicación</h2>
+
+                <p className={styles.sectionDescription}>
+                  Consulta la ubicación exacta del comercio.
+                </p>
+              </div>
+            </div>
+
+            <div
+              className={styles.mapContainer}
+              role="link"
+              tabIndex={0}
+              aria-label={`Abrir ubicación de ${comercio.nombre} en Google Maps`}
+              onClick={handleOpenMap}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  handleOpenMap();
+                }
+              }}
+            >
+              <Suspense
+                fallback={
+                  <div className={styles.mapLoading}>
+                    <MaterialSymbol
+                      icon="progress_activity"
+                      size="medium"
+                      className={styles.loadingIcon}
+                    />
+
+                    <span>Cargando ubicación...</span>
+                  </div>
+                }
+              >
+                {typeof window !== "undefined" && (
+                  <MapaComercioLazy lat={latitude} lng={longitude} />
+                )}
+              </Suspense>
+
+              <span className={styles.mapHint}>
+                <MaterialSymbol icon="open_in_new" size="small" />
+
+                <span>Abrir en Google Maps</span>
+              </span>
+            </div>
+          </section>
         )}
 
-        <Button
-          fullWidth
-          sx={{
-            mt: 3,
-            borderRadius: 3,
-            background: `linear-gradient(135deg, ${colorPrimario}, ${colorSecundario})`,
-            color: "#fff",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-          }}
-          onClick={() =>
-            window.open(
-              `https://www.google.com/maps?q=${comercio?.lat},${comercio?.lng}`,
-              "_blank"
-            )
-          }
-        >
-          Ver ubicación
-        </Button>
-      </Stack>
-    </Box>
+        <Accordion className={styles.accordion} elevation={0} disableGutters>
+          <AccordionSummary
+            className={styles.accordionSummary}
+            expandIcon={<MaterialSymbol icon="expand_more" size="medium" />}
+          >
+            <span
+              className={[
+                styles.accordionIcon,
+                styles.ratingAccordionIcon,
+              ].join(" ")}
+            >
+              <MaterialSymbol icon="star" size="medium" filled />
+            </span>
+
+            <div>
+              <h2 className={styles.accordionTitle}>
+                Calificaciones y comentarios
+              </h2>
+
+              <p className={styles.accordionDescription}>
+                Consulta o comparte una experiencia con el comercio.
+              </p>
+            </div>
+          </AccordionSummary>
+
+          <AccordionDetails className={styles.accordionDetails}>
+            <CalificacionesComentarios
+              colorPrimario={colorPrimario}
+              colorSecundario={colorSecundario}
+              idComercio={Number(comercio.id)}
+            />
+          </AccordionDetails>
+        </Accordion>
+
+        {hasLocation && (
+          <button
+            type="button"
+            className={styles.mapActionButton}
+            onClick={handleOpenMap}
+          >
+            <MaterialSymbol icon="directions" size="medium" />
+
+            <span>Ver ubicación en el mapa</span>
+
+            <MaterialSymbol
+              icon="open_in_new"
+              size="small"
+              className={styles.mapActionArrow}
+            />
+          </button>
+        )}
+      </div>
+    </article>
   );
 }

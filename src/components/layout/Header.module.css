@@ -1,0 +1,596 @@
+.header {
+  --header-primary: #007aff;
+  --header-primary-dark: #005fcc;
+  --header-text: #1c1c1e;
+  --header-muted: #6f6f74;
+  --header-border: rgba(0, 0, 0, 0.07);
+  --header-surface: rgba(255, 255, 255, 0.84);
+  --header-surface-solid: #ffffff;
+
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+
+  width: 100%;
+
+  color: var(--header-text);
+  background-color: var(--header-surface);
+  border-bottom: 1px solid var(--header-border);
+
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.toolbar {
+  width: 100%;
+  max-width: 1240px;
+  min-height: 70px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Marca */
+
+.brandArea {
+  min-width: 0;
+
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 16px;
+}
+
+.brandLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 11px;
+
+  color: var(--header-text);
+  text-decoration: none;
+}
+
+.logo {
+  width: 38px;
+  height: 38px;
+
+  display: block;
+  object-fit: cover;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.14);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.brandLink:hover .logo {
+  transform: scale(1.05);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.17);
+}
+
+.brandLink:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.25);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.brandName {
+  color: var(--header-text);
+
+  font-size: 1.05rem;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+/* Ubicación */
+
+.desktopLocation {
+  min-width: 0;
+}
+
+.locationBadge {
+  max-width: 250px;
+  min-height: 30px;
+  padding: 6px 11px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #4b4b50;
+  background-color: rgba(0, 0, 0, 0.055);
+  border: 1px solid rgba(0, 0, 0, 0.035);
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+  font-weight: 550;
+  line-height: 1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.locationBadge > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.locationSkeleton {
+  width: 112px !important;
+  height: 29px !important;
+  border-radius: 999px !important;
+}
+
+/* Navegación escritorio */
+
+.desktopNavigation {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+}
+
+.navigationLink {
+  min-height: 42px;
+  padding: 10px 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  color: var(--header-text);
+  background-color: transparent;
+  border-radius: 999px;
+
+  font-size: 0.875rem;
+  font-weight: 550;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.navigationLink:hover {
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.055);
+}
+
+.navigationLink:active {
+  transform: scale(0.98);
+}
+
+.navigationLink:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.22);
+  outline-offset: 2px;
+}
+
+.registerButton {
+  min-height: 44px;
+  margin-left: 8px;
+  padding: 11px 21px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--header-primary),
+    var(--header-primary-dark)
+  );
+
+  border-radius: 999px;
+
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.28);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.registerButton:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 27px rgba(0, 122, 255, 0.4);
+}
+
+.registerButton:active {
+  transform: scale(0.99);
+}
+
+.registerButton:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.28);
+  outline-offset: 3px;
+}
+
+/* Botón menú móvil */
+
+.menuButton {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--header-text);
+  background-color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.menuButton:hover {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+.menuButton:active {
+  transform: scale(0.96);
+}
+
+.menuButton:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.25);
+  outline-offset: 3px;
+}
+
+/* Drawer */
+
+.drawerPaper {
+  width: min(380px, 100vw) !important;
+
+  overflow: hidden !important;
+
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.drawerContent {
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  color: var(--header-text);
+  background-color: rgba(255, 255, 255, 0.97);
+
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.drawerBrand {
+  min-width: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+
+  color: var(--header-text);
+  text-decoration: none;
+}
+
+.drawerLogo {
+  width: 38px;
+  height: 38px;
+
+  display: block;
+  flex-shrink: 0;
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  box-shadow: 0 4px 13px rgba(0, 0, 0, 0.15);
+}
+
+.drawerBrandName {
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.closeButton {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--header-muted);
+  background-color: rgba(0, 0, 0, 0.045);
+  border: 0;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.closeButton:hover {
+  color: var(--header-text);
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.closeButton:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.22);
+  outline-offset: 2px;
+}
+
+.drawerLocation {
+  min-height: 31px;
+  margin-top: 24px;
+}
+
+.drawerLocationSkeleton {
+  width: 125px !important;
+  height: 30px !important;
+  border-radius: 999px !important;
+}
+
+/* Navegación móvil */
+
+.mobileNavigation {
+  margin-top: 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileNavigationLink {
+  width: 100%;
+  min-height: 58px;
+  padding: 9px 12px;
+
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+
+  color: var(--header-text);
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 16px;
+
+  font-size: 0.91rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.mobileNavigationLink:hover {
+  color: var(--header-text);
+  background-color: rgba(0, 0, 0, 0.045);
+  border-color: rgba(0, 0, 0, 0.045);
+}
+
+.mobileNavigationLink:active {
+  transform: scale(0.99);
+}
+
+.mobileNavigationLink:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.2);
+  outline-offset: 2px;
+}
+
+.mobileNavigationIcon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--header-primary);
+  background-color: rgba(0, 122, 255, 0.09);
+  border-radius: 13px;
+}
+
+.mobileNavigationArrow {
+  color: #a5a5aa;
+}
+
+/* Parte inferior del Drawer */
+
+.drawerFooter {
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.drawerBusinessMessage {
+  margin-bottom: 18px;
+  padding: 16px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  background-color: rgba(0, 122, 255, 0.055);
+  border: 1px solid rgba(0, 122, 255, 0.1);
+  border-radius: 18px;
+}
+
+.drawerBusinessIcon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--header-primary);
+  background-color: rgba(0, 122, 255, 0.1);
+  border-radius: 13px;
+}
+
+.drawerBusinessTitle {
+  margin: 1px 0 0;
+
+  color: var(--header-text);
+
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.drawerBusinessDescription {
+  margin: 5px 0 0;
+
+  color: var(--header-muted);
+
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.mobileRegisterButton {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--header-primary),
+    var(--header-primary-dark)
+  );
+
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+
+  box-shadow: 0 9px 23px rgba(0, 122, 255, 0.32);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.mobileRegisterButton:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(0, 122, 255, 0.42);
+}
+
+.mobileRegisterButton:active {
+  transform: scale(0.99);
+}
+
+.mobileRegisterButton:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.25);
+  outline-offset: 3px;
+}
+
+/* Tablet y móvil */
+
+@media (max-width: 899px) {
+  .toolbar {
+    min-height: 64px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .desktopNavigation {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-flex;
+  }
+
+  .brandArea {
+    gap: 13px;
+  }
+}
+
+@media (max-width: 599px) {
+  .toolbar {
+    min-height: 60px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .logo {
+    width: 35px;
+    height: 35px;
+  }
+
+  .brandName {
+    font-size: 1rem;
+  }
+
+  .desktopLocation {
+    display: none;
+  }
+
+  .menuButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .drawerContent {
+    padding: 20px 18px;
+  }
+}

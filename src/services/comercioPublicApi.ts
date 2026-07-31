@@ -3,7 +3,18 @@ import type { ApiResponse } from "../api/apiResponse";
 const BASE_URL =
   import.meta.env.MODE === "production"
     ? "https://adlocalapi.onrender.com/api"
-    : "http://localhost:8080/api";
+    : "https://adlocalapi.onrender.com/api";
+
+const municipioActual: string | null = (() => {
+  const raw = localStorage.getItem("municipioActual");
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as { municipio?: string | null };
+    return parsed?.municipio ?? null;
+  } catch {
+    return null;
+  }
+})();
 
 const api = axios.create({
   baseURL: BASE_URL + "/comercios",
@@ -18,10 +29,11 @@ api.interceptors.response.use(
     const message =
       e.response?.data?.mensaje ||
       e.response?.data?.message ||
+      e.cod ||
       "Error en la petición";
 
     throw new Error(message);
-  }
+  },
 );
 
 export interface HorarioComercioDto {
@@ -48,6 +60,11 @@ export interface ComercioDtoListItem {
   colorSecundario?: string;
   activo: boolean;
   fechaCreacion: string;
+  estadoNombre: string;
+  municipioNombre: string;
+  promedioCalificacion: number;
+  badge: string;
+  distanciaKm: number;
 }
 
 export interface ComercioDto {
@@ -66,50 +83,98 @@ export interface ComercioDto {
   activo?: boolean;
   horarios?: HorarioComercioDto[];
   productos?: ProductoServicioDto[];
+  estadoNombre: string;
+  municipioNombre: string;
+  calificacion: number;
+  badge: string;
+  tipoComercioId: number;
+  tipoComercio: string;
 }
 
 export interface ProductoServicioDto {
   id?: number;
-
   idComercio: number;
   idUsuario: number;
-
   nombre: string;
   descripcion?: string;
-
   logoUrl?: string;
-
   tipo: number;
-
   precio?: number;
   stock?: number;
-
   activo: boolean;
   eliminado?: boolean;
   visible?: boolean;
-
   codigoInterno?: string;
-
   fechaCreacion?: string;
   fechaActualizacion?: string;
   fechaEliminado?: string;
 }
 
 export const comercioPublicApi = {
-  getPopulares: () =>
+  getDestacados: (page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "populares" },
+      params: {
+        tipo: "destacados",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
     }),
 
-  getRecientes: () =>
+  getPopulares: (page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "recientes" },
+      params: {
+        tipo: "populares",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
     }),
 
-  getCercanos: (lat: number, lng: number) =>
+  getRecientes: (page: number, pageSize: number) =>
     api.get<ApiResponse<ComercioDtoListItem[]>>("", {
-      params: { tipo: "cercanos", lat, lng },
+      params: {
+        tipo: "recientes",
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
+    }),
+
+  getSugeridos: (lat: number, lng: number, page: number, pageSize: number) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: {
+        tipo: "sugeridos",
+        lat,
+        lng,
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
+    }),
+
+  getCercanos: (lat: number, lng: number, page: number, pageSize: number) =>
+    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+      params: {
+        tipo: "cercanos",
+        lat,
+        lng,
+        municipio: municipioActual,
+        page,
+        pageSize,
+      },
     }),
 
   getById: (id: number) => api.get<ApiResponse<ComercioDto>>(`/${id}`),
+  getByFiltros: (
+    estadoId: number = 0,
+    municipioId: number = 0,
+    idTipoComercio: number = 0,
+    orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
+    page: number = 1,
+    pageSize: number = 8,
+  ) =>
+    api.get<ApiResponse<any>>("por-filtros", {
+      params: { estadoId, municipioId, idTipoComercio, orden, page, pageSize },
+    }),
 };

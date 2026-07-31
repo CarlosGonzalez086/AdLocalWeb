@@ -5,7 +5,6 @@ import {
   CardMedia,
   Typography,
   Chip,
-  Box,
 } from "@mui/material";
 import type { Business } from "../../types/business";
 import type { FC } from "react";

@@ -1,7 +1,13 @@
-import { Box, Typography, Link, IconButton } from "@mui/material";
+import type { FC } from "react";
+
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import type { FC } from "react";
+
+import styles from "./Footer.module.css";
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+
+const LOGO_URL =
+  "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
@@ -12,84 +18,103 @@ const Footer: FC = () => {
       : "http://localhost:5173/registro";
 
   return (
-    <Box
-      component="footer"
-      sx={{
-        mt: 8,
-        backdropFilter: "blur(14px)",
-        background: "rgba(20,20,20,0.85)",
-        color: "#fff",
-        borderTop: "1px solid rgba(255,255,255,0.1)",
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: 1200,
-          mx: "auto",
-          px: 2,
-          py: 4,
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 3,
-          alignItems: { xs: "center", md: "center" },
-          justifyContent: "space-between",
-          textAlign: { xs: "center", md: "left" },
-        }}
-      >
-        {/* CTA */}
-        <Typography fontSize={15} sx={{ opacity: 0.95 }}>
-          ¿Quieres unirte como negocio?{" "}
-          <Link
-            href={registroUrl}
-            underline="none"
-            sx={{
-              ml: 0.5,
-              fontWeight: 600,
-              color: "primary.light",
-              "&:hover": { textDecoration: "underline" },
-            }}
-          >
-            Da clic aquí
-          </Link>
-        </Typography>
+    <footer className={styles.footer}>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <section className={styles.brandSection}>
+            <div className={styles.brand}>
+              <img
+                src={LOGO_URL}
+                alt="Logotipo de ADLocal"
+                className={styles.logo}
+              />
 
-        {/* Social */}
-        <Box display="flex" gap={1}>
-          <IconButton
-            aria-label="Facebook"
-            sx={{
-              color: "#fff",
-              bgcolor: "rgba(255,255,255,0.1)",
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.2)",
-              },
-            }}
-          >
-            <FacebookIcon />
-          </IconButton>
+              <span className={styles.brandName}>ADLocal</span>
+            </div>
 
-          <IconButton
-            aria-label="Instagram"
-            sx={{
-              color: "#fff",
-              bgcolor: "rgba(255,255,255,0.1)",
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.2)",
-              },
-            }}
-          >
-            <InstagramIcon />
-          </IconButton>
-        </Box>
+            <p className={styles.brandDescription}>
+              Conectando negocios locales con su comunidad.
+            </p>
 
-        {/* Copyright */}
-        <Typography fontSize={13} sx={{ opacity: 0.7 }}>
-          © {year} Da VinciX Code Labs
-          <br />
-          Todos los derechos reservados.
-        </Typography>
-      </Box>
-    </Box>
+            <div className={styles.socialLinks}>
+              <a
+                href="https://www.facebook.com/profile.php?id=61588323283229"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visitar ADLocal en Facebook"
+                className={`${styles.socialButton} ${styles.facebookButton}`}
+              >
+                <FacebookIcon className={styles.socialIcon} />
+              </a>
+
+              <button
+                type="button"
+                aria-label="Instagram de ADLocal"
+                className={`${styles.socialButton} ${styles.instagramButton}`}
+              >
+                <InstagramIcon className={styles.socialIcon} />
+              </button>
+            </div>
+          </section>
+
+          <section className={styles.businessCard}>
+            <div className={styles.businessIcon}>
+              <MaterialSymbol icon="storefront" size="large" />
+            </div>
+
+            <div className={styles.businessContent}>
+              <h2 className={styles.businessTitle}>¿Tienes un negocio?</h2>
+
+              <p className={styles.businessDescription}>
+                Únete a ADLocal y llega a más clientes dentro de tu comunidad.
+              </p>
+            </div>
+
+            <a href={registroUrl} className={styles.registerButton}>
+              <MaterialSymbol icon="app_registration" size="small" />
+
+              <span>Registrarme</span>
+            </a>
+          </section>
+
+          <section className={styles.legalSection}>
+            <a
+              href="https://carlosgonzalez086.github.io/DaVincixCode/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.developerLink}
+            >
+              Da VinciX Code Labs
+            </a>
+
+            <p className={styles.copyright}>
+              © {year} Todos los derechos reservados.
+            </p>
+          </section>
+        </div>
+
+        <div className={styles.divider} />
+
+        <div className={styles.bottom}>
+          <p className={styles.bottomText}>
+            <span>ADLocal</span>
+
+            <span className={styles.bottomSeparator} aria-hidden="true">
+              ·
+            </span>
+
+            <span>Hecho en México</span>
+
+            <MaterialSymbol
+              icon="favorite"
+              size="small"
+              filled
+              className={styles.favoriteIcon}
+            />
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 

@@ -1,81 +1,153 @@
+import { useCallback, useEffect, useState, type FC } from "react";
 
-import { useEffect, useState } from "react";
 import {
   comercioPublicApi,
   type ComercioDto,
 } from "../../services/comercioPublicApi";
+
+import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
+
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import ComercioDetalle from "./ComercioDetalle";
-import { Box, CircularProgress, Typography } from "@mui/material";
+
+import styles from "../../styles/Comercio.module.css";
 
 interface ComercioProps {
   id: number;
 }
 
-const Comercio: React.FC<ComercioProps> = ({ id }) => {
+const Comercio: FC<ComercioProps> = ({ id }) => {
   const [comercio, setComercio] = useState<ComercioDto | null>(null);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
 
-  const fetchComercio = async () => {
+  useRegistrarVisita(id);
+
+  const fetchComercio = useCallback(async () => {
+    if (!id || id <= 0) {
+      setComercio(null);
+      setError("El identificador del comercio no es válido.");
+      setLoading(false);
+
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
+
       const response = await comercioPublicApi.getById(id);
-      setComercio(response.data.respuesta ?? null);
-    } catch (err) {
-      console.error(err);
-      setError("Error al cargar el comercio");
+
+      const comercioEncontrado = response.data.respuesta ?? null;
+
+      setComercio(comercioEncontrado);
+    } catch (error) {
+      console.error("Error al consultar el comercio:", error);
+
+      setError("No fue posible cargar la información del comercio.");
+
       setComercio(null);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchComercio();
   }, [id]);
 
-  if (loading)
+  useEffect(() => {
+    void fetchComercio();
+  }, [fetchComercio]);
+
+  if (loading) {
     return (
-      <Box
-        sx={{
-          minHeight: "60vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 2,
-          background: "transparent",
-          borderRadius: 3,
-          p: 3,
-        }}
+      <section
+        className={styles.loadingState}
+        aria-busy="true"
+        aria-live="polite"
       >
-        <CircularProgress size={60} thickness={4.5} sx={{ color: "#6F4E37" }} />
-        <Typography
-          sx={{
-            fontWeight: 600,
-            fontSize: "1.1rem",
-            color: "text.secondary",
-            letterSpacing: "0.3px",
-            animation: "pulse 1.5s ease-in-out infinite",
-          }}
-        >
-          Cargando comercio...
-        </Typography>
-        <style>{`
-            @keyframes pulse {
-              0% { opacity: 0.4; }
-              50% { opacity: 1; }
-              100% { opacity: 0.4; }
-            }
-          `}</style>
-      </Box>
+        <div className={styles.loadingIconContainer}>
+          <MaterialSymbol
+            icon="progress_activity"
+            size="large"
+            className={styles.loadingIcon}
+          />
+        </div>
+
+        <div className={styles.loadingContent}>
+          <h1 className={styles.loadingTitle}>Cargando comercio</h1>
+
+          <p className={styles.loadingDescription}>
+            Estamos preparando la información del negocio.
+          </p>
+        </div>
+
+        <div className={styles.loadingProgress} aria-hidden="true">
+          <span />
+        </div>
+      </section>
     );
-  if (error) return <div>Error: {error}</div>;
-  if (!comercio) return <div>Comercio no encontrado</div>;
+  }
+
+  if (error) {
+    return (
+      <section className={styles.stateContainer} role="alert">
+        <div className={[styles.stateIcon, styles.errorIcon].join(" ")}>
+          <MaterialSymbol icon="cloud_off" size="large" />
+        </div>
+
+        <h1 className={styles.stateTitle}>No pudimos cargar el comercio</h1>
+
+        <p className={styles.stateDescription}>{error}</p>
+
+        <button
+          type="button"
+          className={styles.retryButton}
+          onClick={() => void fetchComercio()}
+        >
+          <MaterialSymbol icon="refresh" size="small" />
+
+          <span>Intentar nuevamente</span>
+        </button>
+
+        <a href="/" className={styles.secondaryButton}>
+          <MaterialSymbol icon="arrow_back" size="small" />
+
+          <span>Regresar al inicio</span>
+        </a>
+      </section>
+    );
+  }
+
+  if (!comercio) {
+    return (
+      <section className={styles.stateContainer} aria-live="polite">
+        <div className={styles.stateIcon}>
+          <MaterialSymbol icon="storefront" size="large" />
+        </div>
+
+        <h1 className={styles.stateTitle}>Comercio no encontrado</h1>
+
+        <p className={styles.stateDescription}>
+          El comercio solicitado no existe, fue eliminado o ya no se encuentra
+          disponible.
+        </p>
+
+        <a href="/" className={styles.primaryLink}>
+          <MaterialSymbol icon="storefront" size="small" />
+
+          <span>Explorar comercios</span>
+        </a>
+      </section>
+    );
+  }
 
   return (
-    <ComercioDetalle comercio={comercio} productos={comercio.productos ?? []} />
+    <div className={styles.detailContainer}>
+      <ComercioDetalle
+        comercio={comercio}
+        productos={comercio.productos ?? []}
+      />
+    </div>
   );
 };
 

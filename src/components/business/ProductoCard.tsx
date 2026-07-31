@@ -1,73 +1,70 @@
-import { Box, Typography, Stack } from "@mui/material";
+import type { FC } from "react";
+
 import type { ProductoServicioDto } from "../../services/comercioPublicApi";
+
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import styles from "../../styles/ProductoCard.module.css";
 
 interface Props {
   producto: ProductoServicioDto;
 }
 
-export default function ProductoCard({ producto }: Props) {
+const moneyFormatter = new Intl.NumberFormat("es-MX", {
+  style: "currency",
+  currency: "MXN",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const ProductoCard: FC<Props> = ({ producto }) => {
+  const hasImage = Boolean(producto.logoUrl?.trim());
+
+  const hasPrice = producto.precio !== null && producto.precio !== undefined;
+
+  const formattedPrice = hasPrice
+    ? moneyFormatter.format(Number(producto.precio))
+    : null;
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        borderRadius: 3,
-        overflow: "hidden",
-        boxShadow: "0 4px 18px rgba(0,0,0,0.08)",
-        backgroundColor: "#fff",
-        cursor: "pointer",
-        transition: "all 0.3s ease",
-        "&:hover": {
-          transform: "translateY(-3px)",
-          boxShadow: "0 10px 28px rgba(0,0,0,0.15)",
-        },
-      }}
-    >
-      {producto.logoUrl && (
-        <Box
-          component="img"
-          src={producto.logoUrl}
-          alt={producto.nombre}
-          sx={{
-            width: { xs: 100, sm: 120 },
-            height: { xs: 100, sm: 120 },
-            objectFit: "cover",
-            flexShrink: 0,
-          }}
-        />
-      )}
-
-      <Stack spacing={0.5} sx={{ p: 2, flex: 1 }}>
-        <Typography
-          fontWeight={700}
-          variant="subtitle1"
-          sx={{ lineHeight: 1.2 }}
-        >
-          {producto.nombre}
-        </Typography>
-
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            lineHeight: 1.3,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-          }}
-        >
-          {producto.descripcion}
-        </Typography>
-
-        {producto.precio != null && (
-          <Typography fontWeight={700} color="primary">
-            ${producto.precio.toFixed(2)}
-          </Typography>
+    <article className={styles.productCard}>
+      <div className={styles.imageContainer}>
+        {hasImage ? (
+          <img
+            src={producto.logoUrl}
+            alt={producto.nombre}
+            loading="lazy"
+            className={styles.productImage}
+          />
+        ) : (
+          <div className={styles.imagePlaceholder} aria-hidden="true">
+            <MaterialSymbol icon="inventory_2" size="large" />
+          </div>
         )}
-      </Stack>
-    </Box>
+
+        {hasPrice && (
+          <span className={styles.mobilePrice}>{formattedPrice}</span>
+        )}
+      </div>
+
+      <div className={styles.content}>
+        <div className={styles.information}>
+          <h3 className={styles.productName}>{producto.nombre}</h3>
+
+          {producto.descripcion && (
+            <p className={styles.description}>{producto.descripcion}</p>
+          )}
+        </div>
+
+        {hasPrice && (
+          <div className={styles.priceContainer}>
+            <span className={styles.priceLabel}>Precio</span>
+
+            <span className={styles.price}>{formattedPrice}</span>
+          </div>
+        )}
+      </div>
+    </article>
   );
-}
+};
+
+export default ProductoCard;

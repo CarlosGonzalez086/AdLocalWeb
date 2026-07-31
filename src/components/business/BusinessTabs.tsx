@@ -1,49 +1,120 @@
 import {
-  Box,
-  Typography,
   CircularProgress,
-  Button,
-  Stack,
-  Grid,
+  Skeleton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import Slider from "react-slick";
-import ComercioCard from "./ComercioCard";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
+import Slider, { type Settings } from "react-slick";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
-const tabs = [
-  { label: "Destacados", key: "destacados" },
-  { label: "Populares", key: "populares" },
-  { label: "Más recientes", key: "recientes" },
-  { label: "Cercanos", key: "cercanos" },
+import ComercioCard from "./ComercioCard";
+import styles from "../../styles/BusinessTabs.module.css";
+
+import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+type TabKey =
+  | "destacados"
+  | "sugeridos"
+  | "populares"
+  | "recientes"
+  | "cercanos";
+
+interface TabItem {
+  label: string;
+  key: TabKey;
+  icon: string;
+}
+
+const tabs: TabItem[] = [
+  {
+    label: "Destacados",
+    key: "destacados",
+    icon: "star",
+  },
+  {
+    label: "Sugeridos",
+    key: "sugeridos",
+    icon: "lightbulb",
+  },
+  {
+    label: "Populares",
+    key: "populares",
+    icon: "local_fire_department",
+  },
+  {
+    label: "Recientes",
+    key: "recientes",
+    icon: "schedule",
+  },
+  {
+    label: "Cercanos",
+    key: "cercanos",
+    icon: "near_me",
+  },
 ];
 
-export const coffee = {
-  main: "#5B3A29",
-  dark: "#3A2419",
-  light: "#E8D8C8",
-};
-
-type TabKey = "destacados" | "populares" | "recientes" | "cercanos";
-
-interface BusinessTabsProps {
+interface Props {
   comercios: ComercioDtoListItem[];
   loading?: boolean;
   error?: string | null;
   activeTab?: TabKey;
   setActiveTab?: Dispatch<SetStateAction<TabKey>>;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
-const BusinessTabs: React.FC<BusinessTabsProps> = ({
+type IconSize = "small" | "medium" | "large";
+
+interface MaterialSymbolProps {
+  icon: string;
+  size?: IconSize;
+  filled?: boolean;
+}
+
+const MaterialSymbol = ({
+  icon,
+  size = "medium",
+  filled = false,
+}: MaterialSymbolProps) => {
+  const sizeClass = {
+    small: styles.materialSymbolSmall,
+    medium: styles.materialSymbolMedium,
+    large: styles.materialSymbolLarge,
+  }[size];
+
+  return (
+    <span
+      aria-hidden="true"
+      className={[
+        styles.materialSymbol,
+        sizeClass,
+        filled ? styles.materialSymbolFilled : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {icon}
+    </span>
+  );
+};
+
+const BusinessTabs: React.FC<Props> = ({
   comercios,
   loading = false,
   error = null,
   activeTab: activeTabProp = "destacados",
   setActiveTab: setActiveTabProp,
+  hasMore = false,
+  onLoadMore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(activeTabProp);
+
+  const theme = useTheme();
+
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     setActiveTab(activeTabProp);
@@ -54,118 +125,182 @@ const BusinessTabs: React.FC<BusinessTabsProps> = ({
     setActiveTabProp?.(tab);
   };
 
-  const carouselSettings = {
+  const carouselSettings: Settings = {
     dots: false,
     infinite: false,
-    speed: 500,
-    slidesToShow: 3,
+    speed: 400,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: true,
+    swipeToSlide: true,
+    adaptiveHeight: false,
     responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 3 } },
-      { breakpoint: 900, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } },
+      {
+        breakpoint: 1350,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 1000,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
     ],
   };
 
-  if (error) {
-    return (
-      <Typography textAlign="center" mt={4}>
-        {error}
-      </Typography>
-    );
-  }
+  const showCarousel = activeTab === "destacados" && !isMobileOrTablet;
+
+  const showInitialLoading = loading && comercios.length === 0;
+
+  const showError = !loading && Boolean(error) && comercios.length === 0;
+
+  const showEmpty = !loading && !error && comercios.length === 0;
 
   return (
-    <Box>
-      {/* Tabs estilo iOS */}
-      <Stack
-        direction="row"
-        spacing={1}
-        justifyContent="center"
-        mb={4}
-        sx={{
-          bgcolor: coffee.light,
-          p: 1,
-          borderRadius: 999,
-          width: "fit-content",
-          mx: "auto",
-        }}
-      >
-        {tabs.map((t) => {
-          const isActive = activeTab === t.key;
-          return (
-            <Button
-              key={t.key}
-              onClick={() => handleTabClick(t.key as TabKey)}
-              disableElevation
-              sx={{
-                textTransform: "none",
-                fontWeight: 600,
-                borderRadius: 999,
-                px: 3,
-                color: isActive ? "#fff" : coffee.main,
-                backgroundColor: isActive ? coffee.main : "transparent",
-                transition: "all 0.25s ease",
-                "&:hover": {
-                  backgroundColor: isActive ? coffee.dark : coffee.light,
-                },
-              }}
-            >
-              {t.label}
-            </Button>
-          );
-        })}
-      </Stack>
+    <section className={styles.businessTabs} aria-busy={loading}>
+      <nav className={styles.tabsViewport} aria-label="Categorías de comercios">
+        <div className={styles.tabsList} role="tablist">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.key;
 
-      {/* Loading */}
-      {loading && (
-        <Box
-          minHeight="50vh"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          gap={2}
-        >
-          <CircularProgress size={52} sx={{ color: coffee.main }} />
-          <Typography fontWeight={600} color="text.secondary">
-            Cargando comercios…
-          </Typography>
-        </Box>
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={[
+                  styles.tabButton,
+                  isActive ? styles.tabButtonActive : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => handleTabClick(tab.key)}
+              >
+                <MaterialSymbol
+                  icon={tab.icon}
+                  size="small"
+                  filled={isActive}
+                />
+
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {showInitialLoading && (
+        <div className={styles.skeletonGrid} aria-label="Cargando comercios">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className={styles.skeletonCard}>
+              <Skeleton
+                variant="rounded"
+                animation="wave"
+                className={styles.skeletonImage}
+              />
+
+              <Skeleton
+                variant="text"
+                animation="wave"
+                className={styles.skeletonTitle}
+              />
+
+              <Skeleton
+                variant="text"
+                animation="wave"
+                className={styles.skeletonText}
+              />
+
+              <Skeleton
+                variant="text"
+                animation="wave"
+                className={styles.skeletonTextShort}
+              />
+            </div>
+          ))}
+        </div>
       )}
 
-      {/* Contenido */}
-      {!loading && comercios.length > 0 && (
+      {showError && (
+        <div className={styles.stateContainer} role="alert">
+          <div className={styles.stateIcon}>
+            <MaterialSymbol icon="cloud_off" size="large" />
+          </div>
+
+          <h3 className={styles.stateTitle}>No pudimos cargar los comercios</h3>
+
+          <p className={styles.stateDescription}>
+            Verifica tu conexión e intenta nuevamente.
+          </p>
+        </div>
+      )}
+
+      {showEmpty && (
+        <div className={styles.stateContainer} aria-live="polite">
+          <div className={styles.stateIcon}>
+            <MaterialSymbol icon="storefront" size="large" />
+          </div>
+
+          <h3 className={styles.stateTitle}>No hay comercios disponibles</h3>
+
+          <p className={styles.stateDescription}>
+            Por el momento no encontramos comercios en esta categoría.
+          </p>
+        </div>
+      )}
+
+      {comercios.length > 0 && (
         <>
-          {activeTab === "destacados" ? (
-            <Slider {...carouselSettings}>
-              {comercios.map((c) => (
-                <Box key={c.id} px={1}>
-                  <ComercioCard comercio={c} />
-                </Box>
-              ))}
-            </Slider>
-          ) : (
-            <Box className="container-fluid">
-              <div className="row g-3">
-                {comercios.map((c) => (
-                  <div key={c.id} className="col-12 col-sm-6 col-md-4">
-                    <ComercioCard comercio={c} />
+          {showCarousel ? (
+            <div className={styles.carousel}>
+              <Slider {...carouselSettings}>
+                {comercios.map((comercio) => (
+                  <div key={comercio.id} className={styles.carouselItem}>
+                    <ComercioCard comercio={comercio} />
                   </div>
                 ))}
-              </div>
-            </Box>
+              </Slider>
+            </div>
+          ) : (
+            <div className={styles.cardsGrid}>
+              {comercios.map((comercio) => (
+                <div key={comercio.id} className={styles.cardItem}>
+                  <ComercioCard comercio={comercio} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {hasMore && (
+            <div className={styles.loadMoreContainer}>
+              <button
+                type="button"
+                className={styles.loadMoreButton}
+                onClick={onLoadMore}
+                disabled={loading || !onLoadMore}
+              >
+                {loading ? (
+                  <CircularProgress
+                    size={18}
+                    thickness={4}
+                    className={styles.loadMoreSpinner}
+                  />
+                ) : (
+                  <MaterialSymbol icon="expand_more" size="medium" />
+                )}
+
+                <span>
+                  {loading ? "Cargando comercios" : "Ver más comercios"}
+                </span>
+              </button>
+            </div>
           )}
         </>
       )}
-
-      {!loading && comercios.length === 0 && (
-        <Typography textAlign="center" mt={4}>
-          No hay comercios disponibles
-        </Typography>
-      )}
-    </Box>
+    </section>
   );
 };
 

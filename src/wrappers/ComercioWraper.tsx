@@ -1,13 +1,13 @@
-
 import App from "../components/App";
 import React from "react";
 
-// ⚡ Wrapper que solo carga Comercio en cliente
 const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
   return (
     <App>
-      <React.Suspense fallback={<div>Cargando comercio...</div>}>
-        <ComercioLoader id={id} />
+      <React.Suspense>
+        <div className="w-100 h-100 p-3">
+          <ComercioLoader id={id} />
+        </div>
       </React.Suspense>
     </App>
   );
@@ -15,11 +15,10 @@ const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
 
 export default ComercioWraper;
 
-// ----------------------
-// Carga dinámica solo en cliente
-// ----------------------
 const ComercioLoader = ({ id }: { id: number }) => {
-  const [ComercioComponent, setComercioComponent] = React.useState<React.FC<{ id: number }> | null>(null);
+  const [ComercioComponent, setComercioComponent] = React.useState<React.FC<{
+    id: number;
+  }> | null>(null);
 
   React.useEffect(() => {
     import("../components/business/Comercio").then((mod) => {
@@ -27,6 +26,6 @@ const ComercioLoader = ({ id }: { id: number }) => {
     });
   }, []);
 
-  if (!ComercioComponent) return <div>Cargando...</div>;
+  if (!ComercioComponent) return <div></div>;
   return <ComercioComponent id={id} />;
 };
