@@ -5,7 +5,7 @@ import {
   type ComercioDtoListItem,
 } from "../services/comercioPublicApi";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
 
 const BusinessTabsWrapper: React.FC = () => {
   const [comercios, setComercios] = useState<ComercioDtoListItem[]>([]);

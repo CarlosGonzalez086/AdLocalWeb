@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' astro dev",
-    "build": "astro build",
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 astro dev",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 astro build",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
   "devDependencies": {
     "@astrojs/vercel": "^9.0.3",
     "@types/node": "^25.0.8",
-    "@types/react-slick": "^0.23.13"
+    "@types/react-slick": "^0.23.13",
+    "cross-env": "^10.1.0"
   }
 }

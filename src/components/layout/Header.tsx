@@ -1,25 +1,9 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  useTheme,
-  useMediaQuery,
-  Skeleton,
-  Chip,
-  Stack,
-  IconButton,
-  Drawer,
-} from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
+import { Drawer, Skeleton } from "@mui/material";
 import type { FC } from "react";
 import { useState } from "react";
+
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import styles from "./Header.module.css";
 
 const LOGO_URL =
   "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
@@ -30,8 +14,6 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ municipio, loading }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const registroUrl =
@@ -44,258 +26,201 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
       ? "https://www.adlocal.store/comercios/busqueda-avanzada"
       : "/comercios/busqueda-avanzada";
 
-  const navButtonSx = {
-    textTransform: "none",
-    fontWeight: 500,
-    fontSize: "0.875rem",
-    borderRadius: 999,
-    px: 2,
-    color: "#1c1c1e",
-    transition: "all .2s ease",
-    "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
+  const closeDrawer = () => {
+    setDrawerOpen(false);
   };
 
-  const drawerContent = (
-    <Box
-      sx={{
-        width: "100vw",
-        maxWidth: 360,
-        height: "100%",
-        bgcolor: "rgba(255,255,255,0.97)",
-        backdropFilter: "blur(20px)",
-        display: "flex",
-        flexDirection: "column",
-        p: 3,
-        gap: 1,
-      }}
-    >
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-        <Stack direction="row" alignItems="center" spacing={1.2}>
-          <Box
-            component="img"
-            src={LOGO_URL}
-            alt="ADLocal"
-            sx={{ height: 32, width: 32, borderRadius: "50%", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
-          />
-          <Typography fontWeight={700} fontSize={16}>ADLocal</Typography>
-        </Stack>
-        <IconButton size="small" onClick={() => setDrawerOpen(false)}>
-          <CloseRoundedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
-        </IconButton>
-      </Stack>
-
-      {municipio && (
-        <Chip
-          icon={<LocationOnIcon fontSize="small" />}
-          label={municipio}
-          size="small"
-          sx={{
-            alignSelf: "flex-start",
-            borderRadius: 999,
-            fontWeight: 500,
-            fontSize: "0.75rem",
-            px: 1,
-            mb: 1,
-            backgroundColor: "rgba(0,0,0,0.06)",
-          }}
-        />
-      )}
-
-      <Button
-        fullWidth
-        startIcon={<HomeRoundedIcon />}
-        onClick={() => { location.assign("/"); setDrawerOpen(false); }}
-        sx={{
-          ...navButtonSx,
-          justifyContent: "flex-start",
-          px: 2,
-          py: 1.2,
-          color: "#1c1c1e",
-        }}
-      >
-        Inicio
-      </Button>
-
-      <Button
-        fullWidth
-        startIcon={<SearchRoundedIcon />}
-        onClick={() => { location.assign(busquedaAvanzadaUrl); setDrawerOpen(false); }}
-        sx={{
-          ...navButtonSx,
-          justifyContent: "flex-start",
-          px: 2,
-          py: 1.2,
-          color: "#1c1c1e",
-        }}
-      >
-        Búsqueda avanzada
-      </Button>
-
-      <Box mt="auto">
-        <Button
-          fullWidth
-          variant="contained"
-          href={registroUrl}
-          startIcon={<StorefrontRoundedIcon />}
-          sx={{
-            textTransform: "none",
-            borderRadius: 999,
-            fontWeight: 700,
-            py: 1.4,
-            fontSize: "0.9rem",
-            background: "linear-gradient(135deg, #007AFF, #005FCC)",
-            boxShadow: "0 8px 22px rgba(0,122,255,0.35)",
-            "&:hover": { boxShadow: "0 12px 28px rgba(0,122,255,0.45)" },
-          }}
-        >
-          Unirme como negocio
-        </Button>
-      </Box>
-    </Box>
-  );
-
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        backdropFilter: "blur(20px) saturate(180%)",
-        WebkitBackdropFilter: "blur(20px) saturate(180%)",
-        backgroundColor: "rgba(255,255,255,0.75)",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
-        color: "#111",
-      }}
-    >
-      <Toolbar
-        sx={{
-          maxWidth: 1200,
-          mx: "auto",
-          width: "100%",
-          px: { xs: 2, sm: 3 },
-          minHeight: { xs: 60, md: 70 },
-        }}
-      >
-        <Stack direction="row" alignItems="center" spacing={1.4} flexGrow={1}>
-          <Box
-            component="img"
-            src={LOGO_URL}
-            alt="ADLocal"
-            sx={{
-              height: 36,
-              width: 36,
-              borderRadius: "50%",
-              cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              transition: "transform 0.2s ease",
-              "&:hover": { transform: "scale(1.05)" },
-            }}
-            onClick={() => location.assign("/")}
-          />
-
-          <Typography
-            fontWeight={700}
-            fontSize={17}
-            letterSpacing="-0.01em"
-            sx={{ color: "#1c1c1e" }}
-          >
-            ADLocal
-          </Typography>
-
-          {loading ? (
-            <Skeleton variant="rounded" width={110} height={26} sx={{ borderRadius: 999 }} />
-          ) : (
-            municipio && (
-              <Chip
-                icon={<LocationOnIcon sx={{ fontSize: "14px !important" }} />}
-                label={municipio}
-                size="small"
-                sx={{
-                  borderRadius: 999,
-                  fontWeight: 500,
-                  fontSize: "0.73rem",
-                  px: 0.8,
-                  backgroundColor: "rgba(0,0,0,0.06)",
-                  backdropFilter: "blur(6px)",
-                  display: { xs: "none", sm: "flex" },
-                }}
+    <>
+      <header className={styles.header}>
+        <div className={styles.toolbar}>
+          <div className={styles.brandArea}>
+            <a
+              href="/"
+              className={styles.brandLink}
+              aria-label="Ir al inicio de ADLocal"
+            >
+              <img
+                src={LOGO_URL}
+                alt="Logotipo de ADLocal"
+                className={styles.logo}
               />
-            )
-          )}
-        </Stack>
 
-        {!isMobile && (
-          <Stack direction="row" spacing={0.5} alignItems="center">
-            <Button
-              sx={navButtonSx}
-              onClick={() => location.assign("/")}
-              startIcon={<HomeRoundedIcon sx={{ fontSize: 18 }} />}
-            >
-              Inicio
-            </Button>
+              <span className={styles.brandName}>ADLocal</span>
+            </a>
 
-            <Button
-              sx={navButtonSx}
-              onClick={() => location.assign(busquedaAvanzadaUrl)}
-              startIcon={<SearchRoundedIcon sx={{ fontSize: 18 }} />}
-            >
-              Búsqueda avanzada
-            </Button>
+            <div className={styles.desktopLocation}>
+              {loading ? (
+                <Skeleton
+                  variant="rounded"
+                  className={styles.locationSkeleton}
+                />
+              ) : (
+                municipio && (
+                  <span className={styles.locationBadge}>
+                    <MaterialSymbol icon="location_on" size="small" filled />
 
-            <Button
-              variant="contained"
-              href={registroUrl}
-              startIcon={<StorefrontRoundedIcon sx={{ fontSize: 18 }} />}
-              sx={{
-                ml: 1,
-                textTransform: "none",
-                borderRadius: 999,
-                px: 2.5,
-                fontWeight: 700,
-                fontSize: "0.875rem",
-                background: "linear-gradient(135deg, #007AFF, #005FCC)",
-                boxShadow: "0 8px 20px rgba(0,122,255,0.30)",
-                transition: "all 0.25s ease",
-                "&:hover": {
-                  boxShadow: "0 12px 28px rgba(0,122,255,0.42)",
-                  transform: "translateY(-1px)",
-                },
-              }}
-            >
-              Unirme como negocio
-            </Button>
-          </Stack>
-        )}
+                    <span>{municipio}</span>
+                  </span>
+                )
+              )}
+            </div>
+          </div>
 
-        {isMobile && (
-          <IconButton
-            onClick={() => setDrawerOpen(true)}
-            sx={{
-              borderRadius: 999,
-              border: "1px solid rgba(0,0,0,0.10)",
-              p: 0.8,
-              color: "#1c1c1e",
-            }}
+          <nav
+            className={styles.desktopNavigation}
+            aria-label="Navegación principal"
           >
-            <MenuRoundedIcon sx={{ fontSize: 22 }} />
-          </IconButton>
-        )}
-      </Toolbar>
+            <a href="/" className={styles.navigationLink}>
+              <MaterialSymbol icon="home" size="small" filled />
 
+              <span>Inicio</span>
+            </a>
+
+            <a href={busquedaAvanzadaUrl} className={styles.navigationLink}>
+              <MaterialSymbol icon="search" size="small" />
+
+              <span>Búsqueda avanzada</span>
+            </a>
+
+            <a href={registroUrl} className={styles.registerButton}>
+              <MaterialSymbol icon="storefront" size="small" />
+
+              <span>Unirme como negocio</span>
+            </a>
+          </nav>
+
+          <button
+            type="button"
+            className={styles.menuButton}
+            aria-label="Abrir menú"
+            aria-expanded={drawerOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setDrawerOpen(true)}
+          >
+            <MaterialSymbol icon="menu" size="medium" />
+          </button>
+        </div>
+      </header>
 
       <Drawer
         anchor="right"
         open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={closeDrawer}
         PaperProps={{
-          sx: {
-            bgcolor: "transparent",
-            boxShadow: "none",
-          },
+          className: styles.drawerPaper,
         }}
       >
-        {drawerContent}
+        <aside id="mobile-navigation" className={styles.drawerContent}>
+          <div className={styles.drawerHeader}>
+            <a href="/" className={styles.drawerBrand} onClick={closeDrawer}>
+              <img
+                src={LOGO_URL}
+                alt="Logotipo de ADLocal"
+                className={styles.drawerLogo}
+              />
+
+              <span className={styles.drawerBrandName}>ADLocal</span>
+            </a>
+
+            <button
+              type="button"
+              aria-label="Cerrar menú"
+              className={styles.closeButton}
+              onClick={closeDrawer}
+            >
+              <MaterialSymbol icon="close" size="medium" />
+            </button>
+          </div>
+
+          <div className={styles.drawerLocation}>
+            {loading ? (
+              <Skeleton
+                variant="rounded"
+                className={styles.drawerLocationSkeleton}
+              />
+            ) : (
+              municipio && (
+                <span className={styles.locationBadge}>
+                  <MaterialSymbol icon="location_on" size="small" filled />
+
+                  <span>{municipio}</span>
+                </span>
+              )
+            )}
+          </div>
+
+          <nav
+            className={styles.mobileNavigation}
+            aria-label="Navegación móvil"
+          >
+            <a
+              href="/"
+              className={styles.mobileNavigationLink}
+              onClick={closeDrawer}
+            >
+              <span className={styles.mobileNavigationIcon}>
+                <MaterialSymbol icon="home" size="medium" filled />
+              </span>
+
+              <span>Inicio</span>
+
+              <MaterialSymbol
+                icon="chevron_right"
+                size="medium"
+                className={styles.mobileNavigationArrow}
+              />
+            </a>
+
+            <a
+              href={busquedaAvanzadaUrl}
+              className={styles.mobileNavigationLink}
+              onClick={closeDrawer}
+            >
+              <span className={styles.mobileNavigationIcon}>
+                <MaterialSymbol icon="search" size="medium" />
+              </span>
+
+              <span>Búsqueda avanzada</span>
+
+              <MaterialSymbol
+                icon="chevron_right"
+                size="medium"
+                className={styles.mobileNavigationArrow}
+              />
+            </a>
+          </nav>
+
+          <div className={styles.drawerFooter}>
+            <div className={styles.drawerBusinessMessage}>
+              <span className={styles.drawerBusinessIcon}>
+                <MaterialSymbol icon="storefront" size="medium" />
+              </span>
+
+              <div>
+                <p className={styles.drawerBusinessTitle}>
+                  ¿Tienes un negocio?
+                </p>
+
+                <p className={styles.drawerBusinessDescription}>
+                  Regístrate y conecta con clientes de tu comunidad.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={registroUrl}
+              className={styles.mobileRegisterButton}
+              onClick={closeDrawer}
+            >
+              <MaterialSymbol icon="app_registration" size="small" />
+
+              <span>Unirme como negocio</span>
+            </a>
+          </div>
+        </aside>
       </Drawer>
-    </AppBar>
+    </>
   );
 };
 

@@ -1,328 +1,383 @@
-import React, { useState } from "react";
 import {
-  Box,
-  Drawer,
-  IconButton,
-  Button,
-  useMediaQuery,
-  useTheme,
-  FormControl,
-  Typography,
   CircularProgress,
-  Select,
-  MenuItem,
+  Drawer,
   InputAdornment,
+  MenuItem,
+  Select,
+  Skeleton,
+  type SelectChangeEvent,
 } from "@mui/material";
-import {
-  Menu,
-  TuneRounded,
-  CloseRounded,
-  SortRounded,
-} from "@mui/icons-material";
+import React, { useState } from "react";
 
 import { SelectEstadoAutocomplete } from "../Locations/SelectEstadoAutocomplete";
 import { SelectMunicipioAutocomplete } from "../Locations/SelectMunicipioAutocomplete";
-import { useComercioPublico } from "../../hooks/useComercioPublico";
-import ComercioCard from "../business/ComercioCard";
 import { SelectTipoComercioAutocomplete } from "../business/SelectTipoComercioAutocomplete";
+import ComercioCard from "../business/ComercioCard";
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
-const coffee = {
-  main: "#5B3A29",
-  dark: "#3A2419",
-  light: "#f3e9de",
-};
+import { useComercioPublico } from "../../hooks/useComercioPublico";
 
-const fieldSx = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    bgcolor: "#fff",
-    "& fieldset": { borderColor: "#E0E0E0" },
-    "&:hover fieldset": { borderColor: "#BDBDBD" },
-    "&.Mui-focused fieldset": { borderColor: "#5B3A29" },
-  },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#5B3A29" },
-};
+import styles from "./BusquedaAvanzada.module.css";
 
 type OrdenType = "alfabetico" | "recientes" | "antiguos" | "populares";
+
+interface FiltersPanelProps {
+  idState: number;
+  idMunicipality: number;
+  idTipoComercio: number;
+  orden: OrdenType;
+  mobile?: boolean;
+  onStateChange: (id: number) => void;
+  onMunicipalityChange: (id: number) => void;
+  onTipoComercioChange: (id: number) => void;
+  onOrdenChange: (event: SelectChangeEvent<OrdenType>) => void;
+  onAplicar: () => void;
+  onLimpiar: () => void;
+  onClose?: () => void;
+}
+
+const FiltersPanel: React.FC<FiltersPanelProps> = ({
+  idState,
+  idMunicipality,
+  idTipoComercio,
+  orden,
+  mobile = false,
+  onStateChange,
+  onMunicipalityChange,
+  onTipoComercioChange,
+  onOrdenChange,
+  onAplicar,
+  onLimpiar,
+  onClose,
+}) => {
+  return (
+    <div className={styles.filtersPanel}>
+      {mobile && <div className={styles.drawerIndicator} />}
+
+      <div className={styles.filtersHeader}>
+        <div className={styles.filtersTitleContainer}>
+          <span className={styles.filtersTitleIcon}>
+            <MaterialSymbol icon="tune" size="medium" filled />
+          </span>
+
+          <div>
+            <h2 className={styles.filtersTitle}>Filtros</h2>
+
+            <p className={styles.filtersSubtitle}>Personaliza los resultados</p>
+          </div>
+        </div>
+
+        {mobile && (
+          <button
+            type="button"
+            className={styles.closeButton}
+            aria-label="Cerrar filtros"
+            onClick={onClose}
+          >
+            <MaterialSymbol icon="close" size="medium" />
+          </button>
+        )}
+      </div>
+
+      <div className={styles.filtersFields}>
+        <div className={styles.filterField}>
+          <span className={styles.fieldLabel}>Estado</span>
+
+          <SelectEstadoAutocomplete value={idState} onChange={onStateChange} />
+        </div>
+
+        <div className={styles.filterField}>
+          <span className={styles.fieldLabel}>Municipio</span>
+
+          <SelectMunicipioAutocomplete
+            estadoId={idState}
+            value={idMunicipality}
+            onChange={onMunicipalityChange}
+          />
+        </div>
+
+        <div className={styles.filterField}>
+          <span className={styles.fieldLabel}>Tipo de comercio</span>
+
+          <SelectTipoComercioAutocomplete
+            value={idTipoComercio}
+            onChange={onTipoComercioChange}
+          />
+        </div>
+
+        <div className={styles.filterField}>
+          <label htmlFor="orden-comercios" className={styles.fieldLabel}>
+            Ordenar resultados
+          </label>
+
+          <Select<OrdenType>
+            id="orden-comercios"
+            value={orden}
+            onChange={onOrdenChange}
+            displayEmpty
+            fullWidth
+            className={styles.orderSelect}
+            startAdornment={
+              <InputAdornment
+                position="start"
+                className={styles.orderAdornment}
+              >
+                <MaterialSymbol icon="sort" size="medium" />
+              </InputAdornment>
+            }
+            MenuProps={{
+              classes: {
+                paper: styles.orderMenuPaper,
+              },
+            }}
+          >
+            <MenuItem value="alfabetico">Alfabético A–Z</MenuItem>
+
+            <MenuItem value="recientes">Más recientes</MenuItem>
+
+            <MenuItem value="antiguos">Más antiguos</MenuItem>
+
+            <MenuItem value="populares">Más populares</MenuItem>
+          </Select>
+        </div>
+      </div>
+
+      <div className={styles.filtersActions}>
+        <button
+          type="button"
+          className={styles.applyButton}
+          onClick={onAplicar}
+        >
+          <MaterialSymbol icon="filter_alt" size="small" filled />
+
+          <span>Aplicar filtros</span>
+        </button>
+
+        <button
+          type="button"
+          className={styles.clearButton}
+          onClick={onLimpiar}
+        >
+          <MaterialSymbol icon="filter_alt_off" size="small" />
+
+          <span>Limpiar filtros</span>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const BusquedaAvanzada: React.FC = () => {
   const [idState, setIdState] = useState(0);
   const [idMunicipality, setIdMunicipality] = useState(0);
   const [idTipoComercio, setIdTipoComercio] = useState(0);
-  const [orden, setOrden] = useState<OrdenType>("alfabetico");
-  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [orden, setOrden] = useState<OrdenType>("alfabetico");
+
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const { comercios, loading, hasMore, cargarPorFiltros } =
     useComercioPublico();
+
+  const activeFiltersCount =
+    Number(idState > 0) +
+    Number(idMunicipality > 0) +
+    Number(idTipoComercio > 0) +
+    Number(orden !== "alfabetico");
+
+  const handleStateChange = (estadoId: number) => {
+    setIdState(estadoId);
+
+    // Al cambiar el estado se limpia el municipio anterior.
+    setIdMunicipality(0);
+  };
+
+  const handleOrdenChange = (event: SelectChangeEvent<OrdenType>) => {
+    setOrden(event.target.value as OrdenType);
+  };
 
   const handleLimpiar = () => {
     setIdState(0);
     setIdMunicipality(0);
     setIdTipoComercio(0);
     setOrden("alfabetico");
+
     cargarPorFiltros(0, 0, 0, "alfabetico", true);
+
+    setMobileOpen(false);
   };
 
   const handleAplicar = () => {
     cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden, true);
-    if (isMobile) setMobileOpen(false);
+
+    setMobileOpen(false);
   };
 
-  const sidebarContent = (
-    <Box
-      sx={{
-        height: "100%",
-        px: { xs: 2.5, sm: 3 },
-        py: 3,
-        background: "rgba(255,255,255,0.95)",
-        backdropFilter: "blur(18px)",
-        borderRight: "1px solid rgba(0,0,0,0.06)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2.5,
-      }}
-    >
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Box display="flex" alignItems="center" gap={1}>
-          <TuneRounded sx={{ color: coffee.main, fontSize: 20 }} />
-          <Typography
-            fontWeight={700}
-            fontSize="1rem"
-            sx={{ color: coffee.main }}
-          >
-            Filtros
-          </Typography>
-        </Box>
-        {isMobile && (
-          <IconButton size="small" onClick={() => setMobileOpen(false)}>
-            <CloseRounded sx={{ fontSize: 20, color: "text.secondary" }} />
-          </IconButton>
-        )}
-      </Box>
+  const handleLoadMore = () => {
+    cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden);
+  };
 
-      <Box display="flex" flexDirection="column" gap={2}>
-        <SelectEstadoAutocomplete
-          value={idState}
-          onChange={(estadoId) => setIdState(estadoId)}
-        />
-
-        <SelectMunicipioAutocomplete
-          estadoId={idState}
-          value={idMunicipality}
-          onChange={(id) => setIdMunicipality(id)}
-        />
-
-        <SelectTipoComercioAutocomplete
-          value={idTipoComercio}
-          onChange={(id) => setIdTipoComercio(id)}
-        />
-
-        <FormControl fullWidth sx={fieldSx}>
-          <Select
-            value={orden}
-            onChange={(e) => setOrden(e.target.value as OrdenType)}
-            displayEmpty
-            startAdornment={
-              <InputAdornment position="start">
-                <SortRounded sx={{ color: "#9E9E9E", fontSize: 20 }} />
-              </InputAdornment>
-            }
-          >
-            <MenuItem value="alfabetico">Alfabético A–Z</MenuItem>
-            <MenuItem value="recientes">Más recientes</MenuItem>
-            <MenuItem value="antiguos">Más antiguos</MenuItem>
-            <MenuItem value="populares">Más populares</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
-      <Box mt="auto" display="flex" flexDirection="column" gap={1.5}>
-        <Button
-          fullWidth
-          onClick={handleAplicar}
-          sx={{
-            py: 1.4,
-            borderRadius: 999,
-            fontWeight: 700,
-            fontSize: "0.9rem",
-            textTransform: "none",
-            background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
-            color: "#fff",
-            boxShadow: "0 6px 18px rgba(91,58,41,0.30)",
-            "&:hover": {
-              boxShadow: "0 8px 24px rgba(91,58,41,0.40)",
-            },
-          }}
-        >
-          Aplicar filtros
-        </Button>
-
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={handleLimpiar}
-          sx={{
-            borderRadius: 999,
-            fontWeight: 600,
-            fontSize: "0.9rem",
-            textTransform: "none",
-            color: coffee.main,
-            borderColor: coffee.main,
-            "&:hover": {
-              bgcolor: coffee.light,
-              borderColor: coffee.dark,
-            },
-          }}
-        >
-          Limpiar filtros
-        </Button>
-      </Box>
-    </Box>
-  );
+  const filtersPanelProps = {
+    idState,
+    idMunicipality,
+    idTipoComercio,
+    orden,
+    onStateChange: handleStateChange,
+    onMunicipalityChange: setIdMunicipality,
+    onTipoComercioChange: setIdTipoComercio,
+    onOrdenChange: handleOrdenChange,
+    onAplicar: handleAplicar,
+    onLimpiar: handleLimpiar,
+  };
 
   return (
-    <Box display="flex" minHeight="100%">
-      {!isMobile && (
-        <Box
-          sx={{
-            width: { md: 270, lg: 290 },
-            flexShrink: 0,
-            height: { md: 480, lg: 620 },
-            borderRadius: 4,
-            overflow: "hidden",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.07)",
-            mr: 3,
-          }}
-        >
-          {sidebarContent}
-        </Box>
-      )}
+    <section className={styles.searchPage}>
+      <aside className={styles.desktopSidebar}>
+        <FiltersPanel {...filtersPanelProps} />
+      </aside>
 
-      {isMobile && (
-        <>
-          <IconButton
-            onClick={() => setMobileOpen(true)}
-            sx={{
-              position: "fixed",
-              bottom: 24,
-              right: 24,
-              bgcolor: coffee.main,
-              color: "#fff",
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              zIndex: 1300,
-              boxShadow: "0 10px 28px rgba(91,58,41,0.40)",
-              "&:hover": { bgcolor: coffee.dark },
-            }}
-          >
-            <Menu />
-          </IconButton>
+      <main className={styles.resultsSection}>
+        <header className={styles.resultsHeader}>
+          <div>
+            <h1 className={styles.resultsTitle}>Búsqueda avanzada</h1>
 
-          <Drawer
-            anchor="bottom"
-            open={mobileOpen}
-            onClose={() => setMobileOpen(false)}
-            PaperProps={{
-              sx: {
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                maxHeight: "88vh",
-                bgcolor: "transparent",
-              },
-            }}
-          >
-            {sidebarContent}
-          </Drawer>
-        </>
-      )}
+            <p className={styles.resultsDescription}>
+              Encuentra comercios por ubicación, categoría y popularidad.
+            </p>
+          </div>
 
-      <Box sx={{ width: "100%", minWidth: 0 }}>
-        {loading ? (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            gap={1.5}
-            py={6}
-          >
-            <CircularProgress
-              size={20}
-              thickness={4}
-              sx={{ color: coffee.main }}
-            />
-            <Typography
-              sx={{
-                fontSize: "0.9rem",
-                fontWeight: 500,
-                color: "text.secondary",
-              }}
-            >
-              Cargando comercios...
-            </Typography>
-          </Box>
-        ) : comercios.length === 0 ? (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            py={8}
-            gap={1}
-          >
-            <Typography fontSize="2rem">🔍</Typography>
-            <Typography fontWeight={600} color="text.secondary">
-              No se encontraron comercios
-            </Typography>
-            <Typography fontSize="0.85rem" color="text.disabled">
-              Intenta ajustar los filtros
-            </Typography>
-          </Box>
-        ) : (
-          <div className="container-fluid px-0">
-            <div className="row g-3 align-items-stretch">
-              {comercios.map((c) => (
-                <div
-                  key={c.id}
-                  className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
-                >
-                  <ComercioCard comercio={c} />
-                </div>
-              ))}
-            </div>
+          {!loading && comercios.length > 0 && (
+            <span className={styles.resultsCount}>
+              <MaterialSymbol icon="storefront" size="small" />
+
+              <span>
+                {comercios.length}{" "}
+                {comercios.length === 1 ? "comercio" : "comercios"}
+              </span>
+            </span>
+          )}
+        </header>
+
+        {loading && comercios.length === 0 && (
+          <div className={styles.loadingGrid} aria-label="Cargando comercios">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className={styles.skeletonCard}>
+                <Skeleton
+                  variant="rounded"
+                  animation="wave"
+                  className={styles.skeletonImage}
+                />
+
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className={styles.skeletonTitle}
+                />
+
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className={styles.skeletonText}
+                />
+
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className={styles.skeletonTextShort}
+                />
+              </div>
+            ))}
           </div>
         )}
 
-        {hasMore && !loading && (
-          <Box textAlign="center" mt={4}>
-            <Button
-              onClick={() =>
-                cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden)
-              }
-              sx={{
-                px: 5,
-                py: 1.4,
-                borderRadius: 999,
-                fontWeight: 700,
-                fontSize: "0.9rem",
-                textTransform: "none",
-                background: `linear-gradient(135deg, ${coffee.main}, ${coffee.dark})`,
-                color: "#fff",
-                boxShadow: "0 6px 18px rgba(91,58,41,0.28)",
-                "&:hover": {
-                  boxShadow: "0 8px 24px rgba(91,58,41,0.38)",
-                },
-              }}
+        {!loading && comercios.length === 0 && (
+          <div className={styles.emptyState} aria-live="polite">
+            <div className={styles.emptyIcon}>
+              <MaterialSymbol icon="search_off" size="large" />
+            </div>
+
+            <h2 className={styles.emptyTitle}>No se encontraron comercios</h2>
+
+            <p className={styles.emptyDescription}>
+              Prueba seleccionando otra ubicación, categoría o tipo de
+              ordenamiento.
+            </p>
+
+            <button
+              type="button"
+              className={styles.emptyClearButton}
+              onClick={handleLimpiar}
             >
-              Cargar más comercios
-            </Button>
-          </Box>
+              Limpiar filtros
+            </button>
+          </div>
         )}
-      </Box>
-    </Box>
+
+        {comercios.length > 0 && (
+          <div className={styles.cardsGrid}>
+            {comercios.map((comercio) => (
+              <div key={comercio.id} className={styles.cardItem}>
+                <ComercioCard comercio={comercio} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {hasMore && (
+          <div className={styles.loadMoreContainer}>
+            <button
+              type="button"
+              className={styles.loadMoreButton}
+              onClick={handleLoadMore}
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress
+                  size={18}
+                  thickness={4}
+                  className={styles.loadMoreSpinner}
+                />
+              ) : (
+                <MaterialSymbol icon="expand_more" size="medium" />
+              )}
+
+              <span>
+                {loading ? "Cargando comercios" : "Cargar más comercios"}
+              </span>
+            </button>
+          </div>
+        )}
+      </main>
+
+      <button
+        type="button"
+        className={styles.mobileFilterButton}
+        aria-label="Abrir filtros"
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen(true)}
+      >
+        <MaterialSymbol icon="tune" size="medium" filled />
+
+        {activeFiltersCount > 0 && (
+          <span className={styles.filterCounter}>{activeFiltersCount}</span>
+        )}
+      </button>
+
+      <Drawer
+        anchor="bottom"
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        PaperProps={{
+          className: styles.mobileDrawerPaper,
+        }}
+      >
+        <FiltersPanel
+          {...filtersPanelProps}
+          mobile
+          onClose={() => setMobileOpen(false)}
+        />
+      </Drawer>
+    </section>
   );
 };
 

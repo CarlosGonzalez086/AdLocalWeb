@@ -1,309 +1,299 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Stack,
-  Chip,
-  Box,
-  Rating,
-} from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import StarIcon from "@mui/icons-material/Star";
+import type { CSSProperties, FC } from "react";
+
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { slugifyConId } from "../../utils/generals";
+
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import styles from "../../styles/ComercioCard.module.css";
 
 interface Props {
   comercio: ComercioDtoListItem;
 }
 
-export default function ComercioCard({ comercio }: Props) {
-  const slug = slugifyConId(comercio.id, comercio.nombre);
+type BadgeType =
+  | "premium"
+  | "recomendado"
+  | "esencial";
 
-  const renderBadge = (badge?: string) => {
-    if (!badge) return null;
+interface BadgeConfig {
+  label: string;
+  icon: string;
+  className: string;
+}
 
-    const badgeLower = badge.toLowerCase();
-    const isPremium = badgeLower.includes("premium");
-    const isRecomendado = badgeLower.includes("recomendado");
+interface CardCSSProperties extends CSSProperties {
+  "--card-primary": string;
+  "--card-secondary": string;
+}
 
-    const stylesByBadge = isPremium
-      ? {
-          background: "linear-gradient(135deg, #FFD700, #FFB300)",
-          color: "#1c1c1e",
-          boxShadow: "0 6px 20px rgba(255, 215, 0, 0.45)",
-        }
-      : isRecomendado
-        ? {
-            background: "linear-gradient(135deg, #FF9800, #FB8C00)",
-            color: "#fff",
-            boxShadow: "0 6px 18px rgba(255, 152, 0, 0.4)",
-          }
-        : {
-            background: "rgba(255,255,255,0.82)",
-            color: "#111",
-            boxShadow: "0 4px 14px rgba(0,0,0,0.18)",
-          };
+const getBadgeConfig = (
+  badge?: string,
+): BadgeConfig | null => {
+  if (!badge) {
+    return null;
+  }
 
-    return (
-      <Box
-        sx={{
-          ...stylesByBadge,
-          position: "absolute",
-          top: { xs: 8, sm: 12 },
-          right: { xs: 8, sm: 12 },
-          px: { xs: 1, sm: 1.4 },
-          py: { xs: 0.35, sm: 0.55 },
-          borderRadius: 999,
-          display: "flex",
-          alignItems: "center",
-          gap: 0.6,
-          fontSize: { xs: "0.6rem", sm: "0.68rem" },
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          backdropFilter: "blur(16px)",
-          border: "1px solid rgba(255,255,255,0.65)",
-          zIndex: 4,
-          transition: "transform .25s ease",
-          "&:hover": { transform: "scale(1.05)" },
+  const normalizedBadge = badge
+    .trim()
+    .toLowerCase();
+
+  const badgeType: BadgeType = normalizedBadge.includes(
+    "premium",
+  )
+    ? "premium"
+    : normalizedBadge.includes("recomendado")
+      ? "recomendado"
+      : "esencial";
+
+  const configurations: Record<
+    BadgeType,
+    BadgeConfig
+  > = {
+    premium: {
+      label: "Premium",
+      icon: "workspace_premium",
+      className: styles.badgePremium,
+    },
+    recomendado: {
+      label: "Recomendado",
+      icon: "recommend",
+      className: styles.badgeRecommended,
+    },
+    esencial: {
+      label: "Esencial",
+      icon: "verified",
+      className: styles.badgeEssential,
+    },
+  };
+
+  return configurations[badgeType];
+};
+
+const RatingStars: FC<{
+  value: number;
+}> = ({ value }) => {
+  const normalizedValue = Math.min(
+    Math.max(value, 0),
+    5,
+  );
+
+  const filledPercentage =
+    (normalizedValue / 5) * 100;
+
+  const stars = Array.from({
+    length: 5,
+  });
+
+  return (
+    <div
+      className={styles.ratingStars}
+      aria-label={`Calificación ${normalizedValue.toFixed(
+        1,
+      )} de 5`}
+      role="img"
+    >
+      <div className={styles.ratingStarsEmpty}>
+        {stars.map((_, index) => (
+          <MaterialSymbol
+            key={`empty-${index}`}
+            icon="star"
+            size="small"
+            filled
+          />
+        ))}
+      </div>
+
+      <div
+        className={styles.ratingStarsFilled}
+        style={{
+          width: `${filledPercentage}%`,
         }}
       >
-        <Stack direction="row" alignItems="center" spacing={0.5}>
-          <Box
-            sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" }, lineHeight: 1 }}
-          >
-            {isPremium ? "👑" : isRecomendado ? "⭐" : "✨"}
-          </Box>
-          <Typography
-            sx={{
-              display: { xs: "none", sm: "block" },
-              fontSize: "inherit",
-              fontWeight: 600,
-            }}
-          >
-            {isPremium ? "Premium" : isRecomendado ? "Recomendado" : "Esencial"}
-          </Typography>
-        </Stack>
-      </Box>
-    );
+        {stars.map((_, index) => (
+          <MaterialSymbol
+            key={`filled-${index}`}
+            icon="star"
+            size="small"
+            filled
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ComercioCard: FC<Props> = ({
+  comercio,
+}) => {
+  const slug = slugifyConId(
+    comercio.id,
+    comercio.nombre,
+  );
+
+  const badgeConfig = getBadgeConfig(
+    comercio.badge,
+  );
+
+  const rating = Number(
+    comercio.promedioCalificacion ?? 0,
+  );
+
+  const distance = Number(
+    comercio.distanciaKm ?? 0,
+  );
+
+  const primaryColor =
+    comercio.colorPrimario || "#5B3A29";
+
+  const secondaryColor =
+    comercio.colorSecundario || "#3A2419";
+
+  const cardStyles: CardCSSProperties = {
+    "--card-primary": primaryColor,
+    "--card-secondary": secondaryColor,
   };
+
+  const coverStyles: CSSProperties = {
+    backgroundImage: comercio.logoUrl
+      ? `url("${comercio.logoUrl}")`
+      : `linear-gradient(
+          135deg,
+          ${primaryColor},
+          ${secondaryColor}
+        )`,
+  };
+
+  const address = [
+    comercio.direccion,
+    comercio.municipioNombre,
+    comercio.estadoNombre,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const initial =
+    comercio.nombre
+      ?.trim()
+      .charAt(0)
+      .toUpperCase() || "A";
 
   return (
     <a
       href={`/comercios/${slug}`}
-      style={{ textDecoration: "none" }}
-      className="w-100 h-100"
+      className={styles.cardLink}
+      style={cardStyles}
+      aria-label={`Ver información de ${comercio.nombre}`}
     >
-      <Card
-        sx={{
-          cursor: "pointer",
-          borderRadius: 5,
-          overflow: "hidden",
-          position: "relative",
-          background: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(20px)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
-          transition: "transform 0.35s ease, box-shadow 0.35s ease",
-          "&:hover": {
-            transform: "translateY(-6px)",
-            boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
-          },
-          width: "100%",
-          maxWidth: { xs: "100%", sm: 300 },
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          mx: "auto",
-        }}
-      >
-        {renderBadge(comercio.badge)}
-
-        <Box
-          sx={{
-            height: { xs: 160, sm: 180 },
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              background: comercio.logoUrl
-                ? `url(${comercio.logoUrl}) center/cover no-repeat`
-                : `linear-gradient(135deg, ${comercio.colorPrimario}, ${comercio.colorSecundario})`,
-            }}
+      <article className={styles.card}>
+        <div className={styles.cover}>
+          <div
+            className={styles.coverImage}
+            style={coverStyles}
           />
 
-          <Box
-            sx={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 100%)",
-            }}
-          />
+          <div className={styles.coverOverlay} />
 
-          <Avatar
-            src={comercio.logoUrl}
-            alt={comercio.nombre}
-            sx={{
-              width: { xs: 52, sm: 60 },
-              height: { xs: 52, sm: 60 },
-              border: "2.5px solid rgba(255,255,255,0.9)",
-              backgroundColor: "#fff",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
-              position: "absolute",
-              bottom: 12,
-              left: 14,
-            }}
-          />
-
-          <Typography
-            fontWeight={700}
-            sx={{
-              position: "absolute",
-              bottom: 16,
-              left: { xs: 76, sm: 84 },
-              color: "#fff",
-              fontSize: { xs: "0.95rem", sm: "1rem" },
-              textShadow: "0 1px 6px rgba(0,0,0,0.4)",
-              lineHeight: 1.2,
-              maxWidth: "calc(100% - 100px)",
-            }}
-          >
-            {comercio.nombre}
-          </Typography>
-        </Box>
-
-
-        <CardContent
-          sx={{
-            pt: 1.5,
-            pb: "12px !important",
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <Stack spacing={1}>
-
-            <Typography
-              color="text.secondary"
-              sx={{
-                lineHeight: 1.5,
-                fontSize: "0.78rem",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
+          {badgeConfig && (
+            <div
+              className={[
+                styles.badge,
+                badgeConfig.className,
+              ].join(" ")}
             >
-              {`${comercio.direccion}, ${comercio.municipioNombre}, ${comercio.estadoNombre}.`}
-            </Typography>
+              <MaterialSymbol
+                icon={badgeConfig.icon}
+                size="small"
+                filled
+              />
 
+              <span>{badgeConfig.label}</span>
+            </div>
+          )}
 
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={1}
-              flexWrap="wrap"
-            >
-              <Stack direction="row" alignItems="center" spacing={0.4}>
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    fontWeight: 700,
-                    color: "text.primary",
-                  }}
-                >
-                  {comercio.promedioCalificacion ?? 0}
-                </Typography>
-                <Rating
-                  value={comercio.promedioCalificacion ?? 0}
-                  precision={0.5}
-                  readOnly
-                  size="small"
-                  icon={<StarIcon fontSize="inherit" />}
-                  emptyIcon={<StarIcon fontSize="inherit" />}
-                  sx={{ color: "#F5B301", fontSize: "0.85rem" }}
+          <div className={styles.businessIdentity}>
+            <div className={styles.avatar}>
+              {comercio.logoUrl ? (
+                <img
+                  src={comercio.logoUrl}
+                  alt=""
+                  loading="lazy"
+                  className={styles.avatarImage}
                 />
-              </Stack>
+              ) : (
+                <span className={styles.avatarInitial}>
+                  {initial}
+                </span>
+              )}
+            </div>
 
-              {comercio.distanciaKm > 0 && (
+            <h2 className={styles.businessName}>
+              {comercio.nombre}
+            </h2>
+          </div>
+        </div>
+
+        <div className={styles.content}>
+          <div className={styles.information}>
+            <div className={styles.address}>
+              <MaterialSymbol
+                icon="location_on"
+                size="small"
+                filled
+                className={styles.addressIcon}
+              />
+
+              <p className={styles.addressText}>
+                {address
+                  ? `${address}.`
+                  : "Dirección no disponible."}
+              </p>
+            </div>
+
+            <div className={styles.businessMetadata}>
+              <div className={styles.ratingContainer}>
+                <span className={styles.ratingNumber}>
+                  {rating.toFixed(1)}
+                </span>
+
+                <RatingStars value={rating} />
+              </div>
+
+              {distance > 0 && (
                 <>
-                  <Box
-                    sx={{
-                      width: 4,
-                      height: 4,
-                      borderRadius: "50%",
-                      bgcolor: "text.disabled",
-                    }}
+                  <span
+                    className={styles.metadataSeparator}
+                    aria-hidden="true"
                   />
-                  <Chip
-                    label={`📍 ${comercio.distanciaKm} km`}
-                    size="small"
-                    sx={{
-                      height: 22,
-                      fontSize: "0.68rem",
-                      fontWeight: 600,
-                      bgcolor: "rgba(0,0,0,0.06)",
-                      color: "text.secondary",
-                      borderRadius: 999,
-                    }}
-                  />
+
+                  <span className={styles.distanceBadge}>
+                    <MaterialSymbol
+                      icon="near_me"
+                      size="small"
+                      filled
+                    />
+
+                    <span>
+                      {distance.toFixed(1)} km
+                    </span>
+                  </span>
                 </>
               )}
-            </Stack>
-          </Stack>
+            </div>
+          </div>
 
-          <Box mt={1.5}>
-            <Box
-              sx={{
-                width: "100%",
-                py: 1.1,
-                borderRadius: 999,
-                bgcolor: "rgba(255,255,255,0.95)",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
-                border: "1px solid rgba(0,0,0,0.07)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 0.8,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: comercio.colorPrimario,
-                  "& .btn-text": { color: "#fff" },
-                  "& .btn-icon": { color: "#fff" },
-                  boxShadow: `0 6px 20px ${comercio.colorPrimario}55`,
-                },
-              }}
-            >
-              <Typography
-                className="btn-text"
-                sx={{
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  color: "text.primary",
-                  transition: "color 0.2s ease",
-                }}
-              >
-                Ver detalles
-              </Typography>
-              <ArrowForwardIosIcon
-                className="btn-icon"
-                sx={{
-                  fontSize: 11,
-                  color: "text.primary",
-                  transition: "color 0.2s ease",
-                }}
-              />
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+          <div className={styles.detailsButton}>
+            <span>Ver detalles</span>
+
+            <MaterialSymbol
+              icon="arrow_forward_ios"
+              size="small"
+              className={styles.detailsIcon}
+            />
+          </div>
+        </div>
+      </article>
     </a>
   );
-}
+};
+
+export default ComercioCard;

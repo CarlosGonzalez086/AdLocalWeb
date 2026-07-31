@@ -4,8 +4,7 @@ import type { ApiResponse } from "../api/apiResponse";
 const BASE_URL =
   import.meta.env.MODE === "production"
     ? "https://adlocalapi.onrender.com/api"
-    : "http://localhost:8080/api";
-
+    : "https://adlocalapi.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE_URL + "/ComercioVisitas",
@@ -28,7 +27,6 @@ api.interceptors.response.use(
   },
 );
 export const visitasPublicApi = {
-
   registrarVisita: (comercioId: number) =>
     api.post<ApiResponse<null>>(`/${comercioId}`),
 };

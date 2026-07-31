@@ -3,7 +3,7 @@ import type { ApiResponse } from "../api/apiResponse";
 const BASE_URL =
   import.meta.env.MODE === "production"
     ? "https://adlocalapi.onrender.com/api"
-    : "http://localhost:8080/api";
+    : "https://adlocalapi.onrender.com/api";
 
 const municipioActual: string | null = (() => {
   const raw = localStorage.getItem("municipioActual");

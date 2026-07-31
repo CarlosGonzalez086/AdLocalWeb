@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { calificacionesApi, type CalificacionComentarioCreateDto, type CalificacionComentarioDto, type CalificacionComentarioListResponse } from "../services/calificaciones.Api";
-
+import {
+  calificacionesApi,
+  type CalificacionComentarioCreateDto,
+  type CalificacionComentarioDto,
+  type CalificacionComentarioListResponse,
+} from "../services/calificaciones.Api";
 
 export const useCalificaciones = (idComercio: number) => {
-  const [comentarios, setComentarios] = useState<CalificacionComentarioDto[]>([]);
+  const [comentarios, setComentarios] = useState<CalificacionComentarioDto[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
@@ -13,7 +19,7 @@ export const useCalificaciones = (idComercio: number) => {
 
   const cargarComentarios = async (
     pageParam: number = page,
-    orderParam: "asc" | "desc" = orderBy
+    orderParam: "asc" | "desc" = orderBy,
   ) => {
     setLoading(true);
     try {
@@ -21,7 +27,7 @@ export const useCalificaciones = (idComercio: number) => {
         idComercio,
         pageParam,
         pageSize,
-        orderParam
+        orderParam,
       );
 
       if (data.codigo !== "200") {
@@ -63,7 +69,6 @@ export const useCalificaciones = (idComercio: number) => {
       setLoading(false);
     }
   };
-
 
   const cambiarOrden = (nuevoOrden: "asc" | "desc") => {
     setOrderBy(nuevoOrden);

@@ -1,47 +1,97 @@
-// MapaComercio.client.tsx
-"use client"; // Marca explícita de cliente
+import type { FC } from "react";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import L, { type LatLngExpression } from "leaflet";
 
-import React from "react";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import styles from "../../styles/MapaComercio.module.css";
 
 interface Props {
   lat: number;
   lng: number;
 }
 
-const materialIcon = new L.DivIcon({
+const materialIcon = L.divIcon({
   html: `
-    <span class="material-symbols-outlined" style="
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      font-size: 36px;
-      color: #5B3A29;
-      text-shadow: 0 0 2px #000;
-    ">location_on</span>
+    <span
+      class="${styles.markerPulse}"
+      aria-hidden="true"
+    ></span>
+
+    <span
+      class="material-symbols-outlined ${styles.markerIcon}"
+      aria-hidden="true"
+    >
+      location_on
+    </span>
   `,
-  className: "",
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
+  className: styles.markerContainer,
+  iconSize: [48, 48],
+  iconAnchor: [24, 45],
+  popupAnchor: [0, -44],
 });
 
-const MapaComercio: React.FC<Props> = ({ lat, lng }) => {
+const isValidCoordinate = (lat: number, lng: number) => {
   return (
-    <MapContainer
-      center={[lat, lng]}
-      zoom={16}
-      scrollWheelZoom={false}
-      zoomControl={false}
-      dragging={false}
-      doubleClickZoom={false}
-      touchZoom={false}
-      keyboard={false}
-      boxZoom={false}    
-      className="w-100 h-100"
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={[lat, lng]} icon={materialIcon} />
-    </MapContainer>
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  );
+};
+
+const MapaComercio: FC<Props> = ({ lat, lng }) => {
+  if (!isValidCoordinate(lat, lng)) {
+    return (
+      <div className={styles.invalidLocation} role="alert">
+        <span
+          className={`material-symbols-outlined ${styles.invalidLocationIcon}`}
+          aria-hidden="true"
+        >
+          location_off
+        </span>
+
+        <span>La ubicación del comercio no está disponible.</span>
+      </div>
+    );
+  }
+
+  const position: LatLngExpression = [lat, lng];
+
+  return (
+    <div className={styles.mapWrapper}>
+      <MapContainer
+        center={position}
+        zoom={16}
+        minZoom={5}
+        maxZoom={19}
+        scrollWheelZoom={false}
+        zoomControl={false}
+        dragging={false}
+        doubleClickZoom={false}
+        touchZoom={false}
+        keyboard={false}
+        boxZoom={false}
+        className={styles.map}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          }
+        />
+
+        <Marker
+          position={position}
+          icon={materialIcon}
+          keyboard={false}
+          interactive={false}
+        />
+      </MapContainer>
+
+      <div className={styles.mapOverlay} aria-hidden="true" />
+    </div>
   );
 };
 
