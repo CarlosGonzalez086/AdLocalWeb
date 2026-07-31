@@ -7,7 +7,7 @@ import styles from "./Footer.module.css";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 const LOGO_URL =
-  "https://uzgnfwbztoizcctyfdiv.supabase.co/storage/v1/object/public/Imagenes/AZuAXHqalTLlz8th7NMdBA-AZuAXHqaHD92HliWBxJzdA.jpg";
+  "https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
