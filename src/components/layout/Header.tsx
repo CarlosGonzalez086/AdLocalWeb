@@ -18,12 +18,12 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
   const registroUrl =
     import.meta.env.MODE === "production"
-      ? "https://ad-local-gamma.vercel.app/registro"
+      ? "https://adlocal.jcarlosgonzalez086.workers.dev/registro"
       : "http://localhost:5173/registro";
 
   const busquedaAvanzadaUrl =
     import.meta.env.MODE === "production"
-      ? "https://www.adlocal.store/comercios/busqueda-avanzada"
+      ? "https://adlocalweb.jcarlosgonzalez086.workers.dev/comercios/busqueda-avanzada"
       : "/comercios/busqueda-avanzada";
 
   const closeDrawer = () => {
