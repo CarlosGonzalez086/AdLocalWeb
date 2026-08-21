@@ -12,7 +12,6 @@ import {
   setLocalStorageJWTUsuario,
 } from "../utils/storageUsuario";
 
-
 export const useClienteAuth = () => {
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +30,7 @@ export const useClienteAuth = () => {
         return null;
       }
 
-      const token = data.respuesta;
+      const token = data.respuesta?.result as any;
 
       if (!token) {
         setError("No se recibió el token de autenticación");
@@ -63,14 +62,13 @@ export const useClienteAuth = () => {
     try {
       const { data } = await clienteAuthApi.login(dto);
 
-
       if (data.codigo !== "200") {
         setError(data.mensaje || "Correo o contraseña incorrectos");
 
         return null;
       }
 
-      const token = data.respuesta;
+      const token = data.respuesta?.result as any;
 
       if (!token) {
         setError("No se recibió el token de autenticación");
