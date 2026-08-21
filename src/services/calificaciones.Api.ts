@@ -1,31 +1,5 @@
-import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
-
-const BASE_URL =
-  import.meta.env.MODE === "production"
-    ? "https://adlocalapi.onrender.com/api"
-    : "https://adlocalapi.onrender.com/api";
-
-const api = axios.create({
-  baseURL: BASE_URL + "/CalificacionesComentarios",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.response.use(
-  (r) => r,
-  (e) => {
-    console.log(e);
-
-    const message =
-      e.response?.data?.mensaje ||
-      e.response?.data?.message ||
-      "Error en la petición";
-
-    throw new Error(message);
-  }
-);
+import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 
 export interface CalificacionComentarioCreateDto {
   calificacion: number;
@@ -33,7 +7,6 @@ export interface CalificacionComentarioCreateDto {
   idComercio: number;
   nombrePersona: string;
 }
-
 
 export interface CalificacionComentarioDto {
   id: number;
@@ -44,7 +17,6 @@ export interface CalificacionComentarioDto {
   fechaCreacion: string;
 }
 
-
 export interface CalificacionComentarioListResponse {
   totalRecords: number;
   page: number;
@@ -53,18 +25,22 @@ export interface CalificacionComentarioListResponse {
 }
 
 export const calificacionesApi = {
-
   crear: (dto: CalificacionComentarioCreateDto) =>
-    api.post<ApiResponse<CalificacionComentarioDto>>("", dto),
-
+    httpUsuarioPublico.post<ApiResponse<CalificacionComentarioDto>>(
+      "CalificacionesComentarios",
+      dto,
+    ),
 
   obtenerTodos: (
     idComercio: number,
     page: number = 1,
     pageSize: number = 10,
-    orderBy: "asc" | "desc" = "desc"
+    orderBy: "asc" | "desc" = "desc",
   ) =>
-    api.get<ApiResponse<CalificacionComentarioListResponse>>("", {
-      params: { idComercio, page, pageSize, orderBy },
-    }),
+    httpUsuarioPublico.get<ApiResponse<CalificacionComentarioListResponse>>(
+      "CalificacionesComentarios",
+      {
+        params: { idComercio, page, pageSize, orderBy },
+      },
+    ),
 };

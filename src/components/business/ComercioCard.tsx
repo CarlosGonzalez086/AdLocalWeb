@@ -4,16 +4,12 @@ import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { slugifyConId } from "../../utils/generals";
 
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
-import styles from "../../styles/ComercioCard.module.css";
 
 interface Props {
   comercio: ComercioDtoListItem;
 }
 
-type BadgeType =
-  | "premium"
-  | "recomendado"
-  | "esencial";
+type BadgeType = "premium" | "recomendado" | "esencial";
 
 interface BadgeConfig {
   label: string;
@@ -26,43 +22,34 @@ interface CardCSSProperties extends CSSProperties {
   "--card-secondary": string;
 }
 
-const getBadgeConfig = (
-  badge?: string,
-): BadgeConfig | null => {
+const getBadgeConfig = (badge?: string): BadgeConfig | null => {
   if (!badge) {
     return null;
   }
 
-  const normalizedBadge = badge
-    .trim()
-    .toLowerCase();
+  const normalizedBadge = badge.trim().toLowerCase();
 
-  const badgeType: BadgeType = normalizedBadge.includes(
-    "premium",
-  )
+  const badgeType: BadgeType = normalizedBadge.includes("premium")
     ? "premium"
     : normalizedBadge.includes("recomendado")
       ? "recomendado"
       : "esencial";
 
-  const configurations: Record<
-    BadgeType,
-    BadgeConfig
-  > = {
+  const configurations: Record<BadgeType, BadgeConfig> = {
     premium: {
       label: "Premium",
       icon: "workspace_premium",
-      className: styles.badgePremium,
+      className: "comercioCardBadgePremium",
     },
     recomendado: {
       label: "Recomendado",
       icon: "recommend",
-      className: styles.badgeRecommended,
+      className: "comercioCardBadgeRecommended",
     },
     esencial: {
       label: "Esencial",
       icon: "verified",
-      className: styles.badgeEssential,
+      className: "comercioCardBadgeEssential",
     },
   };
 
@@ -72,13 +59,9 @@ const getBadgeConfig = (
 const RatingStars: FC<{
   value: number;
 }> = ({ value }) => {
-  const normalizedValue = Math.min(
-    Math.max(value, 0),
-    5,
-  );
+  const normalizedValue = Math.min(Math.max(value, 0), 5);
 
-  const filledPercentage =
-    (normalizedValue / 5) * 100;
+  const filledPercentage = (normalizedValue / 5) * 100;
 
   const stars = Array.from({
     length: 5,
@@ -86,13 +69,11 @@ const RatingStars: FC<{
 
   return (
     <div
-      className={styles.ratingStars}
-      aria-label={`Calificación ${normalizedValue.toFixed(
-        1,
-      )} de 5`}
+      className="comercioCardRatingStars w-100"
+      aria-label={`Calificación ${normalizedValue.toFixed(1)} de 5`}
       role="img"
     >
-      <div className={styles.ratingStarsEmpty}>
+      <div className="comercioCardRatingStarsEmpty">
         {stars.map((_, index) => (
           <MaterialSymbol
             key={`empty-${index}`}
@@ -104,7 +85,7 @@ const RatingStars: FC<{
       </div>
 
       <div
-        className={styles.ratingStarsFilled}
+        className="comercioCardRatingStarsFilled"
         style={{
           width: `${filledPercentage}%`,
         }}
@@ -122,31 +103,18 @@ const RatingStars: FC<{
   );
 };
 
-const ComercioCard: FC<Props> = ({
-  comercio,
-}) => {
-  const slug = slugifyConId(
-    comercio.id,
-    comercio.nombre,
-  );
+const ComercioCard: FC<Props> = ({ comercio }) => {
+  const slug = slugifyConId(comercio.id, comercio.nombre);
 
-  const badgeConfig = getBadgeConfig(
-    comercio.badge,
-  );
+  const badgeConfig = getBadgeConfig(comercio.badge);
 
-  const rating = Number(
-    comercio.promedioCalificacion ?? 0,
-  );
+  const rating = Number(comercio.promedioCalificacion ?? 0);
 
-  const distance = Number(
-    comercio.distanciaKm ?? 0,
-  );
+  const distance = Number(comercio.distanciaKm ?? 0);
 
-  const primaryColor =
-    comercio.colorPrimario || "#5B3A29";
+  const primaryColor = comercio.colorPrimario || "#5B3A29";
 
-  const secondaryColor =
-    comercio.colorSecundario || "#3A2419";
+  const secondaryColor = comercio.colorSecundario || "#3A2419";
 
   const cardStyles: CardCSSProperties = {
     "--card-primary": primaryColor,
@@ -171,123 +139,96 @@ const ComercioCard: FC<Props> = ({
     .filter(Boolean)
     .join(", ");
 
-  const initial =
-    comercio.nombre
-      ?.trim()
-      .charAt(0)
-      .toUpperCase() || "A";
+  const initial = comercio.nombre?.trim().charAt(0).toUpperCase() || "A";
 
   return (
     <a
       href={`/comercios/${slug}`}
-      className={styles.cardLink}
+      className="comercioCardLink"
       style={cardStyles}
       aria-label={`Ver información de ${comercio.nombre}`}
     >
-      <article className={styles.card}>
-        <div className={styles.cover}>
-          <div
-            className={styles.coverImage}
-            style={coverStyles}
-          />
+      <article className="comercioCard">
+        <div className="comercioCardCover">
+          <div className="comercioCardCoverImage" style={coverStyles} />
 
-          <div className={styles.coverOverlay} />
+          <div className="comercioCardCoverOverlay" />
 
           {badgeConfig && (
-            <div
-              className={[
-                styles.badge,
-                badgeConfig.className,
-              ].join(" ")}
-            >
-              <MaterialSymbol
-                icon={badgeConfig.icon}
-                size="small"
-                filled
-              />
+            <div className={`comercioCardBadge ${badgeConfig.className}`}>
+              <MaterialSymbol icon={badgeConfig.icon} size="small" filled />
 
-              <span>{badgeConfig.label}</span>
+              <span className="fz-h6 fw-semibold">{badgeConfig.label}</span>
             </div>
           )}
 
-          <div className={styles.businessIdentity}>
-            <div className={styles.avatar}>
+          <div className="comercioCardIdentity">
+            <div className="comercioCardAvatar">
               {comercio.logoUrl ? (
                 <img
                   src={comercio.logoUrl}
                   alt=""
                   loading="lazy"
-                  className={styles.avatarImage}
+                  className="comercioCardAvatarImage"
                 />
               ) : (
-                <span className={styles.avatarInitial}>
+                <span className="comercioCardAvatarInitial fz-h3 fw-bold">
                   {initial}
                 </span>
               )}
             </div>
 
-            <h2 className={styles.businessName}>
+            <h2 className="comercioCardBusinessName fz-h3 fw-bold mb-0">
               {comercio.nombre}
             </h2>
           </div>
         </div>
 
-        <div className={styles.content}>
-          <div className={styles.information}>
-            <div className={styles.address}>
+        <div className="comercioCardContent">
+          <div className="comercioCardInformation">
+            <div className="comercioCardAddress">
               <MaterialSymbol
                 icon="location_on"
                 size="small"
                 filled
-                className={styles.addressIcon}
+                className="comercioCardAddressIcon"
               />
 
-              <p className={styles.addressText}>
-                {address
-                  ? `${address}.`
-                  : "Dirección no disponible."}
+              <p className="comercioCardAddressText fz-h5 fw-regular mb-0">
+                {address ? `${address}.` : "Dirección no disponible."}
               </p>
             </div>
 
-            <div className={styles.businessMetadata}>
-              <div className={styles.ratingContainer}>
-                <span className={styles.ratingNumber}>
-                  {rating.toFixed(1)}
-                </span>
+            <div className="comercioCardMetadata">
+              <div className="comercioCardRatingContainer w-50">
+                <span className="fz-h5 fw-semibold">{rating.toFixed(1)}</span>
 
                 <RatingStars value={rating} />
               </div>
 
               {distance > 0 && (
                 <>
-                  <span
-                    className={styles.metadataSeparator}
-                    aria-hidden="true"
-                  />
+                  <div className="d-flex justify-content-end align-items-center w-50">
+                    <span className="comercioCardDistance">
+                      <MaterialSymbol icon="near_me" size="small" filled />
 
-                  <span className={styles.distanceBadge}>
-                    <MaterialSymbol
-                      icon="near_me"
-                      size="small"
-                      filled
-                    />
-
-                    <span>
-                      {distance.toFixed(1)} km
+                      <span className="fz-h5 fw-medium">
+                        {distance.toFixed(1)} km
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </>
               )}
             </div>
           </div>
 
-          <div className={styles.detailsButton}>
-            <span>Ver detalles</span>
+          <div className="comercioCardDetails">
+            <span className="fz-h5 fw-semibold">Ver detalles</span>
 
             <MaterialSymbol
               icon="arrow_forward_ios"
               size="small"
-              className={styles.detailsIcon}
+              className="comercioCardDetailsIcon"
             />
           </div>
         </div>

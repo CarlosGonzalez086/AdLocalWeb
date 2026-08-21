@@ -1,5 +1,6 @@
 ---
 import ComercioWraper from "../../wrappers/ComercioWraper";
+import "../../styles/App.css";
 
 export const prerender = false;
 const { slug } = Astro.params;
@@ -35,36 +36,12 @@ if (isNaN(id)) return Astro.redirect("/");
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
   </head>
-  <body style="background-color: #F2F2F7;">
+  <body>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"></script>
     <ComercioWraper id={id} client:only="react" />
   </body>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-
-    :root {
-      /* Font */
-      --font-body:
-        "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display",
-        "Segoe UI", sans-serif !important;
-    }
-    *::before,
-    *::after {
-      font-family: var(--font-body);
-    }
-    body {
-      font-family: var(--font-body);
-      /* height: 100vh;
-    width: 100vw;
-    overflow: hidden; */
-    }
-  </style>
 </html>

@@ -4,11 +4,13 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+
 import Slider, { type Settings } from "react-slick";
+
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 import ComercioCard from "./ComercioCard";
-import styles from "../../styles/BusinessTabs.module.css";
+import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 
@@ -66,41 +68,6 @@ interface Props {
   onLoadMore?: () => void;
 }
 
-type IconSize = "small" | "medium" | "large";
-
-interface MaterialSymbolProps {
-  icon: string;
-  size?: IconSize;
-  filled?: boolean;
-}
-
-const MaterialSymbol = ({
-  icon,
-  size = "medium",
-  filled = false,
-}: MaterialSymbolProps) => {
-  const sizeClass = {
-    small: styles.materialSymbolSmall,
-    medium: styles.materialSymbolMedium,
-    large: styles.materialSymbolLarge,
-  }[size];
-
-  return (
-    <span
-      aria-hidden="true"
-      className={[
-        styles.materialSymbol,
-        sizeClass,
-        filled ? styles.materialSymbolFilled : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {icon}
-    </span>
-  );
-};
-
 const BusinessTabs: React.FC<Props> = ({
   comercios,
   loading = false,
@@ -122,6 +89,7 @@ const BusinessTabs: React.FC<Props> = ({
 
   const handleTabClick = (tab: TabKey) => {
     setActiveTab(tab);
+
     setActiveTabProp?.(tab);
   };
 
@@ -134,6 +102,7 @@ const BusinessTabs: React.FC<Props> = ({
     arrows: true,
     swipeToSlide: true,
     adaptiveHeight: false,
+
     responsive: [
       {
         breakpoint: 1350,
@@ -159,9 +128,12 @@ const BusinessTabs: React.FC<Props> = ({
   const showEmpty = !loading && !error && comercios.length === 0;
 
   return (
-    <section className={styles.businessTabs} aria-busy={loading}>
-      <nav className={styles.tabsViewport} aria-label="Categorías de comercios">
-        <div className={styles.tabsList} role="tablist">
+    <div className="businessTabs" aria-busy={loading}>
+      <nav
+        className="businessTabsViewport"
+        aria-label="Categorías de comercios"
+      >
+        <div className="businessTabsList" role="tablist">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
 
@@ -171,12 +143,9 @@ const BusinessTabs: React.FC<Props> = ({
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className={[
-                  styles.tabButton,
-                  isActive ? styles.tabButtonActive : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className={`businessTabButton fz-h4 fw-semibold ${
+                  isActive ? "businessTabButtonActive" : ""
+                }`}
                 onClick={() => handleTabClick(tab.key)}
               >
                 <MaterialSymbol
@@ -193,60 +162,68 @@ const BusinessTabs: React.FC<Props> = ({
       </nav>
 
       {showInitialLoading && (
-        <div className={styles.skeletonGrid} aria-label="Cargando comercios">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className={styles.skeletonCard}>
+        <div className="businessSkeletonGrid" aria-label="Cargando comercios">
+          {Array.from({
+            length: 4,
+          }).map((_, index) => (
+            <div key={index} className="businessSkeletonCard">
               <Skeleton
                 variant="rounded"
                 animation="wave"
-                className={styles.skeletonImage}
+                className="businessSkeletonImage"
               />
 
-              <Skeleton
-                variant="text"
-                animation="wave"
-                className={styles.skeletonTitle}
-              />
+              <div className="businessSkeletonContent">
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className="businessSkeletonTitle"
+                />
 
-              <Skeleton
-                variant="text"
-                animation="wave"
-                className={styles.skeletonText}
-              />
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className="businessSkeletonText"
+                />
 
-              <Skeleton
-                variant="text"
-                animation="wave"
-                className={styles.skeletonTextShort}
-              />
+                <Skeleton
+                  variant="text"
+                  animation="wave"
+                  className="businessSkeletonTextShort"
+                />
+              </div>
             </div>
           ))}
         </div>
       )}
 
       {showError && (
-        <div className={styles.stateContainer} role="alert">
-          <div className={styles.stateIcon}>
+        <div className="businessStateContainer" role="alert">
+          <div className="businessStateIcon businessStateIconError">
             <MaterialSymbol icon="cloud_off" size="large" />
           </div>
 
-          <h3 className={styles.stateTitle}>No pudimos cargar los comercios</h3>
+          <h3 className="fz-h3 fw-semibold mb-0">
+            No pudimos cargar los comercios
+          </h3>
 
-          <p className={styles.stateDescription}>
+          <p className="businessStateDescription fz-h4 fw-regular">
             Verifica tu conexión e intenta nuevamente.
           </p>
         </div>
       )}
 
       {showEmpty && (
-        <div className={styles.stateContainer} aria-live="polite">
-          <div className={styles.stateIcon}>
+        <div className="businessStateContainer" aria-live="polite">
+          <div className="businessStateIcon">
             <MaterialSymbol icon="storefront" size="large" />
           </div>
 
-          <h3 className={styles.stateTitle}>No hay comercios disponibles</h3>
+          <h3 className="fz-h3 fw-semibold mb-0">
+            No hay comercios disponibles
+          </h3>
 
-          <p className={styles.stateDescription}>
+          <p className="businessStateDescription fz-h4 fw-regular">
             Por el momento no encontramos comercios en esta categoría.
           </p>
         </div>
@@ -255,19 +232,19 @@ const BusinessTabs: React.FC<Props> = ({
       {comercios.length > 0 && (
         <>
           {showCarousel ? (
-            <div className={styles.carousel}>
+            <div className="businessCarousel">
               <Slider {...carouselSettings}>
                 {comercios.map((comercio) => (
-                  <div key={comercio.id} className={styles.carouselItem}>
+                  <div key={comercio.id} className="businessCarouselItem">
                     <ComercioCard comercio={comercio} />
                   </div>
                 ))}
               </Slider>
             </div>
           ) : (
-            <div className={styles.cardsGrid}>
+            <div className="businessCardsGrid">
               {comercios.map((comercio) => (
-                <div key={comercio.id} className={styles.cardItem}>
+                <div key={comercio.id} className="businessCardItem">
                   <ComercioCard comercio={comercio} />
                 </div>
               ))}
@@ -275,32 +252,34 @@ const BusinessTabs: React.FC<Props> = ({
           )}
 
           {hasMore && (
-            <div className={styles.loadMoreContainer}>
+            <div className="businessLoadMore">
               <button
                 type="button"
-                className={styles.loadMoreButton}
+                className="btn-adlocal fz-h4 fw-semibold"
                 onClick={onLoadMore}
                 disabled={loading || !onLoadMore}
               >
-                {loading ? (
-                  <CircularProgress
-                    size={18}
-                    thickness={4}
-                    className={styles.loadMoreSpinner}
-                  />
-                ) : (
-                  <MaterialSymbol icon="expand_more" size="medium" />
-                )}
+                <div className="d-flex align-items-center justify-content-center gap-2">
+                  {loading ? (
+                    <CircularProgress
+                      size={17}
+                      thickness={4}
+                      className="businessLoadMoreSpinner"
+                    />
+                  ) : (
+                    <MaterialSymbol icon="expand_more" size="small" />
+                  )}
 
-                <span>
-                  {loading ? "Cargando comercios" : "Ver más comercios"}
-                </span>
+                  <span>
+                    {loading ? "Cargando comercios" : "Ver más comercios"}
+                  </span>
+                </div>
               </button>
             </div>
           )}
         </>
       )}
-    </section>
+    </div>
   );
 };
 

@@ -3,7 +3,6 @@ import type { FC } from "react";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 
-import styles from "./Footer.module.css";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 const LOGO_URL =
@@ -14,103 +13,102 @@ const Footer: FC = () => {
 
   const registroUrl =
     import.meta.env.MODE === "production"
-      ? "https://ad-local-gamma.vercel.app/registro"
-      : "http://localhost:5173/registro";
+      ? "https://ad-local-gamma.vercel.app/usuario/crear-cuenta"
+      : "http://localhost:5173/usuario/crear-cuenta";
 
   return (
-    <footer className={styles.footer}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <section className={styles.brandSection}>
-            <div className={styles.brand}>
+    <footer className="footer">
+      <div className="footerContainer">
+        <div className="footerContent">
+          <section className="footerBrandSection">
+            <div className="footerBrand">
               <img
                 src={LOGO_URL}
                 alt="Logotipo de ADLocal"
-                className={styles.logo}
+                className="footerLogo"
               />
 
-              <span className={styles.brandName}>ADLocal</span>
+              <span className="fz-h2 fw-bold">ADLocal</span>
             </div>
 
-            <p className={styles.brandDescription}>
+            <p className="footerBrandDescription fz-h4 fw-regular">
               Conectando negocios locales con su comunidad.
             </p>
 
-            <div className={styles.socialLinks}>
+            <div className="footerSocialLinks">
               <a
                 href="https://www.facebook.com/profile.php?id=61588323283229"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visitar ADLocal en Facebook"
-                className={`${styles.socialButton} ${styles.facebookButton}`}
+                className="footerSocialButton footerFacebookButton"
               >
-                <FacebookIcon className={styles.socialIcon} />
+                <FacebookIcon className="footerSocialIcon" />
               </a>
 
               <button
                 type="button"
                 aria-label="Instagram de ADLocal"
-                className={`${styles.socialButton} ${styles.instagramButton}`}
+                className="footerSocialButton footerInstagramButton"
               >
-                <InstagramIcon className={styles.socialIcon} />
+                <InstagramIcon className="footerSocialIcon" />
               </button>
             </div>
           </section>
 
-          <section className={styles.businessCard}>
-            <div className={styles.businessIcon}>
+          <section className="footerBusinessCard">
+            <div className="footerBusinessIcon">
               <MaterialSymbol icon="storefront" size="large" />
             </div>
 
-            <div className={styles.businessContent}>
-              <h2 className={styles.businessTitle}>¿Tienes un negocio?</h2>
+            <div className="footerBusinessContent">
+              <h2 className="fz-h3 fw-bold mb-0">¿Tienes un negocio?</h2>
 
-              <p className={styles.businessDescription}>
+              <p className="footerBusinessDescription fz-h4 fw-regular">
                 Únete a ADLocal y llega a más clientes dentro de tu comunidad.
               </p>
             </div>
 
-            <a href={registroUrl} className={styles.registerButton}>
-              <MaterialSymbol icon="app_registration" size="small" />
+            <a
+              href={registroUrl}
+              className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
+              style={{ textDecoration: "none" }}
+            >
+              <div className="d-flex align-items-center gap-2">
+                <MaterialSymbol icon="app_registration" size="small" />
 
-              <span>Registrarme</span>
+                <span>Registrarme</span>
+              </div>
             </a>
           </section>
 
-          <section className={styles.legalSection}>
+          <section className="footerLegalSection">
             <a
               href="https://carlosgonzalez086.github.io/DaVincixCode/"
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.developerLink}
+              className="footerDeveloperLink fz-h5 fw-semibold"
             >
               Da VinciX Code Labs
             </a>
 
-            <p className={styles.copyright}>
+            <p className="fz-h5 fw-regular mb-0">
               © {year} Todos los derechos reservados.
             </p>
           </section>
         </div>
 
-        <div className={styles.divider} />
+        <div className="footerDivider" />
 
-        <div className={styles.bottom}>
-          <p className={styles.bottomText}>
-            <span>ADLocal</span>
+        <div className="footerBottom">
+          <p className="footerBottomText fz-h5 fw-regular">
+            <span className="fw-semibold">ADLocal</span>
 
-            <span className={styles.bottomSeparator} aria-hidden="true">
+            <span className="footerBottomSeparator" aria-hidden="true">
               ·
             </span>
 
             <span>Hecho en México</span>
-
-            <MaterialSymbol
-              icon="favorite"
-              size="small"
-              filled
-              className={styles.favoriteIcon}
-            />
           </p>
         </div>
       </div>

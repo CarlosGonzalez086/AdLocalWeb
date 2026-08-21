@@ -3,7 +3,7 @@ import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Body from "./layout/Body";
-import muiTheme from "./theme/muiTheme";
+import muiTheme from "../theme/muiTheme";
 import type { ReactNode } from "react";
 import { useMunicipio } from "../hooks/useMunicipio";
 
@@ -13,6 +13,7 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ children }) => {
   const { municipioActual, loadingMunicipios } = useMunicipio();
+  console.log(municipioActual);
 
   return (
     <ThemeProvider theme={muiTheme}>

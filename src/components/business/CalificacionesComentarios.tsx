@@ -5,13 +5,13 @@ import {
   Rating,
   TextField,
 } from "@mui/material";
+
 import { useState, type CSSProperties, type FormEvent } from "react";
+
 import Swal from "sweetalert2";
 
 import { useCalificaciones } from "../../hooks/useCalificaciones";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
-
-import styles from "../../styles/CalificacionesComentarios.module.css";
 
 interface Props {
   idComercio: number;
@@ -112,42 +112,47 @@ const CalificacionesComentarios = ({
   };
 
   return (
-    <section className={styles.comments} style={dynamicStyles}>
-      <form className={styles.formCard} onSubmit={handleEnviar}>
-        <header className={styles.formHeader}>
-          <span className={styles.formHeaderIcon}>
+    <div className="calificacionesComentarios" style={dynamicStyles}>
+      {/* =====================================================
+          FORMULARIO
+      ===================================================== */}
+
+      <form className="calificacionesFormCard" onSubmit={handleEnviar}>
+        <div className="calificacionesFormHeader">
+          <span className="calificacionesFormHeaderIcon">
             <MaterialSymbol icon="edit_note" size="medium" />
           </span>
 
           <div>
-            <h2 className={styles.formTitle}>Deja tu comentario</h2>
+            <h2 className="fz-h3 fw-bold mb-1">Deja tu comentario</h2>
 
-            <p className={styles.formDescription}>
+            <p className="calificacionesFormDescription fz-h5 fw-regular mb-0">
               Comparte tu experiencia con este comercio.
             </p>
           </div>
-        </header>
+        </div>
 
-        <div className={styles.formFields}>
+        <div className="calificacionesFormFields">
           <TextField
             fullWidth
             value={nombre}
             onChange={(event) => setNombre(event.target.value)}
             placeholder="Tu nombre"
             autoComplete="name"
-            className={styles.textField}
+            className="calificacionesTextField"
             slotProps={{
               htmlInput: {
                 maxLength: 100,
                 "aria-label": "Tu nombre",
               },
+
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
                     <MaterialSymbol
                       icon="person"
                       size="medium"
-                      className={styles.fieldIcon}
+                      className="calificacionesFieldIcon"
                     />
                   </InputAdornment>
                 ),
@@ -162,15 +167,14 @@ const CalificacionesComentarios = ({
             value={comentario}
             onChange={(event) => setComentario(event.target.value)}
             placeholder="Escribe tu comentario..."
-            className={[styles.textField, styles.commentField].join(" ")}
+            className="calificacionesTextField calificacionesCommentField"
             helperText={
               <span
-                className={[
-                  styles.characterCounter,
-                  isNearCommentLimit ? styles.characterCounterWarning : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className={`calificacionesCharacterCounter fz-h6 fw-medium ${
+                  isNearCommentLimit
+                    ? "calificacionesCharacterCounterWarning"
+                    : ""
+                }`}
               >
                 {remainingCharacters} caracteres disponibles
               </span>
@@ -180,16 +184,17 @@ const CalificacionesComentarios = ({
                 maxLength: MAX_COMMENT_LENGTH,
                 "aria-label": "Comentario",
               },
+
               input: {
                 startAdornment: (
                   <InputAdornment
                     position="start"
-                    className={styles.commentAdornment}
+                    className="calificacionesCommentAdornment"
                   >
                     <MaterialSymbol
                       icon="chat_bubble"
                       size="medium"
-                      className={styles.fieldIcon}
+                      className="calificacionesFieldIcon"
                     />
                   </InputAdornment>
                 ),
@@ -197,16 +202,18 @@ const CalificacionesComentarios = ({
             }}
           />
 
-          <div className={styles.ratingField}>
-            <div className={styles.ratingInformation}>
-              <span className={styles.ratingIcon}>
+          {/* CALIFICACIÓN */}
+
+          <div className="calificacionesRatingField">
+            <div className="calificacionesRatingInformation">
+              <span className="calificacionesRatingIcon">
                 <MaterialSymbol icon="star" size="medium" filled />
               </span>
 
-              <div>
-                <span className={styles.ratingLabel}>Calificación</span>
+              <div className="calificacionesRatingTexts">
+                <span className="fz-h4 fw-semibold">Calificación</span>
 
-                <span className={styles.ratingDescription}>
+                <span className="calificacionesRatingDescription fz-h5 fw-regular">
                   Selecciona de 1 a 5 estrellas
                 </span>
               </div>
@@ -216,31 +223,40 @@ const CalificacionesComentarios = ({
               value={calificacion}
               onChange={(_, value) => setCalificacion(value)}
               precision={1}
-              className={styles.rating}
+              className="calificacionesRating"
               aria-label="Seleccionar calificación"
               icon={<MaterialSymbol icon="star" size="medium" filled />}
               emptyIcon={<MaterialSymbol icon="star" size="medium" filled />}
             />
           </div>
 
-          <button type="submit" className={styles.submitButton}>
-            <MaterialSymbol icon="send" size="small" />
+          <button
+            type="submit"
+            className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
+          >
+            <div className="d-flex align-items-center justify-content-center gap-2">
+              <MaterialSymbol icon="send" size="small" />
 
-            <span>Enviar comentario</span>
+              <span>Enviar comentario</span>
+            </div>
           </button>
         </div>
       </form>
 
-      <div className={styles.commentsHeader}>
-        <div className={styles.commentsTitleContainer}>
-          <span className={styles.commentsTitleIcon}>
+      {/* =====================================================
+          ENCABEZADO COMENTARIOS
+      ===================================================== */}
+
+      <div className="calificacionesCommentsHeader">
+        <div className="calificacionesCommentsTitleContainer">
+          <span className="calificacionesCommentsTitleIcon">
             <MaterialSymbol icon="forum" size="medium" />
           </span>
 
           <div>
-            <h2 className={styles.commentsTitle}>Comentarios</h2>
+            <h2 className="fz-h3 fw-bold mb-1">Comentarios</h2>
 
-            <p className={styles.commentsSubtitle}>
+            <p className="calificacionesCommentsSubtitle fz-h5 fw-regular mb-0">
               {totalRecords > 0
                 ? `${totalRecords} ${
                     totalRecords === 1
@@ -254,58 +270,66 @@ const CalificacionesComentarios = ({
 
         <button
           type="button"
-          className={styles.orderButton}
+          className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm fz-h5 fw-medium"
           onClick={handleChangeOrder}
         >
-          <MaterialSymbol icon="sort" size="small" />
+          <div className="d-flex align-items-center gap-2">
+            <MaterialSymbol icon="sort" size="small" />
 
-          <span>{orderBy === "desc" ? "Más antiguos" : "Más recientes"}</span>
+            <span>{orderBy === "desc" ? "Más antiguos" : "Más recientes"}</span>
+          </div>
         </button>
       </div>
 
+      {/* =====================================================
+          LOADING / EMPTY / COMENTARIOS
+      ===================================================== */}
+
       {loading ? (
-        <div className={styles.loadingState} aria-live="polite">
+        <div className="calificacionesLoadingState" aria-live="polite">
           <CircularProgress
             size={22}
             thickness={4}
-            className={styles.loadingSpinner}
+            className="calificacionesLoadingSpinner"
           />
 
-          <span>Cargando comentarios...</span>
+          <span className="fz-h4 fw-medium">Cargando comentarios...</span>
         </div>
       ) : comentarios.length === 0 ? (
-        <div className={styles.emptyState}>
-          <div className={styles.emptyStateIcon}>
+        <div className="calificacionesEmptyState">
+          <div className="calificacionesEmptyStateIcon">
             <MaterialSymbol icon="chat_bubble" size="large" />
           </div>
 
-          <h3 className={styles.emptyStateTitle}>Aún no hay comentarios</h3>
+          <h3 className="fz-h3 fw-semibold mb-1">Aún no hay comentarios</h3>
 
-          <p className={styles.emptyStateDescription}>
+          <p className="calificacionesEmptyStateDescription fz-h4 fw-regular mb-0">
             Comparte tu experiencia y sé la primera persona en dejar una
             opinión.
           </p>
         </div>
       ) : (
         <>
-          <div className={styles.commentsList}>
+          <div className="calificacionesCommentsList">
             {comentarios.map((item) => {
               const initial =
                 item.nombrePersona?.trim().charAt(0).toUpperCase() || "A";
 
               return (
-                <article key={item.id} className={styles.commentCard}>
-                  <div className={styles.avatar}>{initial}</div>
+                <article key={item.id} className="calificacionesCommentCard">
+                  <div className="calificacionesAvatar fz-h3 fw-bold">
+                    {initial}
+                  </div>
 
-                  <div className={styles.commentContent}>
-                    <header className={styles.commentHeader}>
-                      <div>
-                        <h3 className={styles.commentAuthor}>
+                  <div className="calificacionesCommentContent">
+                    <div className="calificacionesCommentHeader">
+                      <div className="calificacionesCommentAuthorInformation">
+                        <h3 className="fz-h4 fw-semibold mb-0">
                           {item.nombrePersona}
                         </h3>
 
                         <time
-                          className={styles.commentDate}
+                          className="calificacionesCommentDate fz-h6 fw-regular"
                           dateTime={new Date(item.fechaCreacion).toISOString()}
                         >
                           {formatDate(item.fechaCreacion)}
@@ -316,7 +340,7 @@ const CalificacionesComentarios = ({
                         value={item.calificacion}
                         readOnly
                         size="small"
-                        className={styles.commentRating}
+                        className="calificacionesCommentRating"
                         aria-label={`Calificación ${item.calificacion} de 5`}
                         icon={
                           <MaterialSymbol icon="star" size="small" filled />
@@ -325,9 +349,11 @@ const CalificacionesComentarios = ({
                           <MaterialSymbol icon="star" size="small" filled />
                         }
                       />
-                    </header>
+                    </div>
 
-                    <p className={styles.commentText}>{item.comentario}</p>
+                    <p className="calificacionesCommentText fz-h4 fw-regular mb-0">
+                      {item.comentario}
+                    </p>
                   </div>
                 </article>
               );
@@ -335,7 +361,7 @@ const CalificacionesComentarios = ({
           </div>
 
           {totalPages > 1 && (
-            <div className={styles.paginationContainer}>
+            <div className="calificacionesPaginationContainer">
               <Pagination
                 count={totalPages}
                 page={page}
@@ -343,13 +369,13 @@ const CalificacionesComentarios = ({
                 shape="rounded"
                 siblingCount={0}
                 boundaryCount={1}
-                className={styles.pagination}
+                className="calificacionesPagination"
               />
             </div>
           )}
         </>
       )}
-    </section>
+    </div>
   );
 };
 
