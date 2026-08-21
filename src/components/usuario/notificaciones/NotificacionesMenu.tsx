@@ -25,7 +25,7 @@ export default function NotificacionesMenu() {
         }
       >
         <Badge badgeContent={noLeidas} color="error" max={99}>
-          <MaterialSymbol icon="notifications" size="small" filled />
+          <MaterialSymbol icon="notifications" size="small" filled className="mt-2"/>
         </Badge>
       </IconButton>
       <Menu

@@ -1,4 +1,11 @@
-import { Avatar, Drawer, Skeleton } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  Skeleton,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
@@ -77,6 +84,8 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
   const [usuario, setUsuario] = useState<UsuarioSesion | null>(null);
 
   const [authLoading, setAuthLoading] = useState(true);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const registroNegocioUrl =
     import.meta.env.MODE === "production"
@@ -169,6 +178,8 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
   const iniciales = usuario ? obtenerIniciales(usuario.nombre) : "";
 
+  console.log(isMobile);
+
   return (
     <>
       <header className="header">
@@ -257,19 +268,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
                     {usuario && <NotificacionesMenu />}
 
-                    <div className="d-lg-none">
-                      <button
-                        type="button"
-                        className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm"
-                        aria-label="Abrir menú"
-                        aria-expanded={drawerOpen}
-                        aria-controls="mobile-navigation"
-                        onClick={() => setDrawerOpen(true)}
-                      >
-                        <MaterialSymbol icon="menu" size="medium" />
-                      </button>
-                    </div>
-
                     <a href={cuentaUsuarioUrl} className="userAccount">
                       {usuario.fotoUrl ? (
                         <Avatar src={usuario.fotoUrl} alt={usuario.nombre} />
@@ -326,6 +324,27 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
               </div>
             </a>
           </nav>
+
+          {isMobile ? (
+            <>
+              {" "}
+              <div className="d-flex justify-content-end align-items-center gap-2">
+                {usuario && <NotificacionesMenu />}
+                <Button
+                  type="button"
+                  className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm"
+                  aria-label="Abrir menú"
+                  aria-expanded={drawerOpen}
+                  aria-controls="mobile-navigation"
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  <MaterialSymbol icon="menu" size="medium" className="mt-1"/>
+                </Button>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </header>
 
@@ -531,21 +550,6 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
                 />
               </a>
             )}
-
-            {usuario && <NotificacionesMenu />}
-
-            <div className="d-lg-none">
-              <button
-                type="button"
-                className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm"
-                aria-label="Abrir menú"
-                aria-expanded={drawerOpen}
-                aria-controls="mobile-navigation"
-                onClick={() => setDrawerOpen(true)}
-              >
-                <MaterialSymbol icon="menu" size="medium" />
-              </button>
-            </div>
           </nav>
 
           <div className="drawerFooter">
