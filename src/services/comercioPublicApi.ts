@@ -1,9 +1,6 @@
-import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
-const BASE_URL =
-  import.meta.env.MODE === "production"
-    ? "https://adlocalapi.onrender.com/api"
-    : "https://adlocalapi.onrender.com/api";
+import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
+import { getLocalStorageJWTUsuario } from "../utils/storageUsuario";
 
 const municipioActual: string | null = (() => {
   const raw = localStorage.getItem("municipioActual");
@@ -15,26 +12,6 @@ const municipioActual: string | null = (() => {
     return null;
   }
 })();
-
-const api = axios.create({
-  baseURL: BASE_URL + "/comercios",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.response.use(
-  (r) => r,
-  (e) => {
-    const message =
-      e.response?.data?.mensaje ||
-      e.response?.data?.message ||
-      e.cod ||
-      "Error en la petición";
-
-    throw new Error(message);
-  },
-);
 
 export interface HorarioComercioDto {
   dia: number;
@@ -67,6 +44,13 @@ export interface ComercioDtoListItem {
   distanciaKm: number;
 }
 
+export interface ComercioListadoResponse {
+  items: ComercioDtoListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface ComercioDto {
   id: number;
   nombre: string;
@@ -91,28 +75,68 @@ export interface ComercioDto {
   tipoComercio: string;
 }
 
+export enum TipoProductoServicio {
+  Producto = 1,
+  Servicio = 2,
+}
+
+export enum ModalidadProductoServicio {
+  Compra = 1,
+  Reservacion = 2,
+  Cotizacion = 3,
+}
+
 export interface ProductoServicioDto {
   id?: number;
+
+  uuid: string;
+
   idComercio: number;
-  idUsuario: number;
+
   nombre: string;
-  descripcion?: string;
-  logoUrl?: string;
-  tipo: number;
-  precio?: number;
-  stock?: number;
+
+  descripcion?: string | null;
+
+  logoUrl?: string | null;
+
+  tipo: TipoProductoServicio;
+
+  modalidad: ModalidadProductoServicio;
+
+  precio?: number | null;
+
+  precioDesde?: number | null;
+
+  manejaStock: boolean;
+
+  stock?: number | null;
+
+  disponible: boolean;
+
+  permiteDomicilio: boolean;
+
+  permiteRecoger: boolean;
+
+  duracionMinutos?: number | null;
+
   activo: boolean;
+
   eliminado?: boolean;
-  visible?: boolean;
-  codigoInterno?: string;
+
+  visible: boolean;
+
+  codigoInterno?: string | null;
+
   fechaCreacion?: string;
+
   fechaActualizacion?: string;
+
   fechaEliminado?: string;
 }
 
 export const comercioPublicApi = {
   getDestacados: (page: number, pageSize: number) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "destacados",
         municipio: municipioActual,
@@ -122,7 +146,7 @@ export const comercioPublicApi = {
     }),
 
   getPopulares: (page: number, pageSize: number) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "populares",
         municipio: municipioActual,
@@ -132,7 +156,7 @@ export const comercioPublicApi = {
     }),
 
   getRecientes: (page: number, pageSize: number) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "recientes",
         municipio: municipioActual,
@@ -142,7 +166,7 @@ export const comercioPublicApi = {
     }),
 
   getSugeridos: (lat: number, lng: number, page: number, pageSize: number) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "sugeridos",
         lat,
@@ -151,10 +175,13 @@ export const comercioPublicApi = {
         page,
         pageSize,
       },
+      headers: getLocalStorageJWTUsuario()
+        ? { Authorization: `Bearer ${getLocalStorageJWTUsuario()}` }
+        : undefined,
     }),
 
   getCercanos: (lat: number, lng: number, page: number, pageSize: number) =>
-    api.get<ApiResponse<ComercioDtoListItem[]>>("", {
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "cercanos",
         lat,
@@ -165,7 +192,8 @@ export const comercioPublicApi = {
       },
     }),
 
-  getById: (id: number) => api.get<ApiResponse<ComercioDto>>(`/${id}`),
+  getById: (id: number) =>
+    httpUsuarioPublico.get<ApiResponse<ComercioDto>>(`comercios/${id}`),
   getByFiltros: (
     estadoId: number = 0,
     municipioId: number = 0,
@@ -174,7 +202,7 @@ export const comercioPublicApi = {
     page: number = 1,
     pageSize: number = 8,
   ) =>
-    api.get<ApiResponse<any>>("por-filtros", {
+    httpUsuarioPublico.get<ApiResponse<any>>("comercios/por-filtros", {
       params: { estadoId, municipioId, idTipoComercio, orden, page, pageSize },
     }),
 };

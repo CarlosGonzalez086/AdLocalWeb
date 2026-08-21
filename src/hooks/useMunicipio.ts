@@ -13,39 +13,105 @@ interface MunicipioCache {
   timestamp: number;
 }
 
+interface GoogleGeocodeAddressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
+}
+
+interface GoogleGeocodeResult {
+  address_components: GoogleGeocodeAddressComponent[];
+  types: string[];
+}
+
+interface GoogleGeocodeResponse {
+  results: GoogleGeocodeResult[];
+  status: string;
+}
+
+const CACHE_KEY = "municipioActual";
 const CACHE_TIME = 1000 * 60 * 10;
 
 const obtenerUbicacion = (): Promise<Ubicacion> =>
   new Promise((resolve, reject) => {
-    if (!navigator.geolocation)
-      return reject(new Error("Geolocalización no soportada"));
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocalización no soportada"));
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
-      (pos) =>
+      ({ coords }) => {
         resolve({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        }),
-      (err) => reject(err),
+          lat: coords.latitude,
+          lng: coords.longitude,
+        });
+      },
+      reject,
       {
-        enableHighAccuracy: false, // 🔥 CLAVE
-        timeout: 20000, // más tolerante
-        maximumAge: 60000, // reutiliza cache del navegador
+        enableHighAccuracy: false,
+        timeout: 20000,
+        maximumAge: 60000,
       },
     );
   });
 
-const obtenerMunicipioDesdeGeocode = (results: any[]): string | null => {
-  for (const r of results) {
-    if (r.types?.includes("plus_code")) continue;
+const obtenerMunicipioDesdeGeocode = (
+  results: GoogleGeocodeResult[],
+): string | null => {
+  for (const result of results) {
+    if (result.types.includes("plus_code")) {
+      continue;
+    }
 
-    for (const comp of r.address_components) {
-      if (comp.types.includes("administrative_area_level_2")) {
-        return comp.long_name;
-      }
+    const municipio = result.address_components.find((component) =>
+      component.types.includes("administrative_area_level_2"),
+    );
+
+    if (municipio) {
+      return municipio.long_name;
     }
   }
+
   return null;
+};
+
+const obtenerCache = (): MunicipioCache | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+
+    if (!raw) {
+      return null;
+    }
+
+    const cache = JSON.parse(raw) as MunicipioCache;
+
+    const cacheValido =
+      typeof cache.timestamp === "number" &&
+      typeof cache.lat === "number" &&
+      typeof cache.lng === "number" &&
+      Date.now() - cache.timestamp < CACHE_TIME;
+
+    if (!cacheValido) {
+      localStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    return cache;
+  } catch {
+    localStorage.removeItem(CACHE_KEY);
+    return null;
+  }
+};
+
+const guardarCache = (municipio: string | null, ubicacion: Ubicacion): void => {
+  const cache: MunicipioCache = {
+    municipio,
+    lat: ubicacion.lat,
+    lng: ubicacion.lng,
+    timestamp: Date.now(),
+  };
+
+  localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
 };
 
 export const useMunicipio = () => {
@@ -54,63 +120,97 @@ export const useMunicipio = () => {
     null,
   );
   const [loadingMunicipios, setLoadingMunicipios] = useState(true);
+  const [errorMunicipio, setErrorMunicipio] = useState<string | null>(null);
 
   useEffect(() => {
+    let activo = true;
+
     const detectarMunicipio = async () => {
       try {
-        const cacheRaw = localStorage.getItem("municipioActual");
-        if (cacheRaw) {
-          const cache: MunicipioCache = JSON.parse(cacheRaw);
-          if (Date.now() - cache.timestamp < CACHE_TIME) {
-            setMunicipioActual(cache.municipio);
-            setUbicacionActual({ lat: cache.lat, lng: cache.lng });
-            setLoadingMunicipios(false);
-            return;
-          }
+        setLoadingMunicipios(true);
+        setErrorMunicipio(null);
+
+        const cache = obtenerCache();
+
+        if (cache) {
+          if (!activo) return;
+
+          setMunicipioActual(cache.municipio);
+          setUbicacionActual({
+            lat: cache.lat,
+            lng: cache.lng,
+          });
+
+          return;
         }
-        const coords = await obtenerUbicacion();
-        console.log(coords);
 
-        const API_KEY = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
-        if (!API_KEY) throw new Error("Falta API Key Google Maps");
+        const ubicacion = await obtenerUbicacion();
 
-        const { data } = await axios.get(
+        if (!activo) return;
+
+        setUbicacionActual(ubicacion);
+
+        const apiKey = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
+
+        if (!apiKey) {
+          throw new Error("Falta PUBLIC_GOOGLE_MAPS_API_KEY");
+        }
+
+        const { data } = await axios.get<GoogleGeocodeResponse>(
           "https://maps.googleapis.com/maps/api/geocode/json",
           {
             params: {
-              latlng: `${coords.lat},${coords.lng}`,
-              key: API_KEY,
+              latlng: `${ubicacion.lat},${ubicacion.lng}`,
+              key: apiKey,
               language: "es",
               result_type: "locality|administrative_area_level_2",
             },
           },
         );
-        console.log(data);
+
+        if (!activo) return;
+
+        if (data.status !== "OK") {
+          throw new Error(
+            `Google Geocoding respondió con estado: ${data.status}`,
+          );
+        }
 
         const municipio = obtenerMunicipioDesdeGeocode(data.results);
-        console.log(municipio);
 
-        const nuevoCache: MunicipioCache = {
-          municipio,
-          lat: coords.lat,
-          lng: coords.lng,
-          timestamp: Date.now(),
-        };
-
-        localStorage.setItem("municipioActual", JSON.stringify(nuevoCache));
+        guardarCache(municipio, ubicacion);
 
         setMunicipioActual(municipio);
-        setUbicacionActual(coords);
-      } catch (err) {
-        console.warn("No se pudo detectar ubicación, usando fallback");
+      } catch (error) {
+        if (!activo) return;
+
+        console.warn("No se pudo detectar el municipio:", error);
+
         setMunicipioActual(null);
+
+        setErrorMunicipio(
+          error instanceof Error
+            ? error.message
+            : "No se pudo obtener la ubicación",
+        );
       } finally {
-        setLoadingMunicipios(false);
+        if (activo) {
+          setLoadingMunicipios(false);
+        }
       }
     };
 
     detectarMunicipio();
+
+    return () => {
+      activo = false;
+    };
   }, []);
 
-  return { municipioActual, ubicacionActual, loadingMunicipios };
+  return {
+    municipioActual,
+    ubicacionActual,
+    loadingMunicipios,
+    errorMunicipio,
+  };
 };

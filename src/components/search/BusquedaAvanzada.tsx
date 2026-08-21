@@ -7,17 +7,17 @@ import {
   Skeleton,
   type SelectChangeEvent,
 } from "@mui/material";
+
 import React, { useState } from "react";
 
 import { SelectEstadoAutocomplete } from "../Locations/SelectEstadoAutocomplete";
 import { SelectMunicipioAutocomplete } from "../Locations/SelectMunicipioAutocomplete";
 import { SelectTipoComercioAutocomplete } from "../business/SelectTipoComercioAutocomplete";
+
 import ComercioCard from "../business/ComercioCard";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 import { useComercioPublico } from "../../hooks/useComercioPublico";
-
-import styles from "./BusquedaAvanzada.module.css";
 
 type OrdenType = "alfabetico" | "recientes" | "antiguos" | "populares";
 
@@ -27,10 +27,13 @@ interface FiltersPanelProps {
   idTipoComercio: number;
   orden: OrdenType;
   mobile?: boolean;
+
   onStateChange: (id: number) => void;
   onMunicipalityChange: (id: number) => void;
   onTipoComercioChange: (id: number) => void;
+
   onOrdenChange: (event: SelectChangeEvent<OrdenType>) => void;
+
   onAplicar: () => void;
   onLimpiar: () => void;
   onClose?: () => void;
@@ -51,26 +54,28 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onClose,
 }) => {
   return (
-    <div className={styles.filtersPanel}>
-      {mobile && <div className={styles.drawerIndicator} />}
+    <div className="advancedFiltersPanel">
+      {mobile && <div className="advancedFiltersIndicator" />}
 
-      <div className={styles.filtersHeader}>
-        <div className={styles.filtersTitleContainer}>
-          <span className={styles.filtersTitleIcon}>
+      <div className="advancedFiltersHeader">
+        <div className="advancedFiltersTitleContainer">
+          <span className="advancedFiltersTitleIcon">
             <MaterialSymbol icon="tune" size="medium" filled />
           </span>
 
           <div>
-            <h2 className={styles.filtersTitle}>Filtros</h2>
+            <h2 className="fz-h2 fw-bold mb-1">Filtros</h2>
 
-            <p className={styles.filtersSubtitle}>Personaliza los resultados</p>
+            <p className="advancedFiltersSubtitle fz-h5 fw-regular mb-0">
+              Personaliza los resultados
+            </p>
           </div>
         </div>
 
         {mobile && (
           <button
             type="button"
-            className={styles.closeButton}
+            className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm"
             aria-label="Cerrar filtros"
             onClick={onClose}
           >
@@ -79,15 +84,15 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
         )}
       </div>
 
-      <div className={styles.filtersFields}>
-        <div className={styles.filterField}>
-          <span className={styles.fieldLabel}>Estado</span>
+      <div className="advancedFiltersFields">
+        <div className="advancedFilterField">
+          <span className="fz-h5 fw-semibold">Estado</span>
 
           <SelectEstadoAutocomplete value={idState} onChange={onStateChange} />
         </div>
 
-        <div className={styles.filterField}>
-          <span className={styles.fieldLabel}>Municipio</span>
+        <div className="advancedFilterField">
+          <span className="fz-h5 fw-semibold">Municipio</span>
 
           <SelectMunicipioAutocomplete
             estadoId={idState}
@@ -96,8 +101,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           />
         </div>
 
-        <div className={styles.filterField}>
-          <span className={styles.fieldLabel}>Tipo de comercio</span>
+        <div className="advancedFilterField">
+          <span className="fz-h5 fw-semibold">Tipo de comercio</span>
 
           <SelectTipoComercioAutocomplete
             value={idTipoComercio}
@@ -105,8 +110,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           />
         </div>
 
-        <div className={styles.filterField}>
-          <label htmlFor="orden-comercios" className={styles.fieldLabel}>
+        <div className="advancedFilterField">
+          <label htmlFor="orden-comercios" className="fz-h5 fw-semibold">
             Ordenar resultados
           </label>
 
@@ -116,18 +121,18 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             onChange={onOrdenChange}
             displayEmpty
             fullWidth
-            className={styles.orderSelect}
+            className="advancedOrderSelect"
             startAdornment={
               <InputAdornment
                 position="start"
-                className={styles.orderAdornment}
+                className="advancedOrderAdornment"
               >
                 <MaterialSymbol icon="sort" size="medium" />
               </InputAdornment>
             }
             MenuProps={{
               classes: {
-                paper: styles.orderMenuPaper,
+                paper: "advancedOrderMenuPaper",
               },
             }}
           >
@@ -142,25 +147,29 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
         </div>
       </div>
 
-      <div className={styles.filtersActions}>
+      <div className="advancedFiltersActions">
         <button
           type="button"
-          className={styles.applyButton}
+          className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
           onClick={onAplicar}
         >
-          <MaterialSymbol icon="filter_alt" size="small" filled />
+          <div className="d-flex align-items-center justify-content-center gap-2">
+            <MaterialSymbol icon="filter_alt" size="small" filled />
 
-          <span>Aplicar filtros</span>
+            <span>Aplicar filtros</span>
+          </div>
         </button>
 
         <button
           type="button"
-          className={styles.clearButton}
+          className="btn-adlocal btn-adlocal--ghost fz-h4 fw-medium"
           onClick={onLimpiar}
         >
-          <MaterialSymbol icon="filter_alt_off" size="small" />
+          <div className="d-flex align-items-center justify-content-center gap-2">
+            <MaterialSymbol icon="filter_alt_off" size="small" />
 
-          <span>Limpiar filtros</span>
+            <span>Limpiar filtros</span>
+          </div>
         </button>
       </div>
     </div>
@@ -169,7 +178,9 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
 const BusquedaAvanzada: React.FC = () => {
   const [idState, setIdState] = useState(0);
+
   const [idMunicipality, setIdMunicipality] = useState(0);
+
   const [idTipoComercio, setIdTipoComercio] = useState(0);
 
   const [orden, setOrden] = useState<OrdenType>("alfabetico");
@@ -187,8 +198,6 @@ const BusquedaAvanzada: React.FC = () => {
 
   const handleStateChange = (estadoId: number) => {
     setIdState(estadoId);
-
-    // Al cambiar el estado se limpia el municipio anterior.
     setIdMunicipality(0);
   };
 
@@ -231,23 +240,23 @@ const BusquedaAvanzada: React.FC = () => {
   };
 
   return (
-    <section className={styles.searchPage}>
-      <aside className={styles.desktopSidebar}>
+    <div className="advancedSearchPage">
+      <div className="advancedSearchSidebar">
         <FiltersPanel {...filtersPanelProps} />
-      </aside>
+      </div>
 
-      <main className={styles.resultsSection}>
-        <header className={styles.resultsHeader}>
+      <div className="advancedSearchResults">
+        <div className="advancedResultsHeader">
           <div>
-            <h1 className={styles.resultsTitle}>Búsqueda avanzada</h1>
+            <h1 className="fz-h1 fw-bold mb-1">Búsqueda avanzada</h1>
 
-            <p className={styles.resultsDescription}>
+            <p className="advancedResultsDescription fz-h4 fw-regular mb-0">
               Encuentra comercios por ubicación, categoría y popularidad.
             </p>
           </div>
 
           {!loading && comercios.length > 0 && (
-            <span className={styles.resultsCount}>
+            <span className="advancedResultsCount fz-h5 fw-semibold">
               <MaterialSymbol icon="storefront" size="small" />
 
               <span>
@@ -256,56 +265,62 @@ const BusquedaAvanzada: React.FC = () => {
               </span>
             </span>
           )}
-        </header>
+        </div>
 
         {loading && comercios.length === 0 && (
-          <div className={styles.loadingGrid} aria-label="Cargando comercios">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className={styles.skeletonCard}>
+          <div className="advancedLoadingGrid" aria-label="Cargando comercios">
+            {Array.from({
+              length: 6,
+            }).map((_, index) => (
+              <div key={index} className="advancedSkeletonCard">
                 <Skeleton
                   variant="rounded"
                   animation="wave"
-                  className={styles.skeletonImage}
+                  className="advancedSkeletonImage"
                 />
 
-                <Skeleton
-                  variant="text"
-                  animation="wave"
-                  className={styles.skeletonTitle}
-                />
+                <div className="advancedSkeletonContent">
+                  <Skeleton
+                    variant="text"
+                    animation="wave"
+                    className="advancedSkeletonTitle"
+                  />
 
-                <Skeleton
-                  variant="text"
-                  animation="wave"
-                  className={styles.skeletonText}
-                />
+                  <Skeleton
+                    variant="text"
+                    animation="wave"
+                    className="advancedSkeletonText"
+                  />
 
-                <Skeleton
-                  variant="text"
-                  animation="wave"
-                  className={styles.skeletonTextShort}
-                />
+                  <Skeleton
+                    variant="text"
+                    animation="wave"
+                    className="advancedSkeletonTextShort"
+                  />
+                </div>
               </div>
             ))}
           </div>
         )}
 
         {!loading && comercios.length === 0 && (
-          <div className={styles.emptyState} aria-live="polite">
-            <div className={styles.emptyIcon}>
+          <div className="advancedEmptyState" aria-live="polite">
+            <div className="advancedEmptyIcon">
               <MaterialSymbol icon="search_off" size="large" />
             </div>
 
-            <h2 className={styles.emptyTitle}>No se encontraron comercios</h2>
+            <h2 className="fz-h2 fw-semibold mb-0">
+              No se encontraron comercios
+            </h2>
 
-            <p className={styles.emptyDescription}>
+            <p className="advancedEmptyDescription fz-h4 fw-regular">
               Prueba seleccionando otra ubicación, categoría o tipo de
               ordenamiento.
             </p>
 
             <button
               type="button"
-              className={styles.emptyClearButton}
+              className="btn-adlocal fz-h4 fw-semibold"
               onClick={handleLimpiar}
             >
               Limpiar filtros
@@ -314,9 +329,9 @@ const BusquedaAvanzada: React.FC = () => {
         )}
 
         {comercios.length > 0 && (
-          <div className={styles.cardsGrid}>
+          <div className="advancedCardsGrid">
             {comercios.map((comercio) => (
-              <div key={comercio.id} className={styles.cardItem}>
+              <div key={comercio.id} className="advancedCardItem">
                 <ComercioCard comercio={comercio} />
               </div>
             ))}
@@ -324,51 +339,61 @@ const BusquedaAvanzada: React.FC = () => {
         )}
 
         {hasMore && (
-          <div className={styles.loadMoreContainer}>
+          <div className="advancedLoadMore">
             <button
               type="button"
-              className={styles.loadMoreButton}
+              className="btn-adlocal fz-h4 fw-semibold"
               onClick={handleLoadMore}
               disabled={loading}
             >
-              {loading ? (
-                <CircularProgress
-                  size={18}
-                  thickness={4}
-                  className={styles.loadMoreSpinner}
-                />
-              ) : (
-                <MaterialSymbol icon="expand_more" size="medium" />
-              )}
+              <div className="d-flex align-items-center justify-content-center gap-2">
+                {loading ? (
+                  <CircularProgress
+                    size={17}
+                    thickness={4}
+                    className="advancedLoadMoreSpinner"
+                  />
+                ) : (
+                  <MaterialSymbol icon="expand_more" size="small" />
+                )}
 
-              <span>
-                {loading ? "Cargando comercios" : "Cargar más comercios"}
-              </span>
+                <span>
+                  {loading ? "Cargando comercios" : "Cargar más comercios"}
+                </span>
+              </div>
             </button>
           </div>
         )}
-      </main>
+      </div>
 
-      <button
-        type="button"
-        className={styles.mobileFilterButton}
-        aria-label="Abrir filtros"
-        aria-expanded={mobileOpen}
-        onClick={() => setMobileOpen(true)}
-      >
-        <MaterialSymbol icon="tune" size="medium" filled />
+      <div className="advancedMobileFilterContainer">
+        <button
+          type="button"
+          className="btn-adlocal btn-adlocal--solid btn-adlocal--sm"
+          aria-label="Abrir filtros"
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen(true)}
+        >
+          <div className="advancedMobileFilterContent">
+            <MaterialSymbol icon="tune" size="medium" filled />
 
-        {activeFiltersCount > 0 && (
-          <span className={styles.filterCounter}>{activeFiltersCount}</span>
-        )}
-      </button>
+            <span className="fz-h4 fw-semibold">Filtros</span>
+
+            {activeFiltersCount > 0 && (
+              <span className="advancedFilterCounter fz-h6 fw-bold">
+                {activeFiltersCount}
+              </span>
+            )}
+          </div>
+        </button>
+      </div>
 
       <Drawer
         anchor="bottom"
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         PaperProps={{
-          className: styles.mobileDrawerPaper,
+          className: "advancedMobileDrawerPaper",
         }}
       >
         <FiltersPanel
@@ -377,7 +402,7 @@ const BusquedaAvanzada: React.FC = () => {
           onClose={() => setMobileOpen(false)}
         />
       </Drawer>
-    </section>
+    </div>
   );
 };
 

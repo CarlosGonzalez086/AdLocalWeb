@@ -1,27 +1,14 @@
-import { Box } from "@mui/material";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 interface BodyProps {
   children?: ReactNode;
 }
 
-const Body: React.FC<BodyProps> = ({ children }) => {
+const Body: FC<BodyProps> = ({ children }) => {
   return (
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        px: { xs: 2, sm: 3 },
-        py: { xs: 3, sm: 4 },
-        backgroundColor: "#fff",
-      }}
-    >
-      {children}
-    </Box>
+    <main className="appBody">
+      <div className="appBodyContainer">{children}</div>
+    </main>
   );
 };
 

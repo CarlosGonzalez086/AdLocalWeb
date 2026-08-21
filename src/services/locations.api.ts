@@ -1,38 +1,4 @@
-import axios from "axios";
-const BASE_URL =
-  import.meta.env.MODE === "production"
-    ? "https://adlocalapi.onrender.com/api"
-    : "https://adlocalapi.onrender.com/api";
-const api = axios.create({
-  baseURL: `${BASE_URL}/locations`,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  },
-);
+import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 
 export interface StateDto {
   id: number;
@@ -46,8 +12,8 @@ export interface MunicipalityDto {
 }
 
 export const locationsApi = {
-  getAllStates: () => api.get("/states"),
+  getAllStates: () => httpUsuarioPublico.get("locations/states"),
 
   getMunicipalitiesByState: (stateId: number) =>
-    api.get(`/states/${stateId}/municipalities`),
+    httpUsuarioPublico.get(`locations/states/${stateId}/municipalities`),
 };

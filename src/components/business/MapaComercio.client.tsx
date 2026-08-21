@@ -3,7 +3,6 @@ import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import L, { type LatLngExpression } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
-import styles from "../../styles/MapaComercio.module.css";
 
 interface Props {
   lat: number;
@@ -13,18 +12,18 @@ interface Props {
 const materialIcon = L.divIcon({
   html: `
     <span
-      class="${styles.markerPulse}"
+      class="mapaComercioMarkerPulse"
       aria-hidden="true"
     ></span>
 
     <span
-      class="material-symbols-outlined ${styles.markerIcon}"
+      class="material-symbols-outlined mapaComercioMarkerIcon"
       aria-hidden="true"
     >
       location_on
     </span>
   `,
-  className: styles.markerContainer,
+  className: "mapaComercioMarkerContainer",
   iconSize: [48, 48],
   iconAnchor: [24, 45],
   popupAnchor: [0, -44],
@@ -44,15 +43,17 @@ const isValidCoordinate = (lat: number, lng: number) => {
 const MapaComercio: FC<Props> = ({ lat, lng }) => {
   if (!isValidCoordinate(lat, lng)) {
     return (
-      <div className={styles.invalidLocation} role="alert">
+      <div className="mapaComercioInvalidLocation" role="alert">
         <span
-          className={`material-symbols-outlined ${styles.invalidLocationIcon}`}
+          className="material-symbols-outlined mapaComercioInvalidLocationIcon"
           aria-hidden="true"
         >
           location_off
         </span>
 
-        <span>La ubicación del comercio no está disponible.</span>
+        <span className="fz-h4 fw-medium">
+          La ubicación del comercio no está disponible.
+        </span>
       </div>
     );
   }
@@ -60,7 +61,7 @@ const MapaComercio: FC<Props> = ({ lat, lng }) => {
   const position: LatLngExpression = [lat, lng];
 
   return (
-    <div className={styles.mapWrapper}>
+    <div className="mapaComercioWrapper">
       <MapContainer
         center={position}
         zoom={16}
@@ -73,7 +74,7 @@ const MapaComercio: FC<Props> = ({ lat, lng }) => {
         touchZoom={false}
         keyboard={false}
         boxZoom={false}
-        className={styles.map}
+        className="mapaComercioMap"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -90,7 +91,7 @@ const MapaComercio: FC<Props> = ({ lat, lng }) => {
         />
       </MapContainer>
 
-      <div className={styles.mapOverlay} aria-hidden="true" />
+      <div className="mapaComercioOverlay" aria-hidden="true" />
     </div>
   );
 };
