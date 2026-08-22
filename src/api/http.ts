@@ -5,5 +5,5 @@ export const BACKEND_URL =
 
 export const URL_ADLOCAL_COMERCIO =
   import.meta.env.MODE === "development"
-    ? import.meta.env.PUBLIC_URL_ADLOCAL_COMERCIO
-    : import.meta.env.PUBLIC_URL_ADLOCAL_PROD_COMERCIO;
+    ? "http://localhost:5173/usuario/registro"
+    : "https://adlocal.store/usuario/registro";
