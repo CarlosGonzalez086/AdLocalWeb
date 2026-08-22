@@ -94,7 +94,7 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
   const busquedaAvanzadaUrl =
     import.meta.env.MODE === "production"
-      ? "https://adlocalweb.jcarlosgonzalez086.workers.dev/comercios/busqueda-avanzada"
+      ? "https://adlocal.store/comercios/busqueda-avanzada"
       : "/comercios/busqueda-avanzada";
 
   const loginUsuarioUrl = "/usuario/login";
