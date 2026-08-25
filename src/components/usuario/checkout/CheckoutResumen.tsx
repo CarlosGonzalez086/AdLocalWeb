@@ -1,9 +1,14 @@
 import { Button } from "@mui/material";
-import type { CheckoutResponseDto } from "../../../types/checkout";
+import {
+  TipoEntregaPedido,
+  type CheckoutComercioForm,
+  type CheckoutResponseDto,
+} from "../../../types/checkout";
 import MaterialSymbol from "../../UI/MaterialSymbol/MaterialSymbol";
 
 interface Props {
   checkout: CheckoutResponseDto;
+  forms: Record<string, CheckoutComercioForm>;
 
   loading: boolean;
 
@@ -24,6 +29,7 @@ const moneyFormatter = new Intl.NumberFormat("es-MX", {
 
 export default function CheckoutResumen({
   checkout,
+  forms,
   loading,
   disabled,
   onConfirmar,
@@ -39,17 +45,28 @@ export default function CheckoutResumen({
 
         <div className="d-flex flex-column gap-3">
           {checkout.comercios.map((comercio) => (
-            <div
-              key={comercio.comercioUuid}
-              className="d-flex justify-content-between gap-3"
-            >
-              <span className="checkoutMutedText fz-h5 fw-medium">
-                {comercio.comercio}
-              </span>
-
-              <strong className="fz-h5 fw-semibold">
-                {moneyFormatter.format(comercio.subtotal)}
-              </strong>
+            <div key={comercio.comercioUuid}>
+              <div className="d-flex justify-content-between gap-3">
+                <span className="checkoutMutedText fz-h5 fw-medium">
+                  {comercio.comercio}
+                </span>
+                <strong className="fz-h5 fw-semibold">
+                  {moneyFormatter.format(comercio.subtotal)}
+                </strong>
+              </div>
+              {forms[comercio.comercioUuid]?.tipoEntrega ===
+                TipoEntregaPedido.Domicilio && (
+                <div className="d-flex justify-content-between gap-3 mt-2">
+                  <span className="checkoutMutedText fz-h6 fw-regular">
+                    Envío
+                  </span>
+                  <strong className="fz-h6 fw-semibold">
+                    {comercio.costoEnvio === 0
+                      ? "Gratis"
+                      : moneyFormatter.format(comercio.costoEnvio)}
+                  </strong>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -60,7 +77,18 @@ export default function CheckoutResumen({
           <strong className="fz-h3 fw-bold">Total</strong>
 
           <strong className="checkoutSummaryTotal fz-h2 fw-bold">
-            {moneyFormatter.format(checkout.totalGeneral)}
+            {moneyFormatter.format(
+              checkout.comercios.reduce(
+                (total, comercio) =>
+                  total +
+                  comercio.subtotal +
+                  (forms[comercio.comercioUuid]?.tipoEntrega ===
+                  TipoEntregaPedido.Domicilio
+                    ? comercio.costoEnvio
+                    : 0),
+                0,
+              ),
+            )}
           </strong>
         </div>
 

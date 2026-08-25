@@ -57,7 +57,6 @@ export interface CheckoutProductoDto {
   precioUnitario: number;
 
   subtotal: number;
-
   permiteDomicilio: boolean;
 
   permiteRecoger: boolean;
@@ -83,6 +82,9 @@ export interface CheckoutComercioResponseDto {
   logoUrl?: string | null;
 
   subtotal: number;
+  costoEnvio: number;
+  totalDomicilio: number;
+  compraMinimaEnvioGratis?: number | null;
 
   aceptaEfectivo: boolean;
 
