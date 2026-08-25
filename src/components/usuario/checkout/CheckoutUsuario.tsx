@@ -381,6 +381,7 @@ export default function CheckoutUsuario({
             <div className="checkoutSummarySticky">
               <CheckoutResumen
                 checkout={checkout}
+                forms={forms}
                 loading={confirmando}
                 disabled={!checkoutValido}
                 onConfirmar={confirmar}

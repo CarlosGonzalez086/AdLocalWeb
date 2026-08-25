@@ -32,6 +32,54 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/usuario/carrito/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/checkout/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/citas/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/crear-cuenta/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/direcciones/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/login/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/pedidos/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/perfil/editar/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/perfil/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/recuperar-contrasena/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/restablecer-contrasena/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/usuario/verificar-codigo/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/$",
 			"dest": "_render"
 		}

@@ -77,6 +77,14 @@ export default function CheckoutComercioCard({
             <strong className="checkoutCommerceTotal fz-h3 fw-bold">
               {moneyFormatter.format(comercio.subtotal)}
             </strong>
+            {form.tipoEntrega === TipoEntregaPedido.Domicilio && (
+              <span className="checkoutCommerceLabel fz-h6 fw-semibold d-block mt-1">
+                Envío:{" "}
+                {comercio.costoEnvio === 0
+                  ? "Gratis"
+                  : moneyFormatter.format(comercio.costoEnvio)}
+              </span>
+            )}
           </div>
         </div>
       </div>
