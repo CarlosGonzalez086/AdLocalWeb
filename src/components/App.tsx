@@ -3,6 +3,7 @@ import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Body from "./layout/Body";
+import PwaInstallPrompt from "./common/PwaInstallPrompt";
 import muiTheme from "../theme/muiTheme";
 import type { ReactNode } from "react";
 import { useMunicipio } from "../hooks/useMunicipio";
@@ -31,6 +32,7 @@ const App: React.FC<AppProps> = ({ children }) => {
         <Header municipio={municipioActual} loading={loadingMunicipios} />
         <Body>{children}</Body>
         <Footer />
+        <PwaInstallPrompt />
       </Box>
     </ThemeProvider>
   );

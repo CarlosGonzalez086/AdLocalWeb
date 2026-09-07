@@ -51,7 +51,7 @@ const getBadgeConfig = (badge?: string): BadgeConfig | null => {
 
   const configurations: Record<BadgeType, BadgeConfig> = {
     premium: {
-      label: "Premium",
+      label: "Favorito Local",
       icon: "workspace_premium",
       className: "comercioDetalleBadgePremium",
     },
@@ -63,8 +63,8 @@ const getBadgeConfig = (badge?: string): BadgeConfig | null => {
     },
 
     esencial: {
-      label: "Esencial",
-      icon: "verified",
+      label: "Comercio Vecino",
+      icon: "storefront",
       className: "comercioDetalleBadgeEssential",
     },
   };

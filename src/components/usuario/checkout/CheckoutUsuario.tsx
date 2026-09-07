@@ -319,13 +319,13 @@ export default function CheckoutUsuario({
         <div className="row g-3 align-items-end mb-4">
           <div className="col">
             <span className="checkoutEyebrow fz-h5 fw-bold">
-              Finalizar compra
+              🌱 Compra Comunitaria
             </span>
 
-            <h1 className="checkoutTitle fw-bold mb-1">Checkout</h1>
+            <h1 className="checkoutTitle fw-bold mb-1">Confirmar pedido</h1>
 
             <p className="checkoutMutedText fz-h4 fw-regular mb-0">
-              Configura la entrega y el método de pago de cada comercio.
+              Cada negocio vecino preparará tu pedido con dedicación. Configura la entrega y tu método de pago.
             </p>
           </div>
 

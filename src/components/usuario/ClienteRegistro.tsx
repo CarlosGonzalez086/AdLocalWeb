@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useState, type FormEvent } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import { URL_REGISTRO_COMERCIO } from "../../api/http";
 
 interface RegistroData {
   nombre: string;
@@ -323,7 +324,22 @@ export default function ClienteRegistro({
                 </a>
                 .
               </p>
+
+              <div className="usuarioAuthMerchantCallout text-center mt-3 pt-3 border-top">
+                <p className="fz-h5 text-muted mb-2">
+                  ¿Quieres vender tus productos o servicios en ADLocal?
+                </p>
+                <a
+                  href={URL_REGISTRO_COMERCIO}
+                  className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm fz-h5 fw-semibold d-inline-flex align-items-center gap-2"
+                  style={{ textDecoration: "none" }}
+                >
+                  <MaterialSymbol icon="storefront" size="small" />
+                  <span>Registrar mi negocio como comercio</span>
+                </a>
+              </div>
             </div>
+
 
             <div className="usuarioAuthFooter">
               <MaterialSymbol icon="verified_user" size="small" />

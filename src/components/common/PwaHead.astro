@@ -1,0 +1,50 @@
+﻿---
+// PwaHead.astro - Metadata and Service Worker registration for PWA
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "ADLocal - Tu Comercio Local",
+  description = "Conecta con panaderías artesanales, talleres, cafeterías y negocios vecinos en tu comunidad.",
+} = Astro.props;
+---
+
+<!-- Web App Manifest -->
+<link rel="manifest" href="/manifest.webmanifest" />
+
+<!-- Primary Theme Colors -->
+<meta name="theme-color" content="#6F4E37" />
+<meta name="msapplication-TileColor" content="#6F4E37" />
+<meta name="msapplication-navbutton-color" content="#6F4E37" />
+
+<!-- iOS / Apple Mobile Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="ADLocal" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+
+<!-- Android / Chrome Mobile Web App -->
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="ADLocal" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
+
+<!-- Service Worker Registration -->
+<script is:inline>
+  if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("[PWA] Service Worker registrado con éxito:", registration.scope);
+        })
+        .catch((error) => {
+          console.warn("[PWA] Error al registrar Service Worker:", error);
+        });
+    });
+  }
+</script>

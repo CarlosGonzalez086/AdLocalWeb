@@ -4,17 +4,13 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import { URL_PANEL_COMERCIO, URL_REGISTRO_COMERCIO } from "../../api/http";
 
 const LOGO_URL =
   "https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
-
-  const registroUrl =
-    import.meta.env.MODE === "production"
-      ? "https://ad-local-gamma.vercel.app/usuario/crear-cuenta"
-      : "http://localhost:5173/usuario/crear-cuenta";
 
   return (
     <footer className="footer">
@@ -69,17 +65,29 @@ const Footer: FC = () => {
               </p>
             </div>
 
-            <a
-              href={registroUrl}
-              className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
-              style={{ textDecoration: "none" }}
-            >
-              <div className="d-flex align-items-center gap-2">
-                <MaterialSymbol icon="app_registration" size="small" />
+            <div className="d-flex flex-column gap-2 align-items-stretch">
+              <a
+                href={URL_REGISTRO_COMERCIO}
+                className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="d-flex align-items-center justify-content-center gap-2">
+                  <MaterialSymbol icon="app_registration" size="small" />
+                  <span>Registrar mi negocio</span>
+                </div>
+              </a>
 
-                <span>Registrarme</span>
-              </div>
-            </a>
+              <a
+                href={URL_PANEL_COMERCIO}
+                className="btn-adlocal btn-adlocal--ghost fz-h5 fw-medium text-center"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="d-flex align-items-center justify-content-center gap-2">
+                  <MaterialSymbol icon="login" size="small" />
+                  <span>Acceso a Panel Comercios</span>
+                </div>
+              </a>
+            </div>
           </section>
 
           <section className="footerLegalSection">
@@ -96,20 +104,6 @@ const Footer: FC = () => {
               © {year} Todos los derechos reservados.
             </p>
           </section>
-        </div>
-
-        <div className="footerDivider" />
-
-        <div className="footerBottom">
-          <p className="footerBottomText fz-h5 fw-regular">
-            <span className="fw-semibold">ADLocal</span>
-
-            <span className="footerBottomSeparator" aria-hidden="true">
-              ·
-            </span>
-
-            <span>Hecho en México</span>
-          </p>
         </div>
       </div>
     </footer>

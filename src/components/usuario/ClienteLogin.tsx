@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useState, type FormEvent } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import { URL_PANEL_COMERCIO } from "../../api/http";
 
 const LOGO_URL =
   "https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg";
@@ -244,7 +245,22 @@ export default function ClienteLogin({
                 </a>
                 .
               </p>
+
+              <div className="usuarioAuthMerchantCallout text-center mt-3 pt-3 border-top">
+                <p className="fz-h5 text-muted mb-2">
+                  ¿Tienes un negocio o tienda registrada?
+                </p>
+                <a
+                  href={URL_PANEL_COMERCIO}
+                  className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm fz-h5 fw-semibold d-inline-flex align-items-center gap-2"
+                  style={{ textDecoration: "none" }}
+                >
+                  <MaterialSymbol icon="storefront" size="small" />
+                  <span>Acceder al Panel de Comercios</span>
+                </a>
+              </div>
             </div>
+
 
             <div className="usuarioAuthFooter">
               <MaterialSymbol icon="verified_user" size="small" />

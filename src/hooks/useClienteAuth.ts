@@ -30,7 +30,11 @@ export const useClienteAuth = () => {
         return null;
       }
 
-      const token = data.respuesta?.result as any;
+      const rawRespuesta: any = data.respuesta;
+      const token =
+        typeof rawRespuesta === "string"
+          ? rawRespuesta
+          : rawRespuesta?.token || rawRespuesta?.result;
 
       if (!token) {
         setError("No se recibió el token de autenticación");
@@ -39,6 +43,13 @@ export const useClienteAuth = () => {
       }
 
       setLocalStorageJWTUsuario(token);
+
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("usuarioSesionActualizada", { detail: { token } }),
+        );
+        window.dispatchEvent(new Event("storage"));
+      }
 
       return token;
     } catch (err: any) {
@@ -68,7 +79,11 @@ export const useClienteAuth = () => {
         return null;
       }
 
-      const token = data.respuesta?.result as any;
+      const rawRespuesta: any = data.respuesta;
+      const token =
+        typeof rawRespuesta === "string"
+          ? rawRespuesta
+          : rawRespuesta?.token || rawRespuesta?.result;
 
       if (!token) {
         setError("No se recibió el token de autenticación");
@@ -77,6 +92,13 @@ export const useClienteAuth = () => {
       }
 
       setLocalStorageJWTUsuario(token);
+
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("usuarioSesionActualizada", { detail: { token } }),
+        );
+        window.dispatchEvent(new Event("storage"));
+      }
 
       return token;
     } catch (err: any) {
@@ -182,6 +204,10 @@ export const useClienteAuth = () => {
 
   const logout = useCallback(() => {
     clearStorageUsuario();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("usuarioSesionActualizada"));
+      window.dispatchEvent(new Event("storage"));
+    }
   }, []);
 
   const clearError = useCallback(() => {

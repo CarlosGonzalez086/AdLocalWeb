@@ -14,6 +14,15 @@ import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
 } from "../../utils/storageUsuario";
+import {
+  isTokenProximoAExpirar,
+  renovarTokenSilencioso,
+} from "../../utils/tokenManager";
+import {
+  URL_DASHBOARD_COMERCIO,
+  URL_PANEL_COMERCIO,
+  URL_REGISTRO_COMERCIO,
+} from "../../api/http";
 
 const LOGO_URL =
   "https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg";
@@ -87,10 +96,9 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const registroNegocioUrl =
-    import.meta.env.MODE === "production"
-      ? "https://adlocal.jcarlosgonzalez086.workers.dev/usuario/crear-cuenta"
-      : "http://localhost:5173/usuario/crear-cuenta";
+  const registroNegocioUrl = URL_REGISTRO_COMERCIO;
+  const loginNegocioUrl = URL_PANEL_COMERCIO;
+  const dashboardNegocioUrl = URL_DASHBOARD_COMERCIO;
 
   const busquedaAvanzadaUrl =
     import.meta.env.MODE === "production"
@@ -108,12 +116,14 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
   const citasUrl = "/usuario/citas";
 
   useEffect(() => {
-    const cargarUsuario = () => {
+    let activo = true;
+
+    const cargarUsuario = async () => {
       try {
         const token = getLocalStorageJWTUsuario();
 
         if (!token) {
-          setUsuario(null);
+          if (activo) setUsuario(null);
           return;
         }
 
@@ -121,45 +131,88 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
 
         if (!payload) {
           clearStorageUsuario();
-          setUsuario(null);
+          if (activo) setUsuario(null);
           return;
         }
 
+        // Si ya expiró el token, intentamos renovarlo antes de cerrar sesión
         if (payload.exp && payload.exp * 1000 <= Date.now()) {
-          clearStorageUsuario();
-          setUsuario(null);
-          return;
+          const nuevoToken = await renovarTokenSilencioso();
+          if (nuevoToken && activo) {
+            cargarUsuario();
+            return;
+          } else {
+            clearStorageUsuario();
+            if (activo) setUsuario(null);
+            return;
+          }
+        }
+
+        // Si le quedan menos de 8 minutos, renovamos proactivamente
+        if (isTokenProximoAExpirar(token, 8)) {
+          renovarTokenSilencioso().catch(() => {});
         }
 
         const id = Number(payload.id);
 
         if (!id || !payload.nombre) {
           clearStorageUsuario();
-          setUsuario(null);
+          if (activo) setUsuario(null);
           return;
         }
 
-        setUsuario({
-          id,
-          nombre: payload.nombre,
-          rol: payload.rol ?? "",
-          fotoUrl: payload.fotoUrl || null,
-        });
+        if (activo) {
+          setUsuario({
+            id,
+            nombre: payload.nombre,
+            rol: payload.rol ?? "",
+            fotoUrl: payload.fotoUrl || null,
+          });
+        }
       } catch {
         clearStorageUsuario();
-
-        setUsuario(null);
+        if (activo) setUsuario(null);
       } finally {
-        setAuthLoading(false);
+        if (activo) {
+          setAuthLoading(false);
+        }
       }
     };
 
     cargarUsuario();
 
+    // Sincronización en tiempo real entre componentes y pestañas
+    window.addEventListener("usuarioSesionActualizada", cargarUsuario);
     window.addEventListener("storage", cargarUsuario);
 
+    // Renovación periódica silenciosa en segundo plano (cada 2.5 minutos)
+    const interval = setInterval(() => {
+      const token = getLocalStorageJWTUsuario();
+      if (token && isTokenProximoAExpirar(token, 8)) {
+        renovarTokenSilencioso();
+      }
+    }, 150000);
+
+    // Al volver a la pestaña o desbloquear celular
+    const handleReanudar = () => {
+      if (document.visibilityState === "visible") {
+        const token = getLocalStorageJWTUsuario();
+        if (token && isTokenProximoAExpirar(token, 8)) {
+          renovarTokenSilencioso();
+        }
+      }
+    };
+
+    window.addEventListener("focus", handleReanudar);
+    document.addEventListener("visibilitychange", handleReanudar);
+
     return () => {
+      activo = false;
+      clearInterval(interval);
+      window.removeEventListener("usuarioSesionActualizada", cargarUsuario);
       window.removeEventListener("storage", cargarUsuario);
+      window.removeEventListener("focus", handleReanudar);
+      document.removeEventListener("visibilitychange", handleReanudar);
     };
   }, []);
 
@@ -312,17 +365,30 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
               </>
             )}
 
-            <a
-              href={registroNegocioUrl}
-              className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
-              style={{ textDecoration: "none" }}
-            >
-              <div className="d-flex align-items-center gap-2">
-                <MaterialSymbol icon="storefront" size="small" />
+            {usuario?.rol?.toLowerCase() === "comercio" ? (
+              <a
+                href={dashboardNegocioUrl}
+                className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="d-flex align-items-center gap-2">
+                  <MaterialSymbol icon="dashboard" size="small" />
+                  <span>Mi Panel de Comercio</span>
+                </div>
+              </a>
+            ) : (
+              <a
+                href={registroNegocioUrl}
+                className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="d-flex align-items-center gap-2">
+                  <MaterialSymbol icon="storefront" size="small" />
+                  <span>Unirme como negocio</span>
+                </div>
+              </a>
+            )}
 
-                <span>Unirme como negocio</span>
-              </div>
-            </a>
           </nav>
 
           {isMobile ? (
@@ -338,7 +404,7 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
                   aria-controls="mobile-navigation"
                   onClick={() => setDrawerOpen(true)}
                 >
-                  <MaterialSymbol icon="menu" size="medium" className="mt-1"/>
+                  <MaterialSymbol icon="menu" size="medium" className="mt-1" />
                 </Button>
               </div>
             </>
@@ -567,35 +633,66 @@ const Header: FC<HeaderProps> = ({ municipio, loading }) => {
               </button>
             )}
 
-            <div className="drawerBusinessMessage">
-              <span className="drawerBusinessIcon">
-                <MaterialSymbol icon="storefront" size="medium" />
-              </span>
-
-              <div>
-                <p className="drawerBusinessTitle} fz-h4 fw-bold">
-                  ¿Tienes un negocio?
-                </p>
-
-                <p className="drawerBusinessDescription} fz-h5 fw-regular">
-                  Regístrate y conecta con clientes de tu comunidad.
-                </p>
+            {usuario?.rol?.toLowerCase() === "comercio" ? (
+              <div className="d-flex flex-column gap-2 p-2">
+                <a
+                  href={dashboardNegocioUrl}
+                  className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold w-100"
+                  onClick={closeDrawer}
+                  style={{ textDecoration: "none" }}
+                >
+                  <div className="d-flex align-items-center justify-content-center gap-2">
+                    <MaterialSymbol icon="dashboard" size="small" />
+                    <span>Mi Panel de Comercio</span>
+                  </div>
+                </a>
               </div>
-            </div>
-            <div className="drawerBusinessMessage d-flex justify-content-center align-items-center">
-              <a
-                href={registroNegocioUrl}
-                className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold"
-                onClick={closeDrawer}
-                style={{ textDecoration: "none" }}
-              >
-                <div className="d-flex align-items-center justify-content-center gap-2">
-                  <MaterialSymbol icon="app_registration" size="medium" />
+            ) : (
+              <>
+                <div className="drawerBusinessMessage">
+                  <span className="drawerBusinessIcon">
+                    <MaterialSymbol icon="storefront" size="medium" />
+                  </span>
 
-                  <span>Unirme como negocio</span>
+                  <div>
+                    <p className="drawerBusinessTitle fz-h4 fw-bold mb-1">
+                      ¿Tienes un negocio?
+                    </p>
+
+                    <p className="drawerBusinessDescription fz-h5 fw-regular mb-0">
+                      Regístrate y conecta con clientes de tu comunidad.
+                    </p>
+                  </div>
                 </div>
-              </a>
-            </div>
+
+                <div className="d-flex flex-column gap-2 p-2">
+                  <a
+                    href={registroNegocioUrl}
+                    className="btn-adlocal btn-adlocal--solid fz-h4 fw-semibold w-100"
+                    onClick={closeDrawer}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                      <MaterialSymbol icon="app_registration" size="small" />
+                      <span>Unirme como negocio</span>
+                    </div>
+                  </a>
+
+                  <a
+                    href={loginNegocioUrl}
+                    className="btn-adlocal btn-adlocal--ghost fz-h5 fw-medium w-100"
+                    onClick={closeDrawer}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                      <MaterialSymbol icon="login" size="small" />
+                      <span>Ingresar a mi panel</span>
+                    </div>
+                  </a>
+                </div>
+              </>
+            )}
+
           </div>
         </aside>
       </Drawer>

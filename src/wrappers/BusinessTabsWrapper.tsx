@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BusinessTabs from "../components/business/BusinessTabs";
+import HomeHero from "../components/business/HomeHero";
 import {
   comercioPublicApi,
   type ComercioDtoListItem,
@@ -115,15 +116,18 @@ const BusinessTabsWrapper: React.FC = () => {
   };
 
   return (
-    <BusinessTabs
-      comercios={comercios}
-      loading={loading}
-      error={error}
-      activeTab={activeTab}
-      setActiveTab={setActiveTab}
-      hasMore={hasMore}
-      onLoadMore={handleLoadMore}
-    />
+    <div className="w-100">
+      <HomeHero />
+      <BusinessTabs
+        comercios={comercios}
+        loading={loading}
+        error={error}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        hasMore={hasMore}
+        onLoadMore={handleLoadMore}
+      />
+    </div>
   );
 };
 

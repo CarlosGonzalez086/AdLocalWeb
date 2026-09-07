@@ -37,7 +37,7 @@ const getBadgeConfig = (badge?: string): BadgeConfig | null => {
 
   const configurations: Record<BadgeType, BadgeConfig> = {
     premium: {
-      label: "Premium",
+      label: "Favorito Local",
       icon: "workspace_premium",
       className: "comercioCardBadgePremium",
     },
@@ -47,8 +47,8 @@ const getBadgeConfig = (badge?: string): BadgeConfig | null => {
       className: "comercioCardBadgeRecommended",
     },
     esencial: {
-      label: "Esencial",
-      icon: "verified",
+      label: "Comercio Vecino",
+      icon: "storefront",
       className: "comercioCardBadgeEssential",
     },
   };
@@ -207,26 +207,26 @@ const ComercioCard: FC<Props> = ({ comercio }) => {
               </div>
 
               {distance > 0 && (
-                <>
-                  <div className="d-flex justify-content-end align-items-center w-50">
-                    <span className="comercioCardDistance">
-                      <MaterialSymbol icon="near_me" size="small" filled />
+                <div className="d-flex justify-content-end align-items-center w-50">
+                  <span className="comercioCardDistance">
+                    <MaterialSymbol icon="near_me" size="small" filled />
 
-                      <span className="fz-h5 fw-medium">
-                        {distance.toFixed(1)} km
-                      </span>
+                    <span className="fz-h5 fw-medium">
+                      {distance < 1
+                        ? `a ${Math.round(distance * 1000)} m`
+                        : `a ${distance.toFixed(1)} km`}
                     </span>
-                  </div>
-                </>
+                  </span>
+                </div>
               )}
             </div>
           </div>
 
           <div className="comercioCardDetails">
-            <span className="fz-h5 fw-semibold">Ver detalles</span>
+            <span className="fz-h5 fw-semibold">Conocer negocio</span>
 
             <MaterialSymbol
-              icon="arrow_forward_ios"
+              icon="arrow_forward"
               size="small"
               className="comercioCardDetailsIcon"
             />

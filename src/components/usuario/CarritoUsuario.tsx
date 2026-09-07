@@ -186,14 +186,14 @@ export default function CarritoUsuario({
             {!tieneProductos ? (
               <div className="usuarioCarritoEmpty">
                 <div className="usuarioCarritoEmptyIcon">
-                  <MaterialSymbol icon="shopping_cart" size="large" />
+                  <MaterialSymbol icon="shopping_bag" size="large" />
                 </div>
 
-                <h2>Tu carrito está vacío</h2>
+                <h2>Tu canasta local está vacía</h2>
 
                 <p>
-                  Explora los comercios de tu comunidad y agrega los productos
-                  que quieras comprar.
+                  Date una vuelta por los comercios de tu comunidad y apoya a los
+                  productores y negocios de tu colonia.
                 </p>
 
                 <a
@@ -202,7 +202,7 @@ export default function CarritoUsuario({
                 >
                   <MaterialSymbol icon="storefront" size="small" />
 
-                  <span>Explorar comercios</span>
+                  <span>Explorar comercios vecinos</span>
                 </a>
               </div>
             ) : (

@@ -1,45 +1,69 @@
 :root {
-  /* Font */
-  --font-body:
-    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
-    sans-serif; /* Brand premium */
-  --primary: #6f4e37;
-  --primary-dark: #5a3e2b;
-  --primary-light: #c8a97e;
-  --teal: #00c46a;
-  --teal-dark: #00a85a;
-  --teal-light: #28c7fa;
-  --blue: #2f80ed;
-  --cyan: #28c7fa; /* Status */
-  --success: #00c46a;
-  --warning: #ff9f2e;
-  --error: #ff4d4f;
-  --incident: #ff7a45; /* Neutral */
-  --bg: #f6f9fc;
-  --bg-soft: #eef3f8;
+  /* Tipografía */
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  
+  /* Paleta Maestra ADLocal "Warm Earth & Botanical Neighborhood" */
+  --primary: #6f4e37;           /* Café tostado tradicional */
+  --primary-dark: #5a3e2b;      /* Café profundo */
+  --primary-light: #c8a97e;     /* Café claro lino */
+  --primary-glow: rgba(111, 78, 55, 0.25);
+  --primary-subtle: rgba(111, 78, 55, 0.08);
+
+  /* Acento botánico y vitalidad */
+  --botanical: #00a85a;         /* Verde botánico de mercado */
+  --botanical-dark: #008746;
+  --botanical-light: #2cd483;
+  --botanical-subtle: rgba(0, 168, 90, 0.10);
+  --teal: #00a85a;
+  --teal-dark: #008746;
+  --teal-light: #2cd483;
+
+  /* Acento cálido artesanal (Terracota y acción) */
+  --accent-orange: #e8692c;
+  --accent-orange-dark: #c65420;
+  --accent-gold: #e5a93c;       /* Miel dorada para favoritos y estrellas */
+
+  /* Estados */
+  --success: #00a85a;
+  --warning: #e8692c;
+  --error: #c0392b;
+  --incident: #d96c3d;
+  --blue: #2a6f97;
+
+  /* Superficies y Fondos Orgánicos (Calidez de papel craft y luz natural) */
+  --bg: #faf8f5;                /* Papel lino cálido */
+  --bg-soft: #f4efea;           /* Crema suave de barrio */
   --surface: #ffffff;
-  --surface-soft: #f8fbfe;
-  --surface-hover: rgba(0, 196, 106, 0.075);
-  --text: #06111f;
-  --text-secondary: #7f94a8;
-  --text-muted: #9aaec0;
-  --border: #e1e9f2;
-  --border-soft: rgba(225, 233, 242, 0.76); /* Sidebar */
-  --sidebar-bg: #06111f;
-  --sidebar-bg-light: #0b1b2d;
-  --sidebar-text: #f7fbff;
-  --sidebar-muted: rgba(247, 251, 255, 0.58); /* Shadows */
-  --shadow-xs: 0 4px 12px rgba(6, 17, 31, 0.05);
-  --shadow-sm: 0 10px 28px rgba(6, 17, 31, 0.07);
-  --shadow-md: 0 18px 44px rgba(6, 17, 31, 0.1);
-  --shadow-lg: 0 26px 70px rgba(6, 17, 31, 0.16);
-  --shadow-green: 0 16px 34px rgba(0, 196, 106, 0.26); /* Radius */
-  --radius-xs: 10px;
-  --radius-sm: 14px;
-  --radius-md: 20px;
-  --radius-lg: 26px;
-  --radius-xl: 34px;
-  --transition: all 0.25s ease;
+  --surface-soft: #f9f6f0;
+  --surface-warm: #f5efe6;
+  --surface-hover: rgba(111, 78, 55, 0.05);
+
+  /* Textos cálidos con contraste humano */
+  --text: #2a1f18;              /* Café espresso profundo */
+  --text-secondary: #7a6c62;    /* Tono tierra neutro */
+  --text-muted: #a19388;
+
+  /* Bordes artesanales sutiles */
+  --border: #e8dfd5;
+  --border-soft: rgba(232, 223, 213, 0.85);
+
+  /* Sombras cálidas y orgánicas */
+  --shadow-xs: 0 2px 8px rgba(42, 31, 24, 0.04);
+  --shadow-sm: 0 6px 18px rgba(42, 31, 24, 0.06);
+  --shadow-md: 0 14px 34px rgba(42, 31, 24, 0.08);
+  --shadow-lg: 0 22px 55px rgba(42, 31, 24, 0.12);
+  --shadow-warm: 0 12px 30px rgba(111, 78, 55, 0.15);
+  --shadow-botanical: 0 12px 28px rgba(0, 168, 90, 0.22);
+  --shadow-terracotta: 0 12px 28px rgba(232, 105, 44, 0.22);
+
+  /* Radio de curvatura orgánico */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -66,13 +90,18 @@ body {
   background:
     radial-gradient(
       circle at top left,
-      rgba(0, 196, 106, 0.1),
-      transparent 34%
+      rgba(232, 105, 44, 0.045),
+      transparent 38%
     ),
     radial-gradient(
       circle at top right,
-      rgba(47, 128, 237, 0.09),
-      transparent 32%
+      rgba(0, 168, 90, 0.04),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(111, 78, 55, 0.035),
+      transparent 45%
     ),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
   -webkit-font-smoothing: antialiased;
@@ -292,9 +321,10 @@ body {
 
 .locationBadge {
   max-width: 230px;
-  min-height: 34px;
+  max-width: 260px;
+  min-height: 36px;
 
-  padding: 6px 12px;
+  padding: 6px 14px;
 
   display: inline-flex;
   align-items: center;
@@ -302,13 +332,22 @@ body {
 
   color: var(--primary);
 
-  background: rgba(111, 78, 55, 0.06);
+  background: var(--surface-warm);
 
-  border: 1px solid rgba(111, 78, 55, 0.1);
+  border: 1px solid var(--border);
   border-radius: 999px;
+
+  box-shadow: var(--shadow-xs);
 
   overflow: hidden;
   white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.locationBadge:hover {
+  background: #ffffff;
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .locationBadge > span:last-child {
@@ -2104,6 +2143,229 @@ body {
   }
 }
 /* =========================================================
+   HOME HERO - IDENTIDAD Y CALIDEZ COMUNITARIA
+========================================================= */
+
+.homeHeroSection {
+  width: 100%;
+  padding: 44px 20px 36px;
+  margin-bottom: 28px;
+  background: radial-gradient(
+      ellipse at 20% 0%,
+      rgba(232, 105, 44, 0.08) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 80% 100%,
+      rgba(0, 168, 90, 0.06) 0%,
+      transparent 50%
+    ),
+    linear-gradient(180deg, #FFFFFF 0%, var(--surface-warm) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.homeHeroContainer {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homeHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+
+.homeHeroBadgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--botanical);
+  box-shadow: 0 0 0 3px rgba(0, 168, 90, 0.2);
+  display: inline-block;
+}
+
+.homeHeroTitle {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.22;
+  color: var(--text);
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+.homeHeroTitleAccent {
+  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.homeHeroSubtitle {
+  font-size: clamp(15px, 2vw, 17px);
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.6;
+  margin-bottom: 26px;
+}
+
+.homeHeroSearchForm {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  gap: 8px;
+  background: #FFFFFF;
+  padding: 6px 6px 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  margin-bottom: 20px;
+}
+
+.homeHeroSearchForm:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-subtle), var(--shadow-md);
+}
+
+.homeHeroSearchInputContainer {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.homeHeroSearchIcon {
+  color: var(--primary);
+  opacity: 0.8;
+}
+
+.homeHeroSearchInput {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  outline: none;
+}
+
+.homeHeroSearchInput::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.homeHeroSearchButton {
+  border-radius: 999px !important;
+  padding: 8px 20px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: var(--shadow-xs) !important;
+}
+
+.homeHeroSearchButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-warm) !important;
+}
+
+.homeHeroCategories {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.homeHeroCategoriesLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.homeHeroCategoriesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.homeHeroCategoryChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.homeHeroCategoryChip:hover {
+  background: var(--surface-warm);
+  border-color: var(--primary-light);
+  color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.homeHeroLocationHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--botanical-dark);
+  background: rgba(0, 168, 90, 0.08);
+  border: 1px solid rgba(0, 168, 90, 0.2);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .homeHeroSection {
+    padding: 28px 16px 24px;
+    border-radius: var(--radius-md);
+  }
+  .homeHeroSearchForm {
+    flex-direction: column;
+    border-radius: var(--radius-md);
+    padding: 10px;
+  }
+  .homeHeroSearchButton {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* =========================================================
    BUSINESS TABS
 ========================================================= */
 
@@ -2235,83 +2497,82 @@ body {
    CARRUSEL
 ========================================================= */
 
-.businessCarousel {
+.businessCarouselContainer {
+  position: relative;
   width: 100%;
-  min-width: 0;
+  display: flex;
+  align-items: center;
+}
 
-  margin: 0 -8px;
+.businessCarouselTrack {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 6px 4px 16px 4px;
+  width: 100%;
+}
+
+.businessCarouselTrack::-webkit-scrollbar {
+  display: none;
 }
 
 .businessCarouselItem {
-  height: 100%;
-
-  padding: 4px 8px 10px;
+  flex: 0 0 calc(25% - 14px);
+  min-width: 275px;
+  max-width: 340px;
+  scroll-snap-align: start;
 }
 
-.businessCarousel :global(.slick-track) {
-  display: flex;
+@media (max-width: 1280px) {
+  .businessCarouselItem {
+    flex: 0 0 calc(33.333% - 12px);
+    min-width: 260px;
+  }
 }
 
-.businessCarousel :global(.slick-slide) {
-  height: auto;
+@media (max-width: 900px) {
+  .businessCarouselItem {
+    flex: 0 0 calc(50% - 10px);
+    min-width: 240px;
+  }
 }
 
-.businessCarousel :global(.slick-slide > div) {
-  height: 100%;
-}
-
-/* Flechas slick */
-
-.businessCarousel :global(.slick-prev),
-.businessCarousel :global(.slick-next) {
+.businessCarouselArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10;
-
-  width: 40px;
-  height: 40px;
-
-  display: flex !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(111, 78, 55, 0.12);
+  color: var(--primary, #6F4E37);
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  background: rgba(255, 255, 255, 0.97);
-
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: 50%;
-
-  box-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.08),
-    0 8px 20px rgba(0, 0, 0, 0.06);
-
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  box-shadow: 0 4px 14px rgba(44, 24, 16, 0.12);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.businessCarousel :global(.slick-prev) {
-  left: -12px;
-}
-
-.businessCarousel :global(.slick-next) {
-  right: -12px;
-}
-
-.businessCarousel :global(.slick-prev:hover),
-.businessCarousel :global(.slick-next:hover) {
+.businessCarouselArrow:hover {
   background: #ffffff;
-
-  transform: scale(1.04);
-
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 10px 24px rgba(0, 0, 0, 0.07);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 20px rgba(44, 24, 16, 0.18);
+  color: var(--primary-hover, #533b2a);
 }
 
-.businessCarousel :global(.slick-prev::before),
-.businessCarousel :global(.slick-next::before) {
-  color: var(--primary);
+.businessCarouselArrowPrev {
+  left: -18px;
+}
 
-  opacity: 1;
+.businessCarouselArrowNext {
+  right: -18px;
 }
 
 /* =========================================================
@@ -3104,29 +3365,27 @@ body {
   display: flex;
   flex-direction: column;
 
-  background: #ffffff;
+  background: var(--surface);
 
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 
-  box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.025),
-    0 8px 22px rgba(0, 0, 0, 0.035);
+  box-shadow: var(--shadow-sm);
 
   transition:
-    transform 0.22s ease,
-    box-shadow 0.22s ease,
-    border-color 0.22s ease;
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease;
 }
 
 .comercioCardLink:hover .comercioCard {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 
-  border-color: color-mix(in srgb, var(--card-primary) 22%, transparent);
+  border-color: color-mix(in srgb, var(--card-primary) 38%, var(--border));
 
   box-shadow:
-    0 5px 14px rgba(0, 0, 0, 0.06),
-    0 14px 32px rgba(0, 0, 0, 0.06);
+    0 14px 32px rgba(111, 78, 55, 0.12),
+    0 4px 10px rgba(42, 31, 24, 0.04);
 }
 
 /* =========================================================
@@ -3218,25 +3477,31 @@ body {
 .comercioCardBadgePremium {
   background: linear-gradient(
     135deg,
-    rgba(221, 157, 22, 0.96),
-    rgba(173, 113, 5, 0.96)
+    rgba(217, 155, 26, 0.95),
+    rgba(184, 123, 8, 0.95)
   );
+  border: 1px solid rgba(254, 235, 200, 0.35);
+  box-shadow: 0 4px 12px rgba(184, 123, 8, 0.25);
 }
 
 .comercioCardBadgeRecommended {
   background: linear-gradient(
     135deg,
-    rgba(0, 122, 255, 0.94),
-    rgba(0, 83, 181, 0.94)
+    rgba(232, 105, 44, 0.95),
+    rgba(198, 84, 32, 0.95)
   );
+  border: 1px solid rgba(246, 221, 210, 0.35);
+  box-shadow: 0 4px 12px rgba(232, 105, 44, 0.25);
 }
 
 .comercioCardBadgeEssential {
   background: linear-gradient(
     135deg,
-    rgba(111, 78, 55, 0.95),
-    rgba(75, 49, 34, 0.95)
+    rgba(0, 168, 90, 0.95),
+    rgba(0, 135, 70, 0.95)
   );
+  border: 1px solid rgba(178, 226, 202, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 168, 90, 0.25);
 }
 
 /* =========================================================
@@ -4680,6 +4945,8 @@ body {
    LEAFLET
 ========================================================= */
 
+.mapaComercioMap,
+.mapaComercioMap.leaflet-container,
 .mapaComercioMap .leaflet-container {
   width: 100%;
   height: 100%;
@@ -7868,3 +8135,193 @@ body {
   border: 1px solid #e6e8ec;
   border-radius: 14px;
 }
+
+/* =========================================================
+   PWA INSTALL BANNER
+========================================================= */
+
+.pwaBannerContainer {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  z-index: 9999;
+  animation: pwaSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pwaSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.pwaBannerCard {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(111, 78, 55, 0.16);
+  border-radius: 20px;
+  padding: 16px 18px;
+  box-shadow: 0 12px 36px rgba(45, 36, 33, 0.14), 0 4px 12px rgba(45, 36, 33, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pwaBannerHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+
+.pwaBannerAppIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(111, 78, 55, 0.15);
+  flex-shrink: 0;
+  border: 1px solid rgba(111, 78, 55, 0.1);
+}
+
+.pwaBannerInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwaBannerTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.pwaBannerBadge {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--surface-terracotta, #FFF2EB);
+  color: var(--secondary, #E8692C);
+  padding: 2px 7px;
+  border-radius: 12px;
+}
+
+.pwaBannerTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text, #2D2421);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pwaBannerSubtitle {
+  font-size: 12.5px;
+  color: var(--text-muted, #7A6F68);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.pwaBannerCloseBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #8E827A);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.pwaBannerCloseBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text, #2D2421);
+}
+
+.pwaIosGuideBox {
+  background: var(--bg-soft, #F4EFEA);
+  border: 1px dashed rgba(111, 78, 55, 0.22);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pwaIosGuideText {
+  font-size: 12px;
+  color: var(--text, #2D2421);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pwaIosIcon {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.pwaBannerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pwaBannerInstallBtn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--primary, #6F4E37);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  padding: 9px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(111, 78, 55, 0.22);
+  transition: all 0.2s ease;
+}
+
+.pwaBannerInstallBtn:hover {
+  background: var(--primary-hover, #533B2A);
+  transform: translateY(-1px);
+}
+
+.pwaBannerLaterBtn {
+  background: transparent;
+  border: 1px solid rgba(111, 78, 55, 0.15);
+  color: var(--text-muted, #7A6F68);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pwaBannerLaterBtn:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text, #2D2421);
+}
+
+@media (max-width: 480px) {
+  .pwaBannerContainer {
+    bottom: 16px;
+    width: calc(100% - 24px);
+  }
+}
+

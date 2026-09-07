@@ -6,4 +6,15 @@ export default defineConfig({
   output: "server", 
   adapter: vercel({ edge: false }), 
   integrations: [react({ client: "load" })],
+  vite: {
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
+    optimizeDeps: {
+      include: ["react", "react-dom", "leaflet", "sweetalert2"],
+    },
+    ssr: {
+      noExternal: ["leaflet"],
+    },
+  },
 });

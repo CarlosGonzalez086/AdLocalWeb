@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADLocal | Sin conexión</title>
+  <meta name="theme-color" content="#6F4E37" />
+  <link rel="icon" type="image/png" href="/icons/favicon-32.png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #FAF8F5;
+      color: #2D2421;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .offline-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(111, 78, 55, 0.12);
+      border-radius: 24px;
+      padding: 40px 28px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 12px 36px rgba(45, 36, 33, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .logo-container {
+      width: 88px;
+      height: 88px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 18px rgba(111, 78, 55, 0.15);
+      border: 2px solid #FAF8F5;
+    }
+    .logo-container img { width: 100%; height: 100%; object-fit: cover; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF2EB;
+      color: #C85018;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E8692C;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2D2421;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    p {
+      font-size: 15px;
+      color: #7A6F68;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .btn-retry {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #6F4E37;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(111, 78, 55, 0.25);
+    }
+    .btn-retry:hover {
+      background: #593D2A;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(111, 78, 55, 0.35);
+    }
+    .footer-note {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #A0958E;
+    }
+  </style>
+</head>
+<body>
+  <main class="offline-card">
+    <div class="logo-container">
+      <img src="/icons/icon-192.png" alt="Logo ADLocal" />
+    </div>
+    
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span>Sin conexión a internet</span>
+    </div>
+
+    <h1>Tu comunidad sigue aquí</h1>
+    <p>
+      Parece que perdiste la señal de red. Tus productos y comercios se sincronizarán en cuanto vuelvas a conectarte.
+    </p>
+
+    <button class="btn-retry" onclick="window.location.reload()">
+      <span>Reintentar conexión</span>
+    </button>
+
+    <div class="footer-note">
+      ADLocal · Comercio de barrio con alma
+    </div>
+  </main>
+</body>
+</html>

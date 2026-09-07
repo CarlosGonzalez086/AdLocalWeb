@@ -50,6 +50,8 @@ const decodeJwt = (token: string): JwtPayload | null => {
   }
 };
 
+import { isTokenProximoAExpirar, renovarTokenSilencioso } from "./tokenManager";
+
 export const getUsuarioSesion = (): UsuarioSesion | null => {
   if (typeof window === "undefined") {
     return null;
@@ -68,15 +70,21 @@ export const getUsuarioSesion = (): UsuarioSesion | null => {
     return null;
   }
 
+  // Si ya expiró el token, intentamos renovarlo silenciosamente
   if (payload.exp && payload.exp * 1000 <= Date.now()) {
-    clearStorageUsuario();
-
+    renovarTokenSilencioso().catch(() => {});
     return null;
   }
 
-  const id = Number(payload.id);
+  // Si le quedan menos de 5 minutos, renovamos en background
+  if (isTokenProximoAExpirar(token, 5)) {
+    renovarTokenSilencioso().catch(() => {});
+  }
 
-  if (!id || !payload.nombre || payload.rol?.toLowerCase() !== "cliente") {
+  const id = Number(payload.id);
+  const rol = payload.rol?.toLowerCase();
+
+  if (!id || !payload.nombre || (rol !== "cliente" && rol !== "comercio")) {
     clearStorageUsuario();
 
     return null;
@@ -90,6 +98,27 @@ export const getUsuarioSesion = (): UsuarioSesion | null => {
     fotoUrl: payload.fotoUrl || null,
     exp: payload.exp,
   };
+};
+
+/**
+ * Valida la sesión y renueva el token de forma asíncrona si está vencido o por vencer.
+ */
+export const obtenerSesionValidaOActualizar = async (): Promise<UsuarioSesion | null> => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const token = getLocalStorageJWTUsuario();
+  if (!token) return null;
+
+  if (isTokenProximoAExpirar(token, 5)) {
+    const nuevoToken = await renovarTokenSilencioso();
+    if (nuevoToken) {
+      return getUsuarioSesion();
+    }
+  }
+
+  return getUsuarioSesion();
 };
 
 export const getInicialesUsuario = (nombre: string): string => {
