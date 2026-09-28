@@ -5,13 +5,11 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useState, type FormEvent } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
-
-const LOGO_URL =
-  "https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg";
+import { URL_PANEL_COMERCIO } from "../../api/http";
+import { ADLOCAL_LOGO_URL } from "../../constants/brand";
 
 interface Props {
   loading?: boolean;
@@ -99,7 +97,7 @@ export default function ClienteLogin({
                 aria-label="Ir al inicio de ADLocal"
                 style={{ textDecoration: "none" }}
               >
-                <img src={LOGO_URL} alt="ADLocal" className="usuarioAuthLogo" />
+                <img src={ADLOCAL_LOGO_URL} alt="ADLocal" className="usuarioAuthLogo" />
               </a>
             </div>
 
@@ -110,18 +108,18 @@ export default function ClienteLogin({
                 </div>
 
                 <div className="usuarioAuthHeaderContent">
-                  <Typography component="span" className="usuarioAuthType">
+                  <span className="usuarioAuthType">
                     Cuenta ADLocal
-                  </Typography>
+                  </span>
 
-                  <Typography component="h1" className="usuarioAuthTitle">
+                  <h1 className="usuarioAuthTitle">
                     Iniciar sesión
-                  </Typography>
+                  </h1>
 
-                  <Typography component="p" className="usuarioAuthDescription">
+                  <p className="usuarioAuthDescription">
                     Accede a tu cuenta para comprar en comercios locales y
                     consultar tus pedidos.
-                  </Typography>
+                  </p>
                 </div>
               </div>
 
@@ -148,9 +146,12 @@ export default function ClienteLogin({
                   )}
 
                   <TextField
-                    placeholder="Correo electrónico"
+                    id="login-email"
+                    label="Correo electrónico"
+                    placeholder="ejemplo@correo.com"
                     type="email"
                     fullWidth
+                    autoComplete="email"
                     value={email}
                     disabled={loading}
                     onChange={(event) => setEmail(event.target.value)}
@@ -169,9 +170,12 @@ export default function ClienteLogin({
                   />
 
                   <TextField
-                    placeholder="Contraseña"
+                    id="login-password"
+                    label="Contraseña"
+                    placeholder="Ingresa tu contraseña"
                     type={showPassword ? "text" : "password"}
                     fullWidth
+                    autoComplete="current-password"
                     value={password}
                     disabled={loading}
                     onChange={(event) => setPassword(event.target.value)}
@@ -193,6 +197,7 @@ export default function ClienteLogin({
                             size="small"
                             disabled={loading}
                             onClick={() => setShowPassword((value) => !value)}
+                            aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                           >
                             <MaterialSymbol
                               icon={
@@ -212,9 +217,16 @@ export default function ClienteLogin({
                     variant="contained"
                     fullWidth
                     disabled={loading}
-                    className="btn-adlocal btn-adlocal--solid usuarioAuthSubmit fz-h3 fw-bold"
+                    className="btn-adlocal btn-adlocal-primary usuarioAuthSubmit fz-body fw-bold"
                   >
-                    {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Iniciando sesión...
+                      </>
+                    ) : (
+                      "Iniciar sesión"
+                    )}
                   </Button>
                 </div>
               </form>
@@ -244,7 +256,22 @@ export default function ClienteLogin({
                 </a>
                 .
               </p>
+
+              <div className="usuarioAuthMerchantCallout text-center mt-3 pt-3 border-top">
+                <p className="fz-h5 text-muted mb-2">
+                  ¿Tienes un negocio o tienda registrada?
+                </p>
+                <a
+                  href={URL_PANEL_COMERCIO}
+                  className="btn-adlocal btn-adlocal--ghost btn-adlocal--sm fz-h5 fw-semibold d-inline-flex align-items-center gap-2"
+                  style={{ textDecoration: "none" }}
+                >
+                  <MaterialSymbol icon="storefront" size="small" />
+                  <span>Acceder al Panel de Comercios</span>
+                </a>
+              </div>
             </div>
+
 
             <div className="usuarioAuthFooter">
               <MaterialSymbol icon="verified_user" size="small" />

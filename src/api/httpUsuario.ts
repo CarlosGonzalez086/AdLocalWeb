@@ -1,13 +1,16 @@
-import axios from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 
 import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
 } from "../utils/storageUsuario";
+import { renovarTokenSilencioso } from "../utils/tokenManager";
+import { extraerMensajeError } from "../utils/errorHandler";
 import { BACKEND_URL } from "./http";
 
 export const httpUsuario = axios.create({
   baseURL: `${BACKEND_URL}`,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,20 +29,42 @@ httpUsuario.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
 httpUsuario.interceptors.response.use(
   (response) => response,
 
-  (error) => {
-    console.log("STATUS:", error.response?.status);
-
-    console.log("ERROR API:", error.response?.data);
-
+  async (error) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig | undefined;
     const status = error.response?.status;
 
-    if (status === 401 || status === 403) {
-      clearStorageUsuario();
+    // Si es 401 y no hemos reintentado todavía esta petición
+    if (status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-      window.location.href = "/usuario/login";
+      try {
+        const nuevoToken = await renovarTokenSilencioso();
+
+        if (nuevoToken) {
+          originalRequest.headers.Authorization = `Bearer ${nuevoToken}`;
+          return httpUsuario(originalRequest);
+        }
+      } catch {
+        // Fallo en la renovación silenciosa
+      }
+
+      // Si no se pudo renovar el token definitivamente, limpiar y redirigir
+      clearStorageUsuario();
+      if (typeof window !== "undefined") {
+        window.location.href = "/usuario/login";
+      }
+    }
+
+    if (error && typeof error === "object") {
+      (error as Record<string, unknown>).mensajeAmigable =
+        extraerMensajeError(error);
     }
 
     return Promise.reject(error);

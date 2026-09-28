@@ -1,8 +1,11 @@
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import type { ComercioDto } from "../services/comercioPublicApi";
 import * as turf from "@turf/turf";
 import type { Feature, Polygon, MultiPolygon, FeatureCollection } from "geojson";
 import { arcgisToGeoJSON } from "@esri/arcgis-to-geojson-utils";
+
+dayjs.extend(customParseFormat);
 
 export const DIAS_SEMANA_MAP: Record<number, string> = {
   0: "Domingo",
@@ -91,9 +94,22 @@ export function getMunicipioFromLatLng(
   return null;
 }
 
-export function esriToGeoJSON(esriData: any): FeatureCollection {
+export interface EsriFeatureInput {
+  attributes?: {
+    NOMGEO?: string | null;
+    CVE_ENT?: string | null;
+    CVE_MUN?: string | null;
+  };
+  [key: string]: unknown;
+}
+
+export interface EsriDataInput {
+  features?: EsriFeatureInput[];
+  [key: string]: unknown;
+}
+
+export function esriToGeoJSON(esriData: EsriDataInput | null | undefined): FeatureCollection {
   if (!esriData || !Array.isArray(esriData.features)) {
-    console.warn("ESRI inválido:", esriData);
     return {
       type: "FeatureCollection",
       features: [],
@@ -102,7 +118,7 @@ export function esriToGeoJSON(esriData: any): FeatureCollection {
 
   return {
     type: "FeatureCollection",
-    features: esriData.features.map((f: any) => {
+    features: esriData.features.map((f: EsriFeatureInput) => {
       const geo = arcgisToGeoJSON(f);
       geo.properties = {
         NOMGEO: f.attributes?.NOMGEO ?? null,
@@ -152,8 +168,7 @@ export async function getPublicIp(): Promise<string | null> {
 
     const data: { ip: string } = await res.json();
     return data.ip;
-  } catch (error) {
-    console.error("Error obteniendo IP:", error);
+  } catch {
     return null;
   }
 }

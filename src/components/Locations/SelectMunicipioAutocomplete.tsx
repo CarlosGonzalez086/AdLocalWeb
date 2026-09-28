@@ -8,23 +8,12 @@ interface Props {
   onChange: (value: number) => void;
 }
 
-const fieldSx = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    bgcolor: "#fff",
-    "& fieldset": { borderColor: "#E0E0E0" },
-    "&:hover fieldset": { borderColor: "#BDBDBD" },
-    "&.Mui-focused fieldset": { borderColor: "#5B3A29" },
-  },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#5B3A29" },
-};
-
 export const SelectMunicipioAutocomplete = ({ estadoId, value, onChange }: Props) => {
   const { municipalities, loading, getMunicipalitiesByState } = useLocations();
 
   useEffect(() => {
     if (estadoId) getMunicipalitiesByState(estadoId);
-  }, [estadoId]);
+  }, [estadoId, getMunicipalitiesByState]);
 
   const selected = municipalities.find((m) => m.id === value) ?? null;
 
@@ -43,7 +32,7 @@ export const SelectMunicipioAutocomplete = ({ estadoId, value, onChange }: Props
           {...params}
           label="Municipio"
           placeholder={!estadoId ? "Selecciona un estado primero" : ""}
-          sx={fieldSx}
+          className="form-control-mui-adlocal"
         />
       )}
     />

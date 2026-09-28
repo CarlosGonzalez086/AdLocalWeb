@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 

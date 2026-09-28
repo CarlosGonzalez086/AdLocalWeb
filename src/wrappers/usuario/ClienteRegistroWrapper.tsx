@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import { appSwal } from "../../utils/sweetalert";
 
 import { useClienteAuth } from "../../hooks/useClienteAuth";
 import ClienteRegistro from "../../components/usuario/ClienteRegistro";
@@ -21,7 +21,7 @@ const ClienteRegistroWrapper = () => {
       return;
     }
 
-    await Swal.fire({
+    await appSwal.fire({
       icon: "success",
       title: "Cuenta creada",
       text: "Tu cuenta de ADLocal fue creada correctamente.",

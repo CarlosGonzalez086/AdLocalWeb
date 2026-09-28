@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import Swal from "sweetalert2";
+import Swal from "../utils/sweetalert";
 import { locationsApi, type MunicipalityDto, type StateDto } from "../services/locations.api";
 
 
@@ -13,8 +13,7 @@ export const useLocations = () => {
     try {
       const { data } = await locationsApi.getAllStates();
       setStates(data.respuesta ?? []);
-    } catch (error) {
-      console.error(error);
+    } catch {
       Swal.fire(
         "Error",
         "No se pudo cargar la información de los estados",
@@ -35,8 +34,7 @@ export const useLocations = () => {
     try {
       const { data } = await locationsApi.getMunicipalitiesByState(stateId);
       setMunicipalities(data.respuesta ?? []);
-    } catch (error) {
-      console.error(error);
+    } catch {
       Swal.fire(
         "Error",
         "No se pudo cargar la información de los municipios",

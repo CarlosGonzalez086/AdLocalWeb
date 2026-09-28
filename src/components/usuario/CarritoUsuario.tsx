@@ -1,6 +1,6 @@
 import { Alert, Button, Skeleton } from "@mui/material";
 
-import Swal from "sweetalert2";
+import { showConfirmDialog } from "../../utils/sweetalert";
 
 import type { CarritoDto } from "../../services/carritoApi";
 
@@ -57,18 +57,17 @@ export default function CarritoUsuario({
   // ==========================================
 
   const handleEliminar = async (uuid: string, nombre: string) => {
-    const result = await Swal.fire({
+    const result = await showConfirmDialog({
       icon: "question",
 
       title: "Eliminar producto",
 
       text: `¿Deseas eliminar ${nombre} de tu carrito?`,
 
-      showCancelButton: true,
-
       confirmButtonText: "Sí, eliminar",
 
       cancelButtonText: "Cancelar",
+      isDestructive: true,
     });
 
     if (!result.isConfirmed) {
@@ -83,18 +82,17 @@ export default function CarritoUsuario({
   // ==========================================
 
   const handleVaciar = async () => {
-    const result = await Swal.fire({
+    const result = await showConfirmDialog({
       icon: "warning",
 
       title: "Vaciar carrito",
 
       text: "Se eliminarán todos los productos de todos los comercios de tu carrito.",
 
-      showCancelButton: true,
-
       confirmButtonText: "Vaciar carrito",
 
       cancelButtonText: "Cancelar",
+      isDestructive: true,
     });
 
     if (!result.isConfirmed) {
@@ -186,14 +184,14 @@ export default function CarritoUsuario({
             {!tieneProductos ? (
               <div className="usuarioCarritoEmpty">
                 <div className="usuarioCarritoEmptyIcon">
-                  <MaterialSymbol icon="shopping_cart" size="large" />
+                  <MaterialSymbol icon="shopping_bag" size="large" />
                 </div>
 
-                <h2>Tu carrito está vacío</h2>
+                <h2>Tu canasta local está vacía</h2>
 
                 <p>
-                  Explora los comercios de tu comunidad y agrega los productos
-                  que quieras comprar.
+                  Date una vuelta por los comercios de tu comunidad y apoya a los
+                  productores y negocios de tu colonia.
                 </p>
 
                 <a
@@ -202,7 +200,7 @@ export default function CarritoUsuario({
                 >
                   <MaterialSymbol icon="storefront" size="small" />
 
-                  <span>Explorar comercios</span>
+                  <span>Explorar comercios vecinos</span>
                 </a>
               </div>
             ) : (

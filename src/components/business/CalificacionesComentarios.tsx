@@ -8,7 +8,7 @@ import {
 
 import { useState, type CSSProperties, type FormEvent } from "react";
 
-import Swal from "sweetalert2";
+import Swal from "../../utils/sweetalert";
 
 import { useCalificaciones } from "../../hooks/useCalificaciones";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";

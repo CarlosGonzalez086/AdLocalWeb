@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 astro dev",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
@@ -34,9 +37,17 @@
     "sweetalert2": "^11.26.17"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/vercel": "^9.0.3",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.0.8",
     "@types/react-slick": "^0.23.13",
-    "cross-env": "^10.1.0"
+    "cross-env": "^10.1.0",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.12.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.2"
   }
 }

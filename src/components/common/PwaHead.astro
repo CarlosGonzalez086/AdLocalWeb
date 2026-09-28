@@ -1,0 +1,46 @@
+---
+// PwaHead.astro - Metadata and Service Worker registration for PWA
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title: _title = "ADLocal - Tu Comercio Local",
+  description: _description = "Conecta con panaderías artesanales, talleres, cafeterías y negocios vecinos en tu comunidad.",
+} = Astro.props;
+---
+
+<!-- Web App Manifest -->
+<link rel="manifest" href="/manifest.webmanifest" />
+
+<!-- Primary Theme Colors -->
+<meta name="theme-color" content="#008989" />
+<meta name="msapplication-TileColor" content="#008989" />
+<meta name="msapplication-navbutton-color" content="#008989" />
+
+<!-- iOS / Apple Mobile Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="ADLocal" />
+<link rel="apple-touch-icon" href="/icons/adlocal-apple-touch-180.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/adlocal-apple-touch-180.png" />
+
+<!-- Android / Chrome Mobile Web App -->
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="ADLocal" />
+<link rel="icon" type="image/svg+xml" href="/logo-adlocal-mark.svg" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/adlocal-192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/adlocal-32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/icons/adlocal-48.png" />
+
+<!-- Service Worker Registration -->
+<script is:inline>
+  if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        // Fallo en Service Worker no interrumpe la carga de la aplicación web
+      });
+    });
+  }
+</script>

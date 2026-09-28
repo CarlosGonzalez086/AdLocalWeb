@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { pedidosApi } from "../services/pedidosApi";
+import { extraerMensajeError } from "../utils/errorHandler";
 import type { EstadoPagoPedido } from "../types/checkout";
 import type {
   PagedResponse,
@@ -39,11 +40,9 @@ export const usePedidos = () => {
       }
 
       setPedidos(data.respuesta);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(
-        error?.response?.data?.mensaje ||
-          error?.message ||
-          "No fue posible cargar los pedidos.",
+        extraerMensajeError(error, "No fue posible cargar los pedidos."),
       );
     } finally {
       setLoading(false);
@@ -64,11 +63,9 @@ export const usePedidos = () => {
 
       setDetalle(data.respuesta);
       setErrorComprobante(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(
-        error?.response?.data?.mensaje ||
-          error?.message ||
-          "No fue posible cargar el pedido.",
+        extraerMensajeError(error, "No fue posible cargar el pedido."),
       );
     } finally {
       setLoadingDetalle(false);
@@ -92,11 +89,9 @@ export const usePedidos = () => {
 
         await Promise.all([cargarPedidos(), seleccionarPedido(pedidoUuid)]);
         return data.respuesta;
-      } catch (error: any) {
+      } catch (error: unknown) {
         setErrorComprobante(
-          error?.response?.data?.mensaje ||
-            error?.message ||
-            "No fue posible subir el comprobante.",
+          extraerMensajeError(error, "No fue posible subir el comprobante."),
         );
         return null;
       } finally {

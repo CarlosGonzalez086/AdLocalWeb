@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState, type FC } from "react";
 
-import Swal from "sweetalert2";
+import Swal from "../../utils/sweetalert";
 
 import {
-  comercioPublicApi,
-  type ComercioDto,
-  type ProductoServicioDto,
+    comercioPublicApi,
+    type ComercioDto,
+    type ProductoServicioDto, dataDefault,
 } from "../../services/comercioPublicApi";
 
 import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
@@ -24,7 +24,7 @@ interface ComercioProps {
 }
 
 const Comercio: FC<ComercioProps> = ({ id }) => {
-  const [comercio, setComercio] = useState<ComercioDto | null>(null);
+  const [comercio, setComercio] = useState<ComercioDto | null>(dataDefault);
 
   const [loading, setLoading] = useState(true);
 
@@ -72,9 +72,7 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
       const comercioEncontrado = response.data.respuesta ?? null;
 
       setComercio(comercioEncontrado);
-    } catch (error) {
-      console.error("Error al consultar el comercio:", error);
-
+    } catch {
       setError("No fue posible cargar la información del comercio.");
 
       setComercio(null);
@@ -209,12 +207,13 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
   // ==========================================
 
   const handleCotizar = useCallback(
-    (producto: ProductoServicioDto) => {
+    (_producto: ProductoServicioDto) => {
       if (!validarSesion()) {
         return;
       }
 
-      window.location.href = `/usuario/cotizacion/${producto.uuid}`;
+      // Opción 1: Deshabilitado temporalmente para evitar 404
+      // window.location.href = `/usuario/cotizacion/${producto.uuid}`;
     },
     [validarSesion],
   );

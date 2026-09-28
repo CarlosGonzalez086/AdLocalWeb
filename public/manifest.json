@@ -1,0 +1,89 @@
+{
+  "id": "com.adlocal.app",
+  "name": "ADLocal - Tu Comercio Local",
+  "short_name": "ADLocal",
+  "description": "Conecta con panaderías artesanales, cafeterías, talleres y negocios de tu comunidad.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8F6F2",
+  "theme_color": "#008989",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": [
+    "shopping",
+    "food",
+    "lifestyle",
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "/icons/adlocal-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/adlocal-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/adlocal-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/adlocal-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/adlocal-apple-touch-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Explorar Comercios",
+      "short_name": "Comercios",
+      "description": "Ver comercios locales de tu comunidad",
+      "url": "/comercios",
+      "icons": [
+        {
+          "src": "/icons/adlocal-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Búsqueda Avanzada",
+      "short_name": "Buscar",
+      "description": "Buscar por categoría o nombre",
+      "url": "/comercios/busqueda-avanzada",
+      "icons": [
+        {
+          "src": "/icons/adlocal-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Mi Carrito",
+      "short_name": "Carrito",
+      "description": "Ver productos seleccionados",
+      "url": "/usuario/carrito",
+      "icons": [
+        {
+          "src": "/icons/adlocal-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

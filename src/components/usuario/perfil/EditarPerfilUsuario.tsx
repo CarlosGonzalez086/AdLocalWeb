@@ -89,7 +89,7 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
               </div>
               <a
                 href="/usuario/perfil"
-                className="btn-adlocal btn-adlocal--ghost text-decoration-none d-flex justify-content-between align-items-center"
+                className="btn-adlocal btn-adlocal-ghost text-decoration-none d-inline-flex align-items-center"
               >
                 <MaterialSymbol
                   icon="arrow_back"
@@ -115,8 +115,8 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
             ) : (
               <div className="row g-4">
                 <div className="col-12 col-md-5 col-lg-4">
-                  <div className="usuarioPerfilCard">
-                    <div className="usuarioPerfilAvatarContainer">
+                  <div className="usuarioPerfilCard card-adlocal p-4 text-center">
+                    <div className="usuarioPerfilAvatarContainer mb-3 d-flex justify-content-center">
                       <Avatar
                         src={fotoVisible}
                         alt={nombreVisible}
@@ -125,8 +125,8 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
                         {getInicialesUsuario(nombreVisible)}
                       </Avatar>
                     </div>
-                    <h2 className="usuarioPerfilNombre">{nombreVisible}</h2>
-                    <span className="usuarioPerfilTipo">Cliente ADLocal</span>
+                    <h2 className="usuarioPerfilNombre fz-h3 fw-bold mb-1">{nombreVisible}</h2>
+                    <span className="usuarioPerfilTipo fz-body-sm text-secondary d-block mb-3">Cliente ADLocal</span>
                     <input
                       ref={inputFoto}
                       type="file"
@@ -138,7 +138,7 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
                     />
                     <Button
                       type="button"
-                      className="btn-adlocal btn-adlocal--ghost mt-3"
+                      className="btn-adlocal btn-adlocal-outline mt-2"
                       disabled={guardando}
                       onClick={() => inputFoto.current?.click()}
                     >
@@ -146,26 +146,26 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
                       <span className="ms-2">Cambiar foto</span>
                     </Button>
                     {errorFoto && (
-                      <span className="usuarioPerfilError fz-h6 d-block mt-2">
+                      <span className="usuarioPerfilError fz-caption text-danger d-block mt-2">
                         {errorFoto}
                       </span>
                     )}
-                    <span className="usuarioCuentaDescription fz-h6 d-block mt-2">
+                    <span className="usuarioCuentaDescription fz-caption text-muted d-block mt-2">
                       JPG, PNG o WEBP. Máximo 5 MB.
                     </span>
                   </div>
                 </div>
                 <div className="col-12 col-md-7 col-lg-8">
-                  <div className="usuarioCuentaCard">
-                    <div className="usuarioCuentaCardHeader">
+                  <div className="usuarioCuentaCard card-adlocal p-4">
+                    <div className="usuarioCuentaCardHeader d-flex align-items-center gap-3 mb-3">
                       <div className="usuarioCuentaCardIcon">
                         <MaterialSymbol icon="person" size="medium" />
                       </div>
                       <div>
-                        <h2 className="usuarioCuentaCardTitle">
+                        <h2 className="usuarioCuentaCardTitle fz-h3 fw-bold mb-0">
                           Información personal
                         </h2>
-                        <p className="usuarioCuentaCardDescription">
+                        <p className="usuarioCuentaCardDescription fz-caption text-secondary mb-0">
                           El correo no puede modificarse desde esta sección.
                         </p>
                       </div>
@@ -202,7 +202,7 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
                         <Button
                           fullWidth
                           type="button"
-                          className="btn-adlocal btn-adlocal--solid"
+                          className="btn-adlocal btn-adlocal-primary"
                           disabled={
                             guardando || !nombre.trim() || Boolean(errorFoto)
                           }
@@ -223,18 +223,18 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="usuarioCuentaDangerCard mt-4">
+                  <div className="usuarioCuentaDangerCard mt-4 d-flex justify-content-between align-items-center p-3">
                     <div>
-                      <h3 className="usuarioCuentaDangerTitle">
+                      <h3 className="usuarioCuentaDangerTitle fz-h4 fw-bold mb-1">
                         Cerrar sesión
                       </h3>
-                      <p className="usuarioCuentaDangerDescription">
+                      <p className="usuarioCuentaDangerDescription fz-caption text-secondary mb-0">
                         Finaliza tu sesión actual en este dispositivo.
                       </p>
                     </div>
                     <Button
                       type="button"
-                      className="btn-adlocal btn-adlocal--danger"
+                      className="btn-adlocal btn-adlocal-danger"
                       onClick={cerrarSesion}
                     >
                       <MaterialSymbol icon="logout" size="small" />

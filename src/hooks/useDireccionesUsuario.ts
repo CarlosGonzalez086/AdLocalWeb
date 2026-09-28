@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-
-import Swal from "sweetalert2";
-
+import {
+  showToast,
+  showConfirmDialog,
+} from "../utils/sweetalert";
+import { extraerMensajeError } from "../utils/errorHandler";
 import {
   direccionesUsuarioApi,
   type DireccionUsuarioDtoCreate,
@@ -10,9 +12,7 @@ import {
 
 export const useDireccionesUsuario = () => {
   const [direcciones, setDirecciones] = useState<DireccionUsuarioDto[]>([]);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
 
   const cargarDirecciones = useCallback(async () => {
@@ -24,21 +24,18 @@ export const useDireccionesUsuario = () => {
 
       if (data.codigo !== "200") {
         setError(data.mensaje || "No fue posible cargar las direcciones");
-
         setDirecciones([]);
-
         return;
       }
 
       setDirecciones(data.respuesta ?? []);
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible cargar las direcciones";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible cargar las direcciones",
+      );
 
       setError(mensaje);
-
       setDirecciones([]);
     } finally {
       setLoading(false);
@@ -55,29 +52,20 @@ export const useDireccionesUsuario = () => {
 
         if (data.codigo !== "200") {
           setError(data.mensaje || "No fue posible registrar la dirección");
-
           return false;
         }
 
         await cargarDirecciones();
-
-        await Swal.fire({
-          icon: "success",
-          title: "Dirección registrada",
-          text: "La dirección fue guardada correctamente.",
-          timer: 1200,
-          showConfirmButton: false,
-        });
+        showToast("Dirección guardada correctamente.", "success", 1500);
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible registrar la dirección";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible registrar la dirección",
+        );
 
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -96,28 +84,20 @@ export const useDireccionesUsuario = () => {
 
         if (data.codigo !== "200") {
           setError(data.mensaje || "No fue posible actualizar la dirección");
-
           return false;
         }
 
         await cargarDirecciones();
-
-        await Swal.fire({
-          icon: "success",
-          title: "Dirección actualizada",
-          timer: 1100,
-          showConfirmButton: false,
-        });
+        showToast("Dirección actualizada correctamente.", "success", 1500);
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible actualizar la dirección";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible actualizar la dirección",
+        );
 
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -128,18 +108,13 @@ export const useDireccionesUsuario = () => {
 
   const eliminarDireccion = useCallback(
     async (direccion: DireccionUsuarioDto) => {
-      const result = await Swal.fire({
-        icon: "warning",
-
+      const result = await showConfirmDialog({
         title: "Eliminar dirección",
-
         text: `¿Deseas eliminar "${direccion.alias}"?`,
-
-        showCancelButton: true,
-
+        icon: "warning",
         confirmButtonText: "Sí, eliminar",
-
         cancelButtonText: "Cancelar",
+        isDestructive: true,
       });
 
       if (!result.isConfirmed) {
@@ -154,28 +129,20 @@ export const useDireccionesUsuario = () => {
 
         if (data.codigo !== "200") {
           setError(data.mensaje || "No fue posible eliminar la dirección");
-
           return false;
         }
 
         await cargarDirecciones();
-
-        await Swal.fire({
-          icon: "success",
-          title: "Dirección eliminada",
-          timer: 1000,
-          showConfirmButton: false,
-        });
+        showToast("Dirección eliminada correctamente.", "success", 1500);
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible eliminar la dirección";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible eliminar la dirección",
+        );
 
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -208,16 +175,14 @@ export const useDireccionesUsuario = () => {
         }
 
         await cargarDirecciones();
-
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible cambiar la dirección predeterminada";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible cambiar la dirección predeterminada",
+        );
 
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -236,20 +201,13 @@ export const useDireccionesUsuario = () => {
 
   return {
     direcciones,
-
     loading,
     error,
-
     cargarDirecciones,
-
     crearDireccion,
-
     actualizarDireccion,
-
     eliminarDireccion,
-
     establecerPredeterminada,
-
     clearError,
   };
 };

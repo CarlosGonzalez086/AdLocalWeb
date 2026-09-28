@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import {
   getUsuarioSesion,
+  obtenerSesionValidaOActualizar,
   type UsuarioSesion,
 } from "../../utils/usuarioSesion";
 
@@ -17,20 +18,44 @@ const UsuarioAuthGuard = ({ children }: Props) => {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const sesion = getUsuarioSesion();
+    let activo = true;
 
-    if (!sesion) {
-      const returnUrl = `${window.location.pathname}${window.location.search}`;
+    const verificar = async () => {
+      const sesion = await obtenerSesionValidaOActualizar();
 
-      window.location.replace(
-        `/usuario/login?returnUrl=${encodeURIComponent(returnUrl)}`,
-      );
+      if (!activo) return;
 
-      return;
-    }
+      if (!sesion) {
+        const returnUrl = `${window.location.pathname}${window.location.search}`;
 
-    setUsuario(sesion);
-    setChecking(false);
+        window.location.replace(
+          `/usuario/login?returnUrl=${encodeURIComponent(returnUrl)}`,
+        );
+
+        return;
+      }
+
+      setUsuario(sesion);
+      setChecking(false);
+    };
+
+    verificar();
+
+    const handleActualizacion = () => {
+      const sesionActual = getUsuarioSesion();
+      if (sesionActual && activo) {
+        setUsuario(sesionActual);
+      }
+    };
+
+    window.addEventListener("usuarioSesionActualizada", handleActualizacion);
+    window.addEventListener("storage", handleActualizacion);
+
+    return () => {
+      activo = false;
+      window.removeEventListener("usuarioSesionActualizada", handleActualizacion);
+      window.removeEventListener("storage", handleActualizacion);
+    };
   }, []);
 
   if (checking || !usuario) {

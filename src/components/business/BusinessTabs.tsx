@@ -5,17 +5,18 @@ import {
   useTheme,
 } from "@mui/material";
 
-import Slider, { type Settings } from "react-slick";
-
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 import ComercioCard from "./ComercioCard";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 type TabKey =
   | "destacados"
@@ -93,30 +94,12 @@ const BusinessTabs: React.FC<Props> = ({
     setActiveTabProp?.(tab);
   };
 
-  const carouselSettings: Settings = {
-    dots: false,
-    infinite: false,
-    speed: 400,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    arrows: true,
-    swipeToSlide: true,
-    adaptiveHeight: false,
+  const carouselRef = useRef<HTMLDivElement | null>(null);
 
-    responsive: [
-      {
-        breakpoint: 1350,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 1000,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-    ],
+  const scrollCarousel = (direction: "left" | "right") => {
+    if (!carouselRef.current) return;
+    const scrollAmount = direction === "left" ? -640 : 640;
+    carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
   const showCarousel = activeTab === "destacados" && !isMobileOrTablet;
@@ -220,11 +203,11 @@ const BusinessTabs: React.FC<Props> = ({
           </div>
 
           <h3 className="fz-h3 fw-semibold mb-0">
-            No hay comercios disponibles
+            Aún no hay comercios en esta sección
           </h3>
 
           <p className="businessStateDescription fz-h4 fw-regular">
-            Por el momento no encontramos comercios en esta categoría.
+            Estamos sumando nuevos negocios de tu comunidad a diario. Si conoces una joyita local en tu zona, ¡invítala a unirse a ADLocal!
           </p>
         </div>
       )}
@@ -232,14 +215,32 @@ const BusinessTabs: React.FC<Props> = ({
       {comercios.length > 0 && (
         <>
           {showCarousel ? (
-            <div className="businessCarousel">
-              <Slider {...carouselSettings}>
+            <div className="businessCarouselContainer">
+              <button
+                type="button"
+                className="businessCarouselArrow businessCarouselArrowPrev"
+                onClick={() => scrollCarousel("left")}
+                aria-label="Comercios anteriores"
+              >
+                <MaterialSymbol icon="chevron_left" size="medium" />
+              </button>
+
+              <div ref={carouselRef} className="businessCarouselTrack">
                 {comercios.map((comercio) => (
                   <div key={comercio.id} className="businessCarouselItem">
                     <ComercioCard comercio={comercio} />
                   </div>
                 ))}
-              </Slider>
+              </div>
+
+              <button
+                type="button"
+                className="businessCarouselArrow businessCarouselArrowNext"
+                onClick={() => scrollCarousel("right")}
+                aria-label="Comercios siguientes"
+              >
+                <MaterialSymbol icon="chevron_right" size="medium" />
+              </button>
             </div>
           ) : (
             <div className="businessCardsGrid">

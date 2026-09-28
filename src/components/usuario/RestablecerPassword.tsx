@@ -103,9 +103,12 @@ export default function RestablecerPassword({
                   )}
 
                   <TextField
-                    placeholder="Nueva contraseña"
+                    id="restablecer-password"
+                    label="Nueva contraseña"
+                    placeholder="Mínimo 8 caracteres"
                     type={showPassword ? "text" : "password"}
                     fullWidth
+                    autoComplete="new-password"
                     value={password}
                     disabled={loading}
                     onChange={(event) => setPassword(event.target.value)}
@@ -127,6 +130,7 @@ export default function RestablecerPassword({
                             size="small"
                             disabled={loading}
                             onClick={() => setShowPassword((value) => !value)}
+                            aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                           >
                             <MaterialSymbol
                               icon={
@@ -141,9 +145,12 @@ export default function RestablecerPassword({
                   />
 
                   <TextField
-                    placeholder="Confirmar nueva contraseña"
+                    id="restablecer-confirmar-password"
+                    label="Confirmar nueva contraseña"
+                    placeholder="Repite la nueva contraseña"
                     type={showConfirmPassword ? "text" : "password"}
                     fullWidth
+                    autoComplete="new-password"
                     value={confirmarPassword}
                     disabled={loading}
                     onChange={(event) =>
@@ -169,6 +176,7 @@ export default function RestablecerPassword({
                             onClick={() =>
                               setShowConfirmPassword((value) => !value)
                             }
+                            aria-label={showConfirmPassword ? "Ocultar contraseña confirmada" : "Ver contraseña confirmada"}
                           >
                             <MaterialSymbol
                               icon={
@@ -189,9 +197,16 @@ export default function RestablecerPassword({
                     variant="contained"
                     fullWidth
                     disabled={loading}
-                    className="btn-adlocal btn-adlocal--solid usuarioAuthSubmit fz-h3 fw-bold"
+                    className="btn-adlocal btn-adlocal-primary usuarioAuthSubmit fz-body fw-bold"
                   >
-                    {loading ? "Actualizando..." : "Cambiar contraseña"}
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Actualizando...
+                      </>
+                    ) : (
+                      "Cambiar contraseña"
+                    )}
                   </Button>
                 </div>
               </form>

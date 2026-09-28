@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { appSwal } from "../../utils/sweetalert";
 
 import { useClienteAuth } from "../../hooks/useClienteAuth";
 
@@ -57,7 +57,7 @@ const RestablecerPasswordWrapper = () => {
 
     removeLocalStorageUsuario("codigoRecuperacion");
 
-    await Swal.fire({
+    await appSwal.fire({
       icon: "success",
       title: "Contraseña actualizada",
       text: "Tu contraseña fue actualizada correctamente.",

@@ -11,6 +11,7 @@ import {
   clearStorageUsuario,
   setLocalStorageJWTUsuario,
 } from "../utils/storageUsuario";
+import { extraerMensajeError } from "../utils/errorHandler";
 
 export const useClienteAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,11 @@ export const useClienteAuth = () => {
         return null;
       }
 
-      const token = data.respuesta?.result as any;
+      const rawRespuesta = data.respuesta as Record<string, unknown> | string | undefined;
+      const token =
+        typeof rawRespuesta === "string"
+          ? rawRespuesta
+          : ((rawRespuesta?.token || rawRespuesta?.result) as string | undefined);
 
       if (!token) {
         setError("No se recibió el token de autenticación");
@@ -40,12 +45,19 @@ export const useClienteAuth = () => {
 
       setLocalStorageJWTUsuario(token);
 
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("usuarioSesionActualizada", { detail: { token } }),
+        );
+        window.dispatchEvent(new Event("storage"));
+      }
+
       return token;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible registrar la cuenta";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible registrar la cuenta",
+      );
 
       setError(mensaje);
 
@@ -68,7 +80,11 @@ export const useClienteAuth = () => {
         return null;
       }
 
-      const token = data.respuesta?.result as any;
+      const rawRespuesta = data.respuesta as Record<string, unknown> | string | undefined;
+      const token =
+        typeof rawRespuesta === "string"
+          ? rawRespuesta
+          : ((rawRespuesta?.token || rawRespuesta?.result) as string | undefined);
 
       if (!token) {
         setError("No se recibió el token de autenticación");
@@ -78,12 +94,19 @@ export const useClienteAuth = () => {
 
       setLocalStorageJWTUsuario(token);
 
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("usuarioSesionActualizada", { detail: { token } }),
+        );
+        window.dispatchEvent(new Event("storage"));
+      }
+
       return token;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible iniciar sesión";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible iniciar sesión",
+      );
 
       setError(mensaje);
 
@@ -107,11 +130,11 @@ export const useClienteAuth = () => {
       }
 
       return true;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible solicitar el código";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible solicitar el código",
+      );
 
       setError(mensaje);
 
@@ -135,11 +158,11 @@ export const useClienteAuth = () => {
       }
 
       return true;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "El código no es válido";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "El código no es válido",
+      );
 
       setError(mensaje);
 
@@ -164,11 +187,11 @@ export const useClienteAuth = () => {
         }
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible actualizar la contraseña";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible actualizar la contraseña",
+        );
 
         setError(mensaje);
 
@@ -182,6 +205,10 @@ export const useClienteAuth = () => {
 
   const logout = useCallback(() => {
     clearStorageUsuario();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("usuarioSesionActualizada"));
+      window.dispatchEvent(new Event("storage"));
+    }
   }, []);
 
   const clearError = useCallback(() => {
