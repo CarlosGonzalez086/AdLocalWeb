@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 
 const PedidosContent = () => {
   const pedidos = usePedidos();
+  const { seleccionarPedido } = pedidos;
   const pedidoAbierto = useRef(false);
 
   useEffect(() => {
@@ -13,8 +14,8 @@ const PedidosContent = () => {
     const pedidoUuid = new URLSearchParams(window.location.search).get("pedido");
     if (!pedidoUuid) return;
     pedidoAbierto.current = true;
-    void pedidos.seleccionarPedido(pedidoUuid);
-  }, [pedidos.seleccionarPedido]);
+    void seleccionarPedido(pedidoUuid);
+  }, [seleccionarPedido]);
 
   return (
     <App>

@@ -1,6 +1,6 @@
 import { Alert, Button, Skeleton } from "@mui/material";
 
-import Swal from "sweetalert2";
+import { showConfirmDialog } from "../../utils/sweetalert";
 
 import type { CarritoDto } from "../../services/carritoApi";
 
@@ -57,18 +57,17 @@ export default function CarritoUsuario({
   // ==========================================
 
   const handleEliminar = async (uuid: string, nombre: string) => {
-    const result = await Swal.fire({
+    const result = await showConfirmDialog({
       icon: "question",
 
       title: "Eliminar producto",
 
       text: `¿Deseas eliminar ${nombre} de tu carrito?`,
 
-      showCancelButton: true,
-
       confirmButtonText: "Sí, eliminar",
 
       cancelButtonText: "Cancelar",
+      isDestructive: true,
     });
 
     if (!result.isConfirmed) {
@@ -83,18 +82,17 @@ export default function CarritoUsuario({
   // ==========================================
 
   const handleVaciar = async () => {
-    const result = await Swal.fire({
+    const result = await showConfirmDialog({
       icon: "warning",
 
       title: "Vaciar carrito",
 
       text: "Se eliminarán todos los productos de todos los comercios de tu carrito.",
 
-      showCancelButton: true,
-
       confirmButtonText: "Vaciar carrito",
 
       cancelButtonText: "Cancelar",
+      isDestructive: true,
     });
 
     if (!result.isConfirmed) {

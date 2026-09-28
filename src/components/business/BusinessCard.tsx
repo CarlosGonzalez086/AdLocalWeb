@@ -1,11 +1,4 @@
 
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Chip,
-} from "@mui/material";
 import type { Business } from "../../types/business";
 import type { FC } from "react";
 
@@ -17,55 +10,44 @@ const BusinessCard: FC<Props> = ({ business }) => {
   const isPremium = business.plan === "PREMIUM";
 
   return (
-    <Card
-      sx={{
-        height: "100%",
-        position: "relative",
-        border:
-          isPremium ? "2px solid" : "1px solid",
-        borderColor:
-          isPremium ? "secondary.main" : "divider",
-      }}
+    <div
+      className={`card-adlocal card-adlocal-interactive h-100 position-relative ${
+        isPremium ? "border-primary" : ""
+      }`}
     >
       {isPremium && (
-        <Chip
-          label="PREMIUM"
-          color="secondary"
-          size="small"
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            fontWeight: 600,
+        <span
+          className="badge-adlocal badge-adlocal-secondary position-absolute top-0 end-0 m-2 fw-semibold"
+        >
+          PREMIUM
+        </span>
+      )}
+
+      {business.imageUrl && (
+        <img
+          src={business.imageUrl}
+          alt={business.name}
+          className="w-100 object-fit-cover"
+          style={{
+            height: "160px",
+            borderTopLeftRadius: "var(--radius-md)",
+            borderTopRightRadius: "var(--radius-md)",
           }}
         />
       )}
 
-      {business.imageUrl && (
-        <CardMedia
-          component="img"
-          height="160"
-          image={business.imageUrl}
-          alt={business.name}
-        />
-      )}
-
-      <CardContent>
-        <Typography variant="h6">
+      <div className="card-adlocal-body">
+        <h3 className="fz-h5 fw-bold mb-1">
           {business.name}
-        </Typography>
+        </h3>
 
         {business.description && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 1 }}
-          >
+          <p className="fz-body-sm text-muted mt-2 mb-0">
             {business.description}
-          </Typography>
+          </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

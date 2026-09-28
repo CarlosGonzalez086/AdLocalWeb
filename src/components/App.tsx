@@ -1,4 +1,4 @@
-import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -14,26 +14,17 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ children }) => {
   const { municipioActual, loadingMunicipios } = useMunicipio();
-  console.log(municipioActual);
 
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
 
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          overflow: "hidden",
-        }}
-      >
+      <div className="d-flex flex-column min-vh-100 w-100 overflow-hidden">
         <Header municipio={municipioActual} loading={loadingMunicipios} />
         <Body>{children}</Body>
         <Footer />
         <PwaInstallPrompt />
-      </Box>
+      </div>
     </ThemeProvider>
   );
 };

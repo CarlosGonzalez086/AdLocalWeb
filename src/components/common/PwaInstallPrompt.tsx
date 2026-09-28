@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -21,7 +21,7 @@ const PwaInstallPrompt: React.FC = () => {
     // Check if app is already running in standalone (PWA) mode
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as any).standalone === true;
+      Boolean((window.navigator as unknown as { standalone?: boolean }).standalone);
 
     if (isStandalone) {
       return;
@@ -104,7 +104,7 @@ const PwaInstallPrompt: React.FC = () => {
       <div className="pwaBannerCard">
         <div className="pwaBannerHeader">
           <img
-            src="/icons/icon-192.png"
+            src="/icons/adlocal-192.png"
             alt="ADLocal App"
             className="pwaBannerAppIcon"
           />

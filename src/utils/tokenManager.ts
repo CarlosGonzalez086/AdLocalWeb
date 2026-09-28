@@ -1,13 +1,14 @@
-﻿import { clienteAuthApi } from "../services/clienteAuthApi";
+import { clienteAuthApi } from "../services/clienteAuthApi";
 import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
   setLocalStorageJWTUsuario,
+  setLocalStorageRefreshTokenUsuario,
 } from "./storageUsuario";
 
 interface JwtPayload {
   exp?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const decodeJwtPayload = (token: string): JwtPayload | null => {
@@ -25,7 +26,7 @@ export const decodeJwtPayload = (token: string): JwtPayload | null => {
     const json = new TextDecoder().decode(bytes);
 
     return JSON.parse(json);
-  } catch (e) {
+  } catch {
     return null;
   }
 };
@@ -75,11 +76,14 @@ export const renovarTokenSilencioso = async (): Promise<string | null> => {
     try {
       const { data } = await clienteAuthApi.renovarToken(tokenActual);
 
-      if (data && (data.codigo === "200" || data.codigo === 200 as any)) {
+      if (data && (data.codigo === "200" || String(data.codigo) === "200")) {
         const nuevoToken = data.respuesta?.token;
 
         if (nuevoToken) {
           setLocalStorageJWTUsuario(nuevoToken);
+          if (data.respuesta?.refreshToken) {
+            setLocalStorageRefreshTokenUsuario(data.respuesta.refreshToken);
+          }
 
           if (data.respuesta?.usuario) {
             try {
@@ -91,8 +95,8 @@ export const renovarTokenSilencioso = async (): Promise<string | null> => {
                 "usuario",
                 JSON.stringify(data.respuesta.usuario),
               );
-            } catch (err) {
-              console.warn("No se pudo persistir datos de usuario:", err);
+            } catch {
+              // Silencioso: ignorar error de cuota o storage bloqueado en navegador
             }
           }
 
@@ -113,10 +117,8 @@ export const renovarTokenSilencioso = async (): Promise<string | null> => {
 
       // Si el backend devolvió código de error distinto a 200
       return null;
-    } catch (error: any) {
-      console.warn("Fallo al renovar token:", error?.response?.status || error?.message);
-
-      const status = error?.response?.status;
+    } catch (error: unknown) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
       // Solo si el servidor rechaza el token con 401/403 de forma terminante
       if (status === 401 || status === 403) {
         clearStorageUsuario();

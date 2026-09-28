@@ -1,6 +1,6 @@
 import { Alert, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import Swal from "../../utils/sweetalert";
 import { citasApi } from "../../services/citasApi";
 import type { ProductoServicioDto } from "../../services/comercioPublicApi";
 
@@ -31,8 +31,10 @@ export default function ReservarCitaModal({ producto, onClose }: Props) {
     try {
       await citasApi.crear({ productoUuid: producto.uuid, fechaInicio: `${fecha}T${hora}:00`, nombrePersona: nombre.trim(), notas: notas.trim() || undefined });
       await Swal.fire("Cita agendada", `Tu cita quedó reservada para el ${fecha} a las ${hora}.`, "success");
-      onClose();
-    } catch (e: any) { setError(e?.response?.data?.mensaje ?? "Ese horario ya no está disponible."); }
+    } catch (e: unknown) {
+      const mensaje = (e as { response?: { data?: { mensaje?: string } } })?.response?.data?.mensaje;
+      setError(mensaje ?? "Ese horario ya no está disponible.");
+    }
     finally { setLoading(false); }
   };
 

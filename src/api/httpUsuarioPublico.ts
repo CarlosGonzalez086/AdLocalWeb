@@ -1,9 +1,10 @@
 import axios from "axios";
 import { BACKEND_URL } from "./http";
+import { extraerMensajeError } from "../utils/errorHandler";
 
 export const httpUsuarioPublico = axios.create({
   baseURL: `${BACKEND_URL}`,
-
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -11,11 +12,11 @@ export const httpUsuarioPublico = axios.create({
 
 httpUsuarioPublico.interceptors.response.use(
   (response) => response,
-
   (error) => {
-    console.log("STATUS PUBLICO:", error.response?.status);
-
-    console.log("ERROR API PUBLICA:", error.response?.data);
+    if (error && typeof error === "object") {
+      (error as Record<string, unknown>).mensajeAmigable =
+        extraerMensajeError(error);
+    }
 
     return Promise.reject(error);
   },

@@ -15,7 +15,6 @@ import {
 
 import { useState, type MouseEvent } from "react";
 
-import { useTheme } from "@mui/material/styles";
 import type {
   DireccionUsuarioDto,
 } from "../../../services/direccionesUsuarioApi";
@@ -40,9 +39,7 @@ export default function DireccionesTable({
   onEliminar,
   onPredeterminada,
 }: Props) {
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery("(max-width: 1199.98px)");
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -90,7 +87,7 @@ export default function DireccionesTable({
           </div>
         ) : (
           direcciones.map((direccion) => (
-            <div key={direccion.uuid} className="direccionMobileCard">
+            <div key={direccion.uuid} className="direccionMobileCard table-adlocal-mobile-card">
               <div className="direccionMobileHeader">
                 <div className="direccionAliasContainer">
                   <div className="direccionIcon">
@@ -108,7 +105,7 @@ export default function DireccionesTable({
                       </strong>
 
                       {direccion.esPredeterminada && (
-                        <span className="direccionDefaultBadge">
+                        <span className="badge-adlocal badge-adlocal-primary">
                           Predeterminada
                         </span>
                       )}
@@ -121,6 +118,7 @@ export default function DireccionesTable({
                 </div>
 
                 <IconButton
+                  aria-label={`Acciones para ${direccion.alias}`}
                   size="small"
                   onClick={(event) => handleMenuOpen(event, direccion)}
                 >
@@ -211,8 +209,8 @@ export default function DireccionesTable({
 
   return (
     <div className="direccionesTableWrapper">
-      <TableContainer className="direccionesTableContainer">
-        <Table>
+      <TableContainer className="direccionesTableContainer table-adlocal-wrapper" tabIndex={0} role="region" aria-label="Direcciones registradas">
+        <Table className="table-adlocal" aria-label="Direcciones registradas">
           <TableHead>
             <TableRow>
               <TableCell className="direccionesTableHeadCell">
@@ -291,7 +289,7 @@ export default function DireccionesTable({
                           </strong>
 
                           {direccion.esPredeterminada && (
-                            <span className="direccionDefaultBadge">
+                            <span className="badge-adlocal badge-adlocal-primary">
                               Predeterminada
                             </span>
                           )}
@@ -331,10 +329,10 @@ export default function DireccionesTable({
 
                   <TableCell>
                     <span
-                      className={`direccionStatus ${
+                      className={`badge-adlocal ${
                         direccion.activo
-                          ? "direccionStatusActive"
-                          : "direccionStatusInactive"
+                          ? "badge-adlocal-success"
+                          : "badge-adlocal-secondary"
                       }`}
                     >
                       {direccion.activo ? "Activa" : "Inactiva"}
@@ -342,12 +340,12 @@ export default function DireccionesTable({
                   </TableCell>
 
                   <TableCell align="right">
-                    <div className="direccionesActions">
+                    <div className="direccionesActions table-adlocal-actions">
                       {!direccion.esPredeterminada && (
                         <Button
                           type="button"
                           size="small"
-                          className="direccionActionPrimary"
+                          className="btn-adlocal btn-adlocal-outline btn-adlocal-sm direccionActionPrimary"
                           onClick={() => onPredeterminada(direccion)}
                         >
                           <MaterialSymbol icon="star" size="small" />

@@ -1,7 +1,8 @@
-import { useEffect, useRef, type FC } from "react";
+
 import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
+import {type FC, useEffect, useRef} from "react";
 
 interface Props {
   lat: number;

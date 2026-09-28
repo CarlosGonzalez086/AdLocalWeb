@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
+import { useState, useEffect, useCallback } from "react";
+import Swal from "../utils/sweetalert";
 import {
   calificacionesApi,
   type CalificacionComentarioCreateDto,
@@ -17,38 +17,40 @@ export const useCalificaciones = (idComercio: number) => {
   const [orderBy, setOrderBy] = useState<"asc" | "desc">("desc");
   const [totalRecords, setTotalRecords] = useState(0);
 
-  const cargarComentarios = async (
-    pageParam: number = page,
-    orderParam: "asc" | "desc" = orderBy,
-  ) => {
-    setLoading(true);
-    try {
-      const { data } = await calificacionesApi.obtenerTodos(
-        idComercio,
-        pageParam,
-        pageSize,
-        orderParam,
-      );
+  const cargarComentarios = useCallback(
+    async (
+      pageParam: number = page,
+      orderParam: "asc" | "desc" = orderBy,
+    ) => {
+      setLoading(true);
+      try {
+        const { data } = await calificacionesApi.obtenerTodos(
+          idComercio,
+          pageParam,
+          pageSize,
+          orderParam,
+        );
 
-      if (data.codigo !== "200") {
-        Swal.fire("Error", data.mensaje, "error");
+        if (data.codigo !== "200") {
+          Swal.fire("Error", data.mensaje, "error");
+          setComentarios([]);
+          return;
+        }
+
+        const respuesta = data.respuesta as CalificacionComentarioListResponse;
+        setComentarios(respuesta.data || []);
+        setTotalRecords(respuesta.totalRecords || 0);
+        setPage(respuesta.page || 1);
+        setOrderBy(orderParam);
+      } catch {
+        Swal.fire("Error", "No se pudieron cargar los comentarios", "error");
         setComentarios([]);
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      const respuesta = data.respuesta as CalificacionComentarioListResponse;
-      setComentarios(respuesta.data || []);
-      setTotalRecords(respuesta.totalRecords || 0);
-      setPage(respuesta.page || 1);
-      setOrderBy(orderParam);
-    } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "No se pudieron cargar los comentarios", "error");
-      setComentarios([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [idComercio, page, pageSize, orderBy],
+  );
 
   const crearComentario = async (dto: CalificacionComentarioCreateDto) => {
     setLoading(true);
@@ -61,8 +63,7 @@ export const useCalificaciones = (idComercio: number) => {
       Swal.fire("Éxito", "Comentario enviado correctamente", "success");
       cargarComentarios(1, orderBy);
       return data.respuesta as CalificacionComentarioDto;
-    } catch (error) {
-      console.error(error);
+    } catch {
       Swal.fire("Error", "No se pudo enviar el comentario", "error");
       return null;
     } finally {
@@ -81,8 +82,10 @@ export const useCalificaciones = (idComercio: number) => {
   };
 
   useEffect(() => {
-    if (idComercio) cargarComentarios();
-  }, [idComercio]);
+    if (idComercio) {
+      void cargarComentarios();
+    }
+  }, [idComercio, cargarComentarios]);
 
   return {
     comentarios,

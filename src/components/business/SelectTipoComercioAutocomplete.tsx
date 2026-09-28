@@ -7,23 +7,12 @@ interface Props {
   onChange: (value: number) => void;
 }
 
-const fieldSx = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    bgcolor: "#fff",
-    "& fieldset": { borderColor: "#E0E0E0" },
-    "&:hover fieldset": { borderColor: "#BDBDBD" },
-    "&.Mui-focused fieldset": { borderColor: "#5B3A29" },
-  },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#5B3A29" },
-};
-
 export const SelectTipoComercioAutocomplete = ({ value, onChange }: Props) => {
   const { tiposSelect, loadingSelect, listarParaSelect } = useTiposComercio();
 
   useEffect(() => {
     listarParaSelect();
-  }, []);
+  }, [listarParaSelect]);
 
   const selected = tiposSelect.find((t) => t.id === value) ?? null;
 
@@ -39,7 +28,7 @@ export const SelectTipoComercioAutocomplete = ({ value, onChange }: Props) => {
         onChange(newValue ? newValue.id : 0);
       }}
       renderInput={(params) => (
-        <TextField {...params} label="Tipo de Comercio" sx={fieldSx} />
+        <TextField {...params} label="Tipo de Comercio" className="form-control-mui-adlocal" />
       )}
     />
   );

@@ -1,15 +1,14 @@
 // ============================================================================
 // ADLOCAL - DESIGN SYSTEM TOKENS & COLOR PALETTE
-// "Warm Earth & Botanical Neighborhood" - Calidez, tradición y comunidad local
+// Marca ADLocal: turquesa, terracota y superficies cálidas.
 // ============================================================================
 
 export const brand = {
-  // Café tostado y tierra (Tradición, solidez, cercanía)
-  primary: "#6F4E37",
-  primaryDark: "#5A3E2B",
-  primaryLight: "#C8A97E",
-  primarySubtle: "rgba(111, 78, 55, 0.10)",
-  primaryGlow: "rgba(111, 78, 55, 0.30)",
+  primary: "#008989",
+  primaryDark: "#007070",
+  primaryLight: "#1DA3A3",
+  primarySubtle: "rgba(0, 137, 137, 0.10)",
+  primaryGlow: "rgba(0, 137, 137, 0.25)",
 
   // Verde botánico y orgánico (Vida, comunidad, frescura, comercios abiertos)
   botanical: "#00A85A",
@@ -19,7 +18,7 @@ export const brand = {
   botanicalGlow: "rgba(0, 168, 90, 0.28)",
 
   // Fondos cálidos orgánicos (Papel lino, calidez de luz natural)
-  backgroundWarm: "#FAF8F5",
+  backgroundWarm: "#F8F6F2",
   surfaceCream: "#F5EFE6",
   surfaceLinen: "#EFE8DC",
 
@@ -34,7 +33,7 @@ export const neutral = {
   whiteSubtle: "rgba(255, 255, 255, 0.12)",
 
   // Superficies
-  surface: "#FAF8F5",
+  surface: "#F8F6F2",
   surfaceCard: "#FFFFFF",
   surfaceWarm: "#F7F3ED",
   surfaceDark: "#2B1E16",
@@ -50,16 +49,16 @@ export const neutral = {
   // Bordes con toque cálido artesanal
   border: "#E9DFD5",
   borderLight: "#F2EBE3",
-  borderFocused: "#6F4E37",
+  borderFocused: "#008989",
 };
 
 export const accent = {
   // Terracota y mandarina cálida (Energía, artesanía, entusiasmo y acciones)
-  orange: "#E8692C",
-  orangeDark: "#C65420",
+  orange: "#E7692C",
+  orangeDark: "#C9551D",
   orangeLight: "#F49A67",
-  orangeGlow: "rgba(232, 105, 44, 0.35)",
-  orangeSubtle: "rgba(232, 105, 44, 0.10)",
+  orangeGlow: "rgba(231, 105, 44, 0.35)",
+  orangeSubtle: "rgba(231, 105, 44, 0.10)",
 
   // Dorado miel para calificaciones y comercios destacados
   gold: "#E5A93C",
@@ -73,7 +72,7 @@ export const status = {
   warning: "#E8692C", // Terracota cálido
   error: "#C0392B",   // Rojo teja suave
   info: "#2A6F97",    // Azul cerúleo artesanal
-  onRoute: "#6F4E37",
+  onRoute: "#008989",
   delay: "#E8692C",
   penalty: "#C0392B",
   incident: "#D96C3D",

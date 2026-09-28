@@ -1,12 +1,10 @@
 import {
-  Box,
   Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
 } from "@mui/material";
 import type { FormEvent, ReactNode } from "react";
 import styles from "./GenericModal.module.css";
@@ -59,27 +57,21 @@ export const GenericModal = ({
   const body = (
     <>
       <DialogTitle className={styles.dialogTitle}>
-        <Box className={styles.titleIcon}>
+        <div className={styles.titleIcon}>
           <MaterialSymbol icon={icon} size="large" />
-        </Box>
+        </div>
 
-        <Box className={styles.titleText}>
-          <Typography
-            component="h2"
-            className={`${styles.title} fz-h2 fw-bold`}
-          >
+        <div className={styles.titleText}>
+          <h2 className={`${styles.title} fz-h2 fw-bold`}>
             {title}
-          </Typography>
+          </h2>
 
           {subtitle && (
-            <Typography
-              component="p"
-              className={`${styles.subtitle} fz-h4 fw-regular`}
-            >
+            <p className={`${styles.subtitle} fz-h4 fw-regular`}>
               {subtitle}
-            </Typography>
+            </p>
           )}
-        </Box>
+        </div>
       </DialogTitle>
 
       <DialogContent className={styles.dialogContent}>{children}</DialogContent>
@@ -139,9 +131,9 @@ export const GenericModal = ({
       }}
     >
       {onSubmit ? (
-        <Box component="form" onSubmit={onSubmit} noValidate>
+        <form onSubmit={onSubmit} noValidate>
           {body}
-        </Box>
+        </form>
       ) : (
         body
       )}

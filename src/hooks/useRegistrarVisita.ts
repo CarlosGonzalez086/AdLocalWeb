@@ -9,12 +9,8 @@ export const useRegistrarVisita = (comercioId: number): void => {
 
     hasRegisteredRef.current = true;
 
-    visitasPublicApi.registrarVisita(comercioId).catch((err: unknown) => {
-      if (err instanceof Error) {
-        console.warn("No se pudo registrar la visita:", err.message);
-      } else {
-        console.warn("No se pudo registrar la visita");
-      }
+    visitasPublicApi.registrarVisita(comercioId).catch(() => {
+      // Silencioso: fallo en métrica de visita no debe degradar la experiencia de usuario
     });
   }, [comercioId]);
 };

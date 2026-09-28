@@ -13,7 +13,6 @@ export default function NotificacionesMenu() {
     setAncla(null);
     if (notificacion.url) window.location.href = notificacion.url;
   };
-  console.log(notificaciones);
 
   return (
     <>

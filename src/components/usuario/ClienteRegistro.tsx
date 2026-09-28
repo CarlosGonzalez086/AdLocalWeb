@@ -8,6 +8,7 @@ import {
 import { useState, type FormEvent } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import { URL_REGISTRO_COMERCIO } from "../../api/http";
+import { ADLOCAL_LOGO_URL } from "../../constants/brand";
 
 interface RegistroData {
   nombre: string;
@@ -121,7 +122,7 @@ export default function ClienteRegistro({
                 style={{ textDecoration: "none" }}
               >
                 <img
-                  src="https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg"
+                  src={ADLOCAL_LOGO_URL}
                   alt="ADLocal"
                   className="usuarioAuthLogo"
                 />
@@ -169,8 +170,11 @@ export default function ClienteRegistro({
                   )}
 
                   <TextField
-                    placeholder="Nombre completo"
+                    id="registro-nombre"
+                    label="Nombre completo"
+                    placeholder="Tu nombre y apellido"
                     fullWidth
+                    autoComplete="name"
                     value={nombre}
                     disabled={loading}
                     onChange={(event) => setNombre(event.target.value)}
@@ -189,9 +193,12 @@ export default function ClienteRegistro({
                   />
 
                   <TextField
-                    placeholder="Correo electrónico"
+                    id="registro-email"
+                    label="Correo electrónico"
+                    placeholder="ejemplo@correo.com"
                     type="email"
                     fullWidth
+                    autoComplete="email"
                     value={email}
                     disabled={loading}
                     onChange={(event) => setEmail(event.target.value)}
@@ -210,9 +217,12 @@ export default function ClienteRegistro({
                   />
 
                   <TextField
-                    placeholder="Contraseña"
+                    id="registro-password"
+                    label="Contraseña"
+                    placeholder="Mínimo 8 caracteres"
                     type={showPassword ? "text" : "password"}
                     fullWidth
+                    autoComplete="new-password"
                     value={password}
                     disabled={loading}
                     onChange={(event) => setPassword(event.target.value)}
@@ -234,6 +244,7 @@ export default function ClienteRegistro({
                             size="small"
                             disabled={loading}
                             onClick={() => setShowPassword((value) => !value)}
+                            aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                           >
                             <MaterialSymbol
                               icon={
@@ -248,9 +259,12 @@ export default function ClienteRegistro({
                   />
 
                   <TextField
-                    placeholder="Confirmar contraseña"
+                    id="registro-confirmar-password"
+                    label="Confirmar contraseña"
+                    placeholder="Repite tu contraseña"
                     type={showConfirmPassword ? "text" : "password"}
                     fullWidth
+                    autoComplete="new-password"
                     value={confirmarPassword}
                     disabled={loading}
                     onChange={(event) =>
@@ -276,12 +290,13 @@ export default function ClienteRegistro({
                             onClick={() =>
                               setShowConfirmPassword((value) => !value)
                             }
+                            aria-label={showConfirmPassword ? "Ocultar contraseña confirmada" : "Ver contraseña confirmada"}
                           >
                             <MaterialSymbol
                               icon={
                                 showConfirmPassword
-                                  ? "visibility_off"
-                                  : "visibility"
+                                   ? "visibility_off"
+                                   : "visibility"
                               }
                               size="small"
                             />
@@ -296,9 +311,16 @@ export default function ClienteRegistro({
                     variant="contained"
                     fullWidth
                     disabled={loading}
-                    className="btn-adlocal btn-adlocal--solid usuarioAuthSubmit fz-h3 fw-bold"
+                    className="btn-adlocal btn-adlocal-primary usuarioAuthSubmit fz-body fw-bold"
                   >
-                    {loading ? "Creando cuenta..." : "Crear cuenta"}
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Creando cuenta...
+                      </>
+                    ) : (
+                      "Crear cuenta"
+                    )}
                   </Button>
                 </div>
               </form>

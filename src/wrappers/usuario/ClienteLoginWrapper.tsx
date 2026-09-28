@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import { appSwal } from "../../utils/sweetalert";
 import { useClienteAuth } from "../../hooks/useClienteAuth";
 import ClienteLogin from "../../components/usuario/ClienteLogin";
 import App from "../../components/App";
@@ -15,7 +15,7 @@ const ClienteLoginWrapper = () => {
       return;
     }
 
-    await Swal.fire({
+    await appSwal.fire({
       icon: "success",
       title: "Bienvenido",
       text: "Has iniciado sesión correctamente.",

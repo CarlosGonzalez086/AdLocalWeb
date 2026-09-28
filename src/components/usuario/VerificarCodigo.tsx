@@ -86,8 +86,11 @@ export default function VerificarCodigo({
                   )}
 
                   <TextField
+                    id="verificar-codigo"
+                    label="Código de verificación (6 dígitos)"
                     placeholder="000000"
                     fullWidth
+                    autoComplete="one-time-code"
                     value={codigo}
                     disabled={loading}
                     onChange={(event) => handleCodigoChange(event.target.value)}
@@ -114,9 +117,16 @@ export default function VerificarCodigo({
                     variant="contained"
                     fullWidth
                     disabled={loading}
-                    className="btn-adlocal btn-adlocal--solid usuarioAuthSubmit fz-h3 fw-bold"
+                    className="btn-adlocal btn-adlocal-primary usuarioAuthSubmit fz-body fw-bold"
                   >
-                    {loading ? "Verificando..." : "Verificar código"}
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Verificando...
+                      </>
+                    ) : (
+                      "Verificar código"
+                    )}
                   </Button>
                 </div>
               </form>

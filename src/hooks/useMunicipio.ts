@@ -184,8 +184,6 @@ export const useMunicipio = () => {
       } catch (error) {
         if (!activo) return;
 
-        console.warn("No se pudo detectar el municipio:", error);
-
         setMunicipioActual(null);
 
         setErrorMunicipio(

@@ -1,7 +1,7 @@
 const isDev = import.meta.env.MODE === "development";
 
 export const BACKEND_URL = isDev
-  ? "http://localhost:8080/api/"
+  ? "https://localhost:44319/api/"
   : "https://adlocalapi.onrender.com/api/";
 
 export const PANEL_BASE_URL = isDev

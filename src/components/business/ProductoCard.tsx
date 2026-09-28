@@ -52,7 +52,7 @@ const ProductoCard: FC<Props> = ({
   onEliminar,
 
   onReservar,
-  onCotizar,
+  onCotizar: _onCotizar,
 }) => {
   const hasImage = Boolean(producto.logoUrl?.trim());
 
@@ -225,17 +225,17 @@ const ProductoCard: FC<Props> = ({
       );
     }
 
-    if (esServicio && esCotizacion) {
+    if (esCotizacion) {
       return (
         <Button
           type="button"
-          disabled={loading || !disponible}
+          disabled
           className="btn-adlocal productoCardActionButton"
-          onClick={() => onCotizar?.(producto)}
+          title="Cotización disponible directamente en sucursal"
         >
-          <MaterialSymbol icon="request_quote" size="small" />
+          <MaterialSymbol icon="store" size="small" />
 
-          <span className="ms-2">Solicitar cotización</span>
+          <span className="ms-2">Cotizar en sucursal</span>
         </Button>
       );
     }

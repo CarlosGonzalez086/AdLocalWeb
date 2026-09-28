@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
-
-import Swal from "sweetalert2";
-
+import { showErrorAlert, notificarErrorApi } from "../utils/sweetalert";
+import { extraerMensajeError } from "../utils/errorHandler";
 import { checkoutApi } from "../services/checkoutApi";
 import { pedidosApi } from "../services/pedidosApi";
 
@@ -38,7 +37,6 @@ export const useCheckout = () => {
 
   const cargarCheckout = useCallback(async () => {
     setLoading(true);
-
     setError(null);
 
     try {
@@ -46,27 +44,21 @@ export const useCheckout = () => {
 
       if (data.codigo !== "200") {
         const mensaje = data.mensaje || "No fue posible cargar el checkout.";
-
         setError(mensaje);
-
         setCheckout(null);
-
         return null;
       }
 
       setCheckout(data.respuesta);
-
       return data.respuesta;
-    } catch (error: any) {
-      const mensaje =
-        error?.response?.data?.mensaje ||
-        error?.message ||
-        "No fue posible cargar el checkout.";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible cargar el checkout.",
+      );
 
       setError(mensaje);
-
       setCheckout(null);
-
       return null;
     } finally {
       setLoading(false);
@@ -79,7 +71,6 @@ export const useCheckout = () => {
 
   const confirmarCheckout = useCallback(async (dto: ConfirmarCheckoutDto) => {
     setConfirmando(true);
-
     setError(null);
 
     try {
@@ -87,27 +78,21 @@ export const useCheckout = () => {
 
       if (data.codigo !== "200") {
         const mensaje = data.mensaje || "No fue posible crear el pedido.";
-
         setError(mensaje);
-
-        await Swal.fire("No se pudo confirmar", mensaje, "error");
-
+        await showErrorAlert("No se pudo confirmar", mensaje);
         return null;
       }
 
       setResultado(data.respuesta);
-
       return data.respuesta;
-    } catch (error: any) {
-      const mensaje =
-        error?.response?.data?.mensaje ||
-        error?.message ||
-        "No fue posible confirmar el pedido.";
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(
+        err,
+        "No fue posible confirmar el pedido.",
+      );
 
       setError(mensaje);
-
-      await Swal.fire("Error", mensaje, "error");
-
+      await notificarErrorApi(err, "No fue posible confirmar el pedido.");
       return null;
     } finally {
       setConfirmando(false);
@@ -164,11 +149,11 @@ export const useCheckout = () => {
         );
 
         return data.respuesta;
-      } catch (error: any) {
-        const mensaje =
-          error?.response?.data?.mensaje ||
-          error?.message ||
-          "No fue posible subir el comprobante.";
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(
+          err,
+          "No fue posible subir el comprobante.",
+        );
 
         setErroresComprobante((actual) => ({
           ...actual,
@@ -188,25 +173,15 @@ export const useCheckout = () => {
 
   return {
     checkout,
-
     resultado,
-
     loading,
-
     confirmando,
-
     error,
-
     cargarCheckout,
-
     confirmarCheckout,
-
     clearError,
-
     subirComprobante,
-
     subiendoComprobante,
-
     erroresComprobante,
   };
 };

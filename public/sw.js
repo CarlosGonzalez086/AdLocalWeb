@@ -1,16 +1,18 @@
-﻿const CACHE_NAME = 'adlocal-pwa-v1';
+﻿const CACHE_NAME = 'adlocal-pwa-v2';
 
 const PRECACHE_ASSETS = [
   '/',
   '/offline.html',
   '/manifest.webmanifest',
   '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/icon-maskable-192.png',
-  '/icons/icon-maskable-512.png',
-  '/icons/apple-touch-icon.png',
-  '/icons/favicon-32.png'
+  '/logo-adlocal.svg',
+  '/logo-adlocal-mark.svg',
+  '/icons/adlocal-192.png',
+  '/icons/adlocal-512.png',
+  '/icons/adlocal-maskable-192.png',
+  '/icons/adlocal-maskable-512.png',
+  '/icons/adlocal-apple-touch-180.png',
+  '/icons/adlocal-32.png'
 ];
 
 // Install: precache essential shell assets
