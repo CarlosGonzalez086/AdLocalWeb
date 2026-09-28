@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import { appSwal } from "../../utils/sweetalert";
 
 import { useClienteAuth } from "../../hooks/useClienteAuth";
 
@@ -22,7 +22,7 @@ const RecuperarPasswordWrapper = () => {
 
     setLocalStorageUsuario("emailRecuperacion", email);
 
-    await Swal.fire({
+    await appSwal.fire({
       icon: "success",
       title: "Código enviado",
       text: "Si existe una cuenta asociada al correo, recibirás un código para continuar.",

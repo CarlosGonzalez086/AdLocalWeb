@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { appSwal } from "../../utils/sweetalert";
 
 import { useClienteAuth } from "../../hooks/useClienteAuth";
 
@@ -44,7 +44,7 @@ const VerificarCodigoWrapper = () => {
 
     setLocalStorageUsuario("codigoRecuperacion", codigo);
 
-    await Swal.fire({
+    await appSwal.fire({
       icon: "success",
       title: "Código correcto",
       text: "Ahora puedes establecer una nueva contraseña.",

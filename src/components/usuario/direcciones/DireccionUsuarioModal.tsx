@@ -1,11 +1,4 @@
-import {
-  Button,
-  FormControlLabel,
-  MenuItem,
-  Switch,
-  TextField,
-} from "@mui/material";
-
+import { FormControlLabel, Switch, TextField } from "@mui/material";
 import { useEffect, useState, type FormEvent } from "react";
 import type {
   DireccionUsuarioDto,
@@ -16,27 +9,12 @@ import MaterialSymbol from "../../UI/MaterialSymbol/MaterialSymbol";
 import { SelectEstadoAutocomplete } from "../../Locations/SelectEstadoAutocomplete";
 import { SelectMunicipioAutocomplete } from "../../Locations/SelectMunicipioAutocomplete";
 
-interface EstadoOption {
-  id: number;
-  nombre: string;
-}
-
-interface MunicipioOption {
-  id: number;
-  nombre: string;
-}
-
 interface Props {
   open: boolean;
-
   onClose: () => void;
-
   direccion?: DireccionUsuarioDto | null;
-
   loading?: boolean;
-
   onCrear: (dto: DireccionUsuarioDtoCreate) => Promise<boolean>;
-
   onActualizar: (
     uuid: string,
     dto: DireccionUsuarioDtoCreate,
@@ -45,61 +23,35 @@ interface Props {
 
 interface FormState {
   alias: string;
-
   calle: string;
-
   numeroExterior: string;
-
   numeroInterior: string;
-
   colonia: string;
-
   codigoPostal: string;
-
   idEstado: number;
-
   idMunicipio: number;
-
   latitud: number | null;
-
   longitud: number | null;
-
   referencias: string;
-
   telefono: string;
-
   esPredeterminada: boolean;
-
   activo: boolean;
 }
 
 const initialForm: FormState = {
   alias: "",
-
   calle: "",
-
   numeroExterior: "",
-
   numeroInterior: "",
-
   colonia: "",
-
   codigoPostal: "",
-
   idEstado: 0,
-
   idMunicipio: 0,
-
   latitud: null,
-
   longitud: null,
-
   referencias: "",
-
   telefono: "",
-
   esPredeterminada: false,
-
   activo: true,
 };
 
@@ -108,191 +60,95 @@ export default function DireccionUsuarioModal({
   onClose,
   direccion = null,
   loading = false,
-
   onCrear,
   onActualizar,
 }: Props) {
   const [form, setForm] = useState<FormState>(initialForm);
-
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof FormState, string>>
-  >({});
-
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const editando = Boolean(direccion);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
+    if (!open) return;
 
     if (!direccion) {
       setForm(initialForm);
       setErrors({});
-
       return;
     }
 
     setForm({
       alias: direccion.alias ?? "",
-
       calle: direccion.calle ?? "",
-
       numeroExterior: direccion.numeroExterior ?? "",
-
       numeroInterior: direccion.numeroInterior ?? "",
-
       colonia: direccion.colonia ?? "",
-
       codigoPostal: direccion.codigoPostal ?? "",
-
       idEstado: direccion.idEstado ?? 0,
-
       idMunicipio: direccion.idMunicipio ?? 0,
-
       latitud: direccion.latitud ?? null,
-
       longitud: direccion.longitud ?? null,
-
       referencias: direccion.referencias ?? "",
-
       telefono: direccion.telefono ?? "",
-
       esPredeterminada: direccion.esPredeterminada ?? false,
-
       activo: direccion.activo ?? true,
     });
-
-    // onEstadoChange(direccion.idEstado);
-
     setErrors({});
   }, [direccion, open]);
 
   const validar = () => {
     const nuevosErrores: typeof errors = {};
-
-    if (!form.alias.trim()) {
-      nuevosErrores.alias = "El alias es obligatorio";
-    }
-
-    if (!form.calle.trim()) {
-      nuevosErrores.calle = "La calle es obligatoria";
-    }
-
-    if (!form.numeroExterior.trim()) {
-      nuevosErrores.numeroExterior = "El número exterior es obligatorio";
-    }
-
-    if (!form.colonia.trim()) {
-      nuevosErrores.colonia = "La colonia es obligatoria";
-    }
-
-    if (!form.codigoPostal.trim()) {
-      nuevosErrores.codigoPostal = "El código postal es obligatorio";
-    }
-
-    if (form.idEstado <= 0) {
-      nuevosErrores.idEstado = "Selecciona un estado";
-    }
-
-    if (form.idMunicipio <= 0) {
-      nuevosErrores.idMunicipio = "Selecciona un municipio";
-    }
+    if (!form.alias.trim()) nuevosErrores.alias = "El alias es obligatorio";
+    if (!form.calle.trim()) nuevosErrores.calle = "La calle es obligatoria";
+    if (!form.numeroExterior.trim()) nuevosErrores.numeroExterior = "El número exterior es obligatorio";
+    if (!form.colonia.trim()) nuevosErrores.colonia = "La colonia es obligatoria";
+    if (!form.codigoPostal.trim()) nuevosErrores.codigoPostal = "El código postal es obligatorio";
+    if (form.idEstado <= 0) nuevosErrores.idEstado = "Selecciona un estado";
+    if (form.idMunicipio <= 0) nuevosErrores.idMunicipio = "Selecciona un municipio";
 
     setErrors(nuevosErrores);
-
     return Object.keys(nuevosErrores).length === 0;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!validar()) {
-      return;
-    }
+    if (!validar()) return;
 
     if (editando && direccion) {
       const success = await onActualizar(direccion.uuid, {
         alias: form.alias.trim(),
-
         calle: form.calle.trim(),
-
         numeroExterior: form.numeroExterior.trim(),
-
         numeroInterior: form.numeroInterior.trim() || null,
-
         colonia: form.colonia.trim(),
-
         codigoPostal: form.codigoPostal.trim(),
-
         idEstado: form.idEstado,
-
         idMunicipio: form.idMunicipio,
-
         latitud: form.latitud,
-
         longitud: form.longitud,
-
         referencias: form.referencias.trim() || null,
-
         telefono: form.telefono.trim() || null,
-
         esPredeterminada: form.esPredeterminada,
       });
-
-      if (success) {
-        onClose();
-      }
-
+      if (success) onClose();
       return;
     }
 
     const success = await onCrear({
       alias: form.alias.trim(),
-
       calle: form.calle.trim(),
-
       numeroExterior: form.numeroExterior.trim(),
-
       numeroInterior: form.numeroInterior.trim() || null,
-
       colonia: form.colonia.trim(),
-
       codigoPostal: form.codigoPostal.trim(),
-
       idEstado: form.idEstado,
-
       idMunicipio: form.idMunicipio,
-
       latitud: form.latitud,
-
       longitud: form.longitud,
-
       referencias: form.referencias.trim() || null,
-
       telefono: form.telefono.trim() || null,
-
       esPredeterminada: form.esPredeterminada,
     });
-
-    if (success) {
-      onClose();
-    }
-  };
-
-  const obtenerUbicacion = () => {
-    if (!navigator.geolocation) {
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      setForm((current) => ({
-        ...current,
-
-        latitud: position.coords.latitude,
-
-        longitud: position.coords.longitude,
-      }));
-    });
+    if (success) onClose();
   };
 
   return (
@@ -311,11 +167,8 @@ export default function DireccionUsuarioModal({
       onSubmit={handleSubmit}
       primaryAction={{
         label: editando ? "Guardar cambios" : "Guardar dirección",
-
         loadingLabel: "Guardando...",
-
         icon: "save",
-
         type: "submit",
       }}
     >
@@ -324,12 +177,10 @@ export default function DireccionUsuarioModal({
           <div className="direccionModalIntroIcon">
             <MaterialSymbol icon="home_pin" size="medium" />
           </div>
-
           <div>
             <h3 className="direccionModalIntroTitle fz-h4 fw-bold">
               Datos de entrega
             </h3>
-
             <p className="direccionModalIntroDescription fz-h5 fw-regular mb-0">
               Ingresa la ubicación con el mayor detalle posible.
             </p>
@@ -344,11 +195,7 @@ export default function DireccionUsuarioModal({
               fullWidth
               error={Boolean(errors.alias)}
               helperText={errors.alias}
-              slotProps={{
-                htmlInput: {
-                  maxLength: 50,
-                },
-              }}
+              slotProps={{ htmlInput: { maxLength: 50 } }}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -427,11 +274,7 @@ export default function DireccionUsuarioModal({
               fullWidth
               error={Boolean(errors.codigoPostal)}
               helperText={errors.codigoPostal}
-              slotProps={{
-                htmlInput: {
-                  maxLength: 10,
-                },
-              }}
+              slotProps={{ htmlInput: { maxLength: 10 } }}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -452,7 +295,6 @@ export default function DireccionUsuarioModal({
                 }));
               }}
             />
-
             {errors.idEstado && (
               <span className="direccionModalFieldError fz-h6 fw-medium">
                 {errors.idEstado}
@@ -471,7 +313,6 @@ export default function DireccionUsuarioModal({
                 }));
               }}
             />
-
             {errors.idMunicipio && (
               <span className="direccionModalFieldError fz-h6 fw-medium">
                 {errors.idMunicipio}
@@ -484,11 +325,7 @@ export default function DireccionUsuarioModal({
               label="Teléfono de contacto"
               value={form.telefono}
               fullWidth
-              slotProps={{
-                htmlInput: {
-                  maxLength: 20,
-                },
-              }}
+              slotProps={{ htmlInput: { maxLength: 20 } }}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -506,11 +343,7 @@ export default function DireccionUsuarioModal({
               multiline
               minRows={3}
               fullWidth
-              slotProps={{
-                htmlInput: {
-                  maxLength: 500,
-                },
-              }}
+              slotProps={{ htmlInput: { maxLength: 500 } }}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -524,7 +357,6 @@ export default function DireccionUsuarioModal({
             <div className="col-12">
               <div className="direccionCoordinates">
                 <MaterialSymbol icon="check_circle" size="small" />
-
                 <span>Ubicación registrada</span>
               </div>
             </div>

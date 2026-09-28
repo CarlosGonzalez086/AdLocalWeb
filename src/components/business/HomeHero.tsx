@@ -6,7 +6,7 @@ interface Props {
   onSearch?: (term: string) => void;
 }
 
-const HomeHero: React.FC<Props> = ({ onSearch }) => {
+const HomeHero: React.FC<Props> = ({ onSearch: _onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { municipioActual, loadingMunicipios } = useMunicipio();
 

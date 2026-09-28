@@ -1,6 +1,7 @@
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import { useState, type FormEvent } from "react";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
+import { ADLOCAL_LOGO_URL } from "../../constants/brand";
 
 interface Props {
   loading?: boolean;
@@ -54,7 +55,7 @@ export default function RecuperarPassword({
             <div className="text-center mb-4">
               <a href="/" className="usuarioAuthLogoLink">
                 <img
-                  src="https://pub-d5a2e881682f4782a4be2517d547d3c7.r2.dev/logo-comercio-imagen/WhatsApp%20Image%202025-12-23%20at%2021.19.26%20(1).jpeg"
+                  src={ADLOCAL_LOGO_URL}
                   alt="ADLocal"
                   className="usuarioAuthLogo"
                 />
@@ -86,9 +87,12 @@ export default function RecuperarPassword({
                   )}
 
                   <TextField
-                    placeholder="Correo electrónico"
+                    id="recuperar-email"
+                    label="Correo electrónico"
+                    placeholder="ejemplo@correo.com"
                     type="email"
                     fullWidth
+                    autoComplete="email"
                     value={email}
                     disabled={loading}
                     onChange={(event) => setEmail(event.target.value)}
@@ -111,9 +115,16 @@ export default function RecuperarPassword({
                     variant="contained"
                     fullWidth
                     disabled={loading}
-                    className="btn-adlocal btn-adlocal--solid usuarioAuthSubmit fz-h3 fw-bold"
+                    className="btn-adlocal btn-adlocal-primary usuarioAuthSubmit fz-body fw-bold"
                   >
-                    {loading ? "Enviando código..." : "Enviar código"}
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Enviando código...
+                      </>
+                    ) : (
+                      "Enviar código"
+                    )}
                   </Button>
                 </div>
               </form>

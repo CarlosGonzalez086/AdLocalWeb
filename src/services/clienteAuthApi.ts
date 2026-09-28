@@ -2,7 +2,7 @@ import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
 import { BACKEND_URL } from "../api/http";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
-import { getLocalStorageJWTUsuario } from "../utils/storageUsuario";
+import { getLocalStorageJWTUsuario, getLocalStorageRefreshTokenUsuario } from "../utils/storageUsuario";
 
 export interface ClienteRegistroDto {
   nombre: string;
@@ -46,6 +46,7 @@ export interface UsuarioRenovadoDto {
 
 export interface RenovarTokenResponse {
   token: string;
+  refreshToken?: string;
   usuario: UsuarioRenovadoDto;
 }
 
@@ -54,17 +55,23 @@ export const clienteAuthApi = {
     httpUsuarioPublico.post<ApiResponse<string>>("/ClienteAuth/registro", dto),
 
   login: (dto: LoginClienteDto) =>
-    httpUsuarioPublico.post<ApiResponse<string>>("/ClienteAuth/login", dto),
+    httpUsuarioPublico.post<ApiResponse<string>>("/ClienteAuth/login", dto, { withCredentials: true }),
 
   renovarToken: (token?: string) => {
     const currentToken = token || getLocalStorageJWTUsuario();
+    const currentRefreshToken = getLocalStorageRefreshTokenUsuario();
     return axios.post<ApiResponse<RenovarTokenResponse>>(
       `${BACKEND_URL}ClienteAuth/renovar-token`,
-      {},
       {
+        token: currentToken,
+        tokenActual: currentToken,
+        refreshToken: currentRefreshToken,
+      },
+      {
+        withCredentials: true,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${currentToken}`,
+          Authorization: currentToken ? `Bearer ${currentToken}` : "",
         },
       },
     );
@@ -85,6 +92,18 @@ export const clienteAuthApi = {
   restablecerPassword: (dto: RestablecerPasswordDto) =>
     httpUsuarioPublico.post<ApiResponse<object>>(
       "/ClienteAuth/restablecer-password",
+      dto,
+    ),
+
+  verificarCorreo: (dto: VerificarCodigoDto) =>
+    httpUsuarioPublico.post<ApiResponse<object>>(
+      "/ClienteAuth/verificar-correo",
+      dto,
+    ),
+
+  reenviarVerificacion: (dto: EmailDto) =>
+    httpUsuarioPublico.post<ApiResponse<object>>(
+      "/ClienteAuth/reenviar-verificacion",
       dto,
     ),
 };

@@ -5,10 +5,12 @@ import {
   getLocalStorageJWTUsuario,
 } from "../utils/storageUsuario";
 import { renovarTokenSilencioso } from "../utils/tokenManager";
+import { extraerMensajeError } from "../utils/errorHandler";
 import { BACKEND_URL } from "./http";
 
 export const httpUsuario = axios.create({
   baseURL: `${BACKEND_URL}`,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -49,8 +51,8 @@ httpUsuario.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${nuevoToken}`;
           return httpUsuario(originalRequest);
         }
-      } catch (renewalError) {
-        console.error("Error al reintentar petición con token renovado:", renewalError);
+      } catch {
+        // Fallo en la renovación silenciosa
       }
 
       // Si no se pudo renovar el token definitivamente, limpiar y redirigir
@@ -58,8 +60,11 @@ httpUsuario.interceptors.response.use(
       if (typeof window !== "undefined") {
         window.location.href = "/usuario/login";
       }
-    } else if (status === 403) {
-      console.warn("Acceso denegado (403 Forbidden): permisos insuficientes");
+    }
+
+    if (error && typeof error === "object") {
+      (error as Record<string, unknown>).mensajeAmigable =
+        extraerMensajeError(error);
     }
 
     return Promise.reject(error);

@@ -1,69 +1,6 @@
+@import "./index.css";
+
 :root {
-  /* Tipografía */
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-  
-  /* Paleta Maestra ADLocal "Warm Earth & Botanical Neighborhood" */
-  --primary: #6f4e37;           /* Café tostado tradicional */
-  --primary-dark: #5a3e2b;      /* Café profundo */
-  --primary-light: #c8a97e;     /* Café claro lino */
-  --primary-glow: rgba(111, 78, 55, 0.25);
-  --primary-subtle: rgba(111, 78, 55, 0.08);
-
-  /* Acento botánico y vitalidad */
-  --botanical: #00a85a;         /* Verde botánico de mercado */
-  --botanical-dark: #008746;
-  --botanical-light: #2cd483;
-  --botanical-subtle: rgba(0, 168, 90, 0.10);
-  --teal: #00a85a;
-  --teal-dark: #008746;
-  --teal-light: #2cd483;
-
-  /* Acento cálido artesanal (Terracota y acción) */
-  --accent-orange: #e8692c;
-  --accent-orange-dark: #c65420;
-  --accent-gold: #e5a93c;       /* Miel dorada para favoritos y estrellas */
-
-  /* Estados */
-  --success: #00a85a;
-  --warning: #e8692c;
-  --error: #c0392b;
-  --incident: #d96c3d;
-  --blue: #2a6f97;
-
-  /* Superficies y Fondos Orgánicos (Calidez de papel craft y luz natural) */
-  --bg: #faf8f5;                /* Papel lino cálido */
-  --bg-soft: #f4efea;           /* Crema suave de barrio */
-  --surface: #ffffff;
-  --surface-soft: #f9f6f0;
-  --surface-warm: #f5efe6;
-  --surface-hover: rgba(111, 78, 55, 0.05);
-
-  /* Textos cálidos con contraste humano */
-  --text: #2a1f18;              /* Café espresso profundo */
-  --text-secondary: #7a6c62;    /* Tono tierra neutro */
-  --text-muted: #a19388;
-
-  /* Bordes artesanales sutiles */
-  --border: #e8dfd5;
-  --border-soft: rgba(232, 223, 213, 0.85);
-
-  /* Sombras cálidas y orgánicas */
-  --shadow-xs: 0 2px 8px rgba(42, 31, 24, 0.04);
-  --shadow-sm: 0 6px 18px rgba(42, 31, 24, 0.06);
-  --shadow-md: 0 14px 34px rgba(42, 31, 24, 0.08);
-  --shadow-lg: 0 22px 55px rgba(42, 31, 24, 0.12);
-  --shadow-warm: 0 12px 30px rgba(111, 78, 55, 0.15);
-  --shadow-botanical: 0 12px 28px rgba(0, 168, 90, 0.22);
-  --shadow-terracotta: 0 12px 28px rgba(232, 105, 44, 0.22);
-
-  /* Radio de curvatura orgánico */
-  --radius-xs: 8px;
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-
-  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -279,7 +216,7 @@ body {
   display: block;
   flex-shrink: 0;
 
-  object-fit: cover;
+  object-fit: contain;
 
   background: #ffffff;
 
@@ -306,6 +243,14 @@ body {
 .brandName {
   color: var(--text, #1d1d1f);
   white-space: nowrap;
+}
+
+.brandNameAd {
+  color: var(--secondary, #e7692c);
+}
+
+.brandNameLocal {
+  color: var(--primary, #008989);
 }
 
 /* =========================================================
@@ -552,7 +497,7 @@ body {
   display: block;
   flex-shrink: 0;
 
-  object-fit: cover;
+  object-fit: contain;
 
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 50%;
@@ -942,7 +887,7 @@ body {
   display: block;
   flex-shrink: 0;
 
-  object-fit: cover;
+  object-fit: contain;
 
   background: #ffffff;
 
@@ -1459,7 +1404,7 @@ body {
   font-size: 1.45rem !important;
   font-weight: 800 !important;
 
-  border: 4px solid rgba(111, 78, 55, 0.1);
+  border: 4px solid rgba(var(--primary-rgb), 0.15);
 }
 
 .usuarioPerfilNombre {
@@ -1493,7 +1438,7 @@ body {
 
   color: var(--success);
 
-  background: rgba(0, 196, 106, 0.08);
+  background: var(--success-subtle);
 
   border-radius: 999px;
 
@@ -1529,7 +1474,7 @@ body {
 
   color: var(--primary);
 
-  background: rgba(111, 78, 55, 0.08);
+  background: var(--primary-subtle);
 }
 
 .usuarioCuentaCardIcon {
@@ -2551,7 +2496,7 @@ body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(111, 78, 55, 0.12);
-  color: var(--primary, #6F4E37);
+  color: var(--primary, #008989);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6311,14 +6256,6 @@ body {
 
 .direccionesTableWrapper {
   width: 100%;
-  overflow: hidden;
-
-  background: var(--surface);
-
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-
-  box-shadow: var(--shadow-xs);
 }
 
 .direccionesTableContainer {
@@ -6368,7 +6305,7 @@ body {
 }
 
 .direccionesTableRow:hover {
-  background: rgba(111, 78, 55, 0.035);
+  background: var(--primary-subtle);
 }
 
 .direccionesTableRow:last-child .MuiTableCell-root {
@@ -6570,9 +6507,9 @@ body {
 
   color: var(--primary) !important;
 
-  background: rgba(111, 78, 55, 0.065) !important;
+  background: var(--primary-subtle) !important;
 
-  border: 1px solid rgba(111, 78, 55, 0.14) !important;
+  border: 1px solid rgba(var(--primary-rgb), 0.2) !important;
   border-radius: 9px !important;
 
   font-family: var(--font-body) !important;
@@ -6615,9 +6552,9 @@ body {
 .direccionActionButton:hover {
   color: var(--primary) !important;
 
-  background: rgba(111, 78, 55, 0.055) !important;
+  background: var(--primary-subtle) !important;
 
-  border-color: rgba(111, 78, 55, 0.25) !important;
+  border-color: rgba(var(--primary-rgb), 0.28) !important;
 
   transform: translateY(-1px);
 }
@@ -6698,6 +6635,18 @@ body {
   gap: 0.85rem;
 }
 
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .direccionesMobileList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .direccionesMobileList .direccionesEmpty {
+    grid-column: 1 / -1;
+  }
+}
+
 .direccionesMobileSkeleton {
   width: 100%;
 
@@ -6727,7 +6676,7 @@ body {
 }
 
 .direccionMobileCard:hover {
-  border-color: rgba(111, 78, 55, 0.18);
+  border-color: var(--primary);
 
   box-shadow: var(--shadow-sm);
 }
@@ -6738,6 +6687,13 @@ body {
   justify-content: space-between;
 
   gap: 0.75rem;
+}
+
+.direccionMobileHeader .MuiIconButton-root {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  color: var(--primary);
 }
 
 .direccionAliasContainer {
@@ -6975,7 +6931,7 @@ body {
 }
 
 .direccionesSummaryItem:hover {
-  border-color: rgba(111, 78, 55, 0.18);
+  border-color: var(--primary);
 
   box-shadow: var(--shadow-sm);
 
@@ -6994,13 +6950,9 @@ body {
 
   color: var(--primary);
 
-  background: linear-gradient(
-    135deg,
-    rgba(111, 78, 55, 0.1),
-    rgba(200, 169, 126, 0.14)
-  );
+  background: var(--primary-subtle);
 
-  border: 1px solid rgba(111, 78, 55, 0.1);
+  border: 1px solid rgba(var(--primary-rgb), 0.12);
   border-radius: 14px;
 }
 
@@ -7191,11 +7143,7 @@ body {
   margin-bottom: 1rem;
   padding: 0.9rem 1rem;
 
-  background: linear-gradient(
-    135deg,
-    rgba(111, 78, 55, 0.07),
-    rgba(200, 169, 126, 0.08)
-  );
+  background: var(--primary-subtle);
 
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
@@ -7213,9 +7161,9 @@ body {
 
   color: var(--primary);
 
-  background: rgba(111, 78, 55, 0.1);
+  background: rgba(var(--primary-rgb), 0.12);
 
-  border: 1px solid rgba(111, 78, 55, 0.08);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
   border-radius: 13px;
 }
 
@@ -7794,6 +7742,10 @@ body {
   align-items: center;
   overflow: hidden;
   padding: 2.5rem 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(var(--primary-rgb), 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 88% 82%, rgba(var(--secondary-rgb), 0.07) 0%, transparent 45%);
 }
 
 .usuarioAuthBackground {
@@ -7811,6 +7763,30 @@ body {
   pointer-events: none;
 }
 
+.usuarioAuthDecorationOne {
+  width: 380px;
+  height: 380px;
+  top: -120px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.12) 0%, transparent 70%);
+}
+
+.usuarioAuthDecorationTwo {
+  width: 440px;
+  height: 440px;
+  bottom: -160px;
+  left: -160px;
+  background: radial-gradient(circle, rgba(var(--secondary-rgb), 0.10) 0%, transparent 70%);
+}
+
+.usuarioAuthDecorationThree {
+  width: 250px;
+  height: 250px;
+  top: 40%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.05) 0%, transparent 70%);
+}
+
 .usuarioAuthContainer {
   position: relative;
   z-index: 2;
@@ -7823,11 +7799,9 @@ body {
 }
 
 .usuarioAuthLogo {
-  width: 96px;
-  height: 96px;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  width: 160px;
+  height: 132px;
+  object-fit: contain;
 }
 
 .usuarioAuthCard {
@@ -7836,7 +7810,7 @@ body {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   backdrop-filter: blur(16px);
 }
 
@@ -7855,8 +7829,9 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.9rem;
-  border-radius: 18px;
-  background: rgba(111, 78, 55, 0.1);
+  border-radius: var(--radius-md);
+  background: var(--primary-subtle);
+  border: 1px solid rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
 }
 
@@ -7955,11 +7930,33 @@ body {
 
 .usuarioAuthField .MuiOutlinedInput-root.Mui-focused {
   background: var(--surface);
-  box-shadow: 0 0 0 4px rgba(111, 78, 55, 0.08);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
 .usuarioAuthFieldIcon {
   color: var(--text-muted);
+}
+
+.usuarioAuthCodeField input {
+  text-align: center;
+  font-size: 1.5rem !important;
+  letter-spacing: 0.35em !important;
+  font-weight: 700 !important;
+  font-family: monospace, var(--font-body) !important;
+}
+
+.usuarioAuthEmailBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+  padding: 0.35rem 0.85rem;
+  background: var(--primary-subtle);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+  border-radius: var(--radius-full);
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .usuarioAuthSubmit {
@@ -7993,6 +7990,13 @@ body {
   margin: 1.65rem 0 1.1rem !important;
   color: var(--text-muted) !important;
   font-size: 0.75rem !important;
+}
+
+.usuarioAuthDividerSimple {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 1.5rem 0;
 }
 
 .usuarioAuthTerms {
@@ -8037,8 +8041,8 @@ body {
   }
 
   .usuarioAuthLogo {
-    width: 82px;
-    height: 82px;
+    width: 138px;
+    height: 114px;
   }
 
   .usuarioAuthTitle {
@@ -8284,7 +8288,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: var(--primary, #6F4E37);
+  background: var(--primary, #008989);
   color: #FFFFFF;
   border: none;
   border-radius: 12px;
@@ -8324,4 +8328,3 @@ body {
     width: calc(100% - 24px);
   }
 }
-

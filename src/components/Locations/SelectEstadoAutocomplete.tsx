@@ -7,23 +7,12 @@ interface Props {
   onChange: (value: number) => void;
 }
 
-const fieldSx = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    bgcolor: "#fff",
-    "& fieldset": { borderColor: "#E0E0E0" },
-    "&:hover fieldset": { borderColor: "#BDBDBD" },
-    "&.Mui-focused fieldset": { borderColor: "#5B3A29" },
-  },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#5B3A29" },
-};
-
 export const SelectEstadoAutocomplete = ({ value, onChange }: Props) => {
   const { states, loading, getAllStates } = useLocations();
 
   useEffect(() => {
     getAllStates();
-  }, []);
+  }, [getAllStates]);
 
   const selected = states.find((s) => s.id === value) ?? null;
 
@@ -37,7 +26,7 @@ export const SelectEstadoAutocomplete = ({ value, onChange }: Props) => {
       getOptionLabel={(opt) => opt.name}
       onChange={(_, newValue) => onChange(newValue ? newValue.id : 0)}
       renderInput={(params) => (
-        <TextField {...params} label="Estado" sx={fieldSx} />
+        <TextField {...params} label="Estado" className="form-control-mui-adlocal" />
       )}
     />
   );

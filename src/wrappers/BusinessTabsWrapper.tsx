@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import type { AxiosResponse } from "axios";
+import type { ApiResponse } from "../api/apiResponse";
 import BusinessTabs from "../components/business/BusinessTabs";
 import HomeHero from "../components/business/HomeHero";
 import {
   comercioPublicApi,
   type ComercioDtoListItem,
+  type ComercioListadoResponse,
 } from "../services/comercioPublicApi";
 
 const PAGE_SIZE = 8;
@@ -19,99 +22,104 @@ const BusinessTabsWrapper: React.FC = () => {
     "destacados" | "populares" | "recientes" | "cercanos" | "sugeridos"
   >("destacados");
 
-  const fetchComercios = async (reset = false) => {
-    try {
-      setLoading(true);
-      setError(null);
+  const fetchComercios = useCallback(
+    async (pageToLoad: number, reset = false) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const currentPage = reset ? 1 : page;
-      let response;
+        let response:
+          | AxiosResponse<ApiResponse<ComercioListadoResponse>>
+          | undefined;
 
-      if (
-        activeTab === "cercanos" &&
-        typeof window !== "undefined" &&
-        navigator.geolocation
-      ) {
-        response = await new Promise<any>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(async (pos) => {
-            try {
-              const resp = await comercioPublicApi.getCercanos(
-                pos.coords.latitude,
-                pos.coords.longitude,
-                currentPage,
+        if (
+          activeTab === "cercanos" &&
+          typeof window !== "undefined" &&
+          navigator.geolocation
+        ) {
+          response = await new Promise<
+            AxiosResponse<ApiResponse<ComercioListadoResponse>>
+          >((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+              try {
+                const resp = await comercioPublicApi.getCercanos(
+                  pos.coords.latitude,
+                  pos.coords.longitude,
+                  pageToLoad,
+                  PAGE_SIZE,
+                );
+                resolve(resp);
+              } catch (e) {
+                reject(e);
+              }
+            }, reject);
+          });
+        } else {
+          switch (activeTab) {
+            case "destacados":
+              response = await comercioPublicApi.getDestacados(
+                pageToLoad,
                 PAGE_SIZE,
               );
-
-              resolve(resp);
-            } catch (e) {
-              reject(e);
-            }
-          }, reject);
-        });
-      } else {
-        switch (activeTab) {
-          case "destacados":
-            response = await comercioPublicApi.getDestacados(
-              currentPage,
-              PAGE_SIZE,
-            );
-            break;
-          case "populares":
-            response = await comercioPublicApi.getPopulares(
-              currentPage,
-              PAGE_SIZE,
-            );
-            break;
-          case "recientes":
-            response = await comercioPublicApi.getRecientes(
-              currentPage,
-              PAGE_SIZE,
-            );
-            break;
-          case "sugeridos":
-            response = await new Promise<any>((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(async (pos) => {
-                try {
-                  const resp = await comercioPublicApi.getSugeridos(
-                    pos.coords.latitude,
-                    pos.coords.longitude,
-                    currentPage,
-                    PAGE_SIZE,
-                  );
-
-                  resolve(resp);
-                } catch (e) {
-                  reject(e);
-                }
-              }, reject);
-            });
-            break;
+              break;
+            case "populares":
+              response = await comercioPublicApi.getPopulares(
+                pageToLoad,
+                PAGE_SIZE,
+              );
+              break;
+            case "recientes":
+              response = await comercioPublicApi.getRecientes(
+                pageToLoad,
+                PAGE_SIZE,
+              );
+              break;
+            case "sugeridos":
+              response = await new Promise<
+                AxiosResponse<ApiResponse<ComercioListadoResponse>>
+              >((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                  try {
+                    const resp = await comercioPublicApi.getSugeridos(
+                      pos.coords.latitude,
+                      pos.coords.longitude,
+                      pageToLoad,
+                      PAGE_SIZE,
+                    );
+                    resolve(resp);
+                  } catch (e) {
+                    reject(e);
+                  }
+                }, reject);
+              });
+              break;
+          }
         }
+
+        const nuevos: ComercioDtoListItem[] =
+          response?.data?.respuesta?.items ?? [];
+
+        setComercios((prev) => (reset ? nuevos : [...prev, ...nuevos]));
+        setHasMore(nuevos.length === PAGE_SIZE);
+        setPage(pageToLoad + 1);
+      } catch {
+        setError("No se pudieron cargar los comercios");
+      } finally {
+        setLoading(false);
       }
-
-      const nuevos: ComercioDtoListItem[] = response.data.respuesta.items ?? [];
-
-      setComercios((prev) => (reset ? nuevos : [...prev, ...nuevos]));
-
-      setHasMore(nuevos.length === PAGE_SIZE);
-      setPage(currentPage + 1);
-    } catch (err) {
-      console.error(err);
-      setError("No se pudieron cargar los comercios");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [activeTab],
+  );
 
   useEffect(() => {
     setPage(1);
     setHasMore(true);
-    fetchComercios(true);
-  }, [activeTab]);
+    void fetchComercios(1, true);
+  }, [activeTab, fetchComercios]);
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
-      fetchComercios();
+      void fetchComercios(page, false);
     }
   };
 

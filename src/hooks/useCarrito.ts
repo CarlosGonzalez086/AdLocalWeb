@@ -5,7 +5,7 @@ import {
   type AgregarProductoCarritoDto,
   type CarritoDto,
 } from "../services/carritoApi";
-
+import { extraerMensajeError } from "../utils/errorHandler";
 import { getUsuarioSesion } from "../utils/usuarioSesion";
 
 export const useCarrito = () => {
@@ -71,16 +71,10 @@ export const useCarrito = () => {
       setCarrito(respuesta);
 
       return respuesta;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible cargar el carrito";
-
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(err, "No fue posible cargar el carrito");
       setError(mensaje);
-
       setCarrito(null);
-
       return null;
     } finally {
       setLoading(false);
@@ -108,14 +102,9 @@ export const useCarrito = () => {
         await cargarCarrito();
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible agregar el producto";
-
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(err, "No fue posible agregar el producto");
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -152,14 +141,9 @@ export const useCarrito = () => {
         await cargarCarrito();
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible actualizar la cantidad";
-
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(err, "No fue posible actualizar la cantidad");
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -189,14 +173,9 @@ export const useCarrito = () => {
         await cargarCarrito();
 
         return true;
-      } catch (err: any) {
-        const mensaje =
-          err?.response?.data?.mensaje ||
-          err?.message ||
-          "No fue posible eliminar el producto";
-
+      } catch (err: unknown) {
+        const mensaje = extraerMensajeError(err, "No fue posible eliminar el producto");
         setError(mensaje);
-
         return false;
       } finally {
         setLoading(false);
@@ -225,14 +204,9 @@ export const useCarrito = () => {
       setCarrito(null);
 
       return true;
-    } catch (err: any) {
-      const mensaje =
-        err?.response?.data?.mensaje ||
-        err?.message ||
-        "No fue posible vaciar el carrito";
-
+    } catch (err: unknown) {
+      const mensaje = extraerMensajeError(err, "No fue posible vaciar el carrito");
       setError(mensaje);
-
       return false;
     } finally {
       setLoading(false);

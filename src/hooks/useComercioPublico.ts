@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   comercioPublicApi,
   type ComercioDtoListItem,
 } from "../services/comercioPublicApi";
-import Swal from "sweetalert2";
+import Swal from "../utils/sweetalert";
 
 export const useComercioPublico = () => {
   const [comercios, setComercios] = useState<ComercioDtoListItem[]>([]);
@@ -11,12 +11,12 @@ export const useComercioPublico = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const resetPaginacion = () => {
+  const resetPaginacion = useCallback(() => {
     setPage(1);
     setHasMore(true);
-  };
+  }, []);
 
-  const cargarPopulares = async () => {
+  const cargarPopulares = useCallback(async () => {
     setLoading(true);
     resetPaginacion();
 
@@ -37,7 +37,7 @@ export const useComercioPublico = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [resetPaginacion]);
 
   const cargarRecientes = async () => {
     setLoading(true);
@@ -128,8 +128,8 @@ export const useComercioPublico = () => {
   };
 
   useEffect(() => {
-    cargarPopulares();
-  }, []);
+    void cargarPopulares();
+  }, [cargarPopulares]);
 
   return {
     comercios,

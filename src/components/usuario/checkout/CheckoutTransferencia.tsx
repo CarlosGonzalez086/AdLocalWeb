@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-import Swal from "sweetalert2";
+import Swal from "../../../utils/sweetalert";
 import MaterialSymbol from "../../UI/MaterialSymbol/MaterialSymbol";
 import type { CuentaTransferenciaCheckoutDto } from "../../../types/checkout";
 

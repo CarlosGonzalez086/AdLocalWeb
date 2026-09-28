@@ -2,7 +2,7 @@ import { Alert, Button, Skeleton } from "@mui/material";
 
 import { useEffect, useMemo, useState } from "react";
 
-import Swal from "sweetalert2";
+import Swal from "../../../utils/sweetalert";
 
 import CheckoutComercioCard from "./CheckoutComercioCard";
 import CheckoutResumen from "./CheckoutResumen";

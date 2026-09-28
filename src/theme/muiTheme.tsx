@@ -205,12 +205,12 @@ const theme = createTheme({
           transition: "all .25s ease",
 
           "&.MuiButton-containedPrimary": {
-            color: neutral.dark,
+            color: neutral.white,
             background: `linear-gradient(135deg, ${brand.primary}, ${brand.primaryLight})`,
             boxShadow: `0 12px 28px ${brand.primaryGlow}`,
 
             "&:hover": {
-              background: `linear-gradient(135deg, #00D977, ${brand.primaryLight})`,
+              background: `linear-gradient(135deg, ${brand.primaryDark}, ${brand.primary})`,
               boxShadow: `0 16px 34px ${brand.primaryGlow}`,
               transform: "translateY(-1px)",
             },
