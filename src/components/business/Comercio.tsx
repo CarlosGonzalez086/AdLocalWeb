@@ -3,9 +3,10 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import Swal from "../../utils/sweetalert";
 
 import {
-    comercioPublicApi,
-    type ComercioDto,
-    type ProductoServicioDto, dataDefault,
+  comercioPublicApi,
+  type ComercioDto,
+  type ProductoServicioDto,
+  dataDefault,
 } from "../../services/comercioPublicApi";
 
 import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
@@ -29,7 +30,9 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState<string | null>(null);
-  const [productoCita, setProductoCita] = useState<ProductoServicioDto | null>(null);
+  const [productoCita, setProductoCita] = useState<ProductoServicioDto | null>(
+    null,
+  );
 
   useRegistrarVisita(id);
 
@@ -341,7 +344,11 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
         onReservar={handleReservar}
         onCotizar={handleCotizar}
       />
-      <ReservarCitaModal producto={productoCita} onClose={() => setProductoCita(null)} />
+      <ReservarCitaModal
+        producto={productoCita}
+        zonaHoraria={comercio?.zonaHoraria ?? "America/Mexico_City"}
+        onClose={() => setProductoCita(null)}
+      />
     </div>
   );
 };

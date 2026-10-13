@@ -1,6 +1,10 @@
-import { useCallback, useState } from "react";
-import { showErrorAlert, notificarErrorApi } from "../utils/sweetalert";
+import { useCallback, useRef, useState } from "react";
 import { extraerMensajeError } from "../utils/errorHandler";
+import {
+  CheckoutOperacion,
+  cuentaCheckout,
+  MENSAJE_CHECKOUT_INCIERTO,
+} from "../utils/checkoutOperacion";
 import { checkoutApi } from "../services/checkoutApi";
 import { pedidosApi } from "../services/pedidosApi";
 
@@ -12,6 +16,21 @@ import type {
 } from "../types/checkout";
 
 export const useCheckout = () => {
+  const operacionRef = useRef<{
+    cuenta: string;
+    operacion: CheckoutOperacion;
+  } | null>(null);
+  const [pendiente, setPendiente] = useState(false);
+  const obtenerOperacion = useCallback(() => {
+    const cuenta = cuentaCheckout();
+    if (operacionRef.current?.cuenta !== cuenta)
+      operacionRef.current = {
+        cuenta,
+        operacion: new CheckoutOperacion(window.localStorage, cuenta),
+      };
+    return operacionRef.current.operacion;
+  }, []);
+
   const [checkout, setCheckout] = useState<CheckoutResponseDto | null>(null);
 
   const [resultado, setResultado] =
@@ -40,11 +59,14 @@ export const useCheckout = () => {
     setError(null);
 
     try {
+      const guardada = obtenerOperacion().pendiente();
+      setPendiente(!!guardada);
+      if (guardada) setError(MENSAJE_CHECKOUT_INCIERTO);
       const { data } = await checkoutApi.obtener();
 
       if (data.codigo !== "200") {
         const mensaje = data.mensaje || "No fue posible cargar el checkout.";
-        setError(mensaje);
+        if (!guardada) setError(mensaje);
         setCheckout(null);
         return null;
       }
@@ -63,41 +85,93 @@ export const useCheckout = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [obtenerOperacion]);
 
   /* ==========================================
      CONFIRMAR
   ========================================== */
 
-  const confirmarCheckout = useCallback(async (dto: ConfirmarCheckoutDto) => {
-    setConfirmando(true);
-    setError(null);
-
-    try {
-      const { data } = await checkoutApi.confirmar(dto);
-
-      if (data.codigo !== "200") {
-        const mensaje = data.mensaje || "No fue posible crear el pedido.";
-        setError(mensaje);
-        await showErrorAlert("No se pudo confirmar", mensaje);
+  const enviarOperacion = useCallback(
+    async (dto?: ConfirmarCheckoutDto) => {
+      let operacion: CheckoutOperacion;
+      try {
+        operacion = obtenerOperacion();
+      } catch (err) {
+        setError(extraerMensajeError(err));
         return null;
       }
+      return operacion.ejecutar(async () => {
+        setConfirmando(true);
+        setError(null);
+        let enviada = false;
+        try {
+          const payload = dto ? operacion.preparar(dto) : operacion.pendiente();
+          if (!payload) return null;
+          setPendiente(true);
+          enviada = true;
+          const { data } = await checkoutApi.confirmar(payload);
+          if (data.codigo !== "200") {
+            // Solo una validación rechazada permite editar y crear una nueva operación.
+            if (data.codigo === "400") {
+              operacion.completar();
+              setPendiente(false);
+            }
+            const mensaje =
+              data.codigo === "400" ? data.mensaje : MENSAJE_CHECKOUT_INCIERTO;
+            setError(mensaje);
+            return null;
+          }
+          if (!data.respuesta || !Array.isArray(data.respuesta.pedidos))
+            throw new Error("El servidor devolvió un resultado incompleto.");
+          setResultado(data.respuesta);
+          operacion.completar();
+          setPendiente(false);
+          return data.respuesta;
+        } catch (err: unknown) {
+          const response = (
+            err as {
+              response?: { status?: number; data?: { codigo?: string } };
+            }
+          ).response;
+          if (
+            enviada &&
+            response?.status === 400 &&
+            response.data?.codigo === "400"
+          ) {
+            operacion.completar();
+            setPendiente(false);
+            setError(extraerMensajeError(err));
+          } else {
+            setError(
+              enviada ? MENSAJE_CHECKOUT_INCIERTO : extraerMensajeError(err),
+            );
+          }
+          return null;
+        } finally {
+          setConfirmando(false);
+        }
+      });
+    },
+    [obtenerOperacion],
+  );
 
-      setResultado(data.respuesta);
-      return data.respuesta;
-    } catch (err: unknown) {
-      const mensaje = extraerMensajeError(
-        err,
-        "No fue posible confirmar el pedido.",
-      );
-
-      setError(mensaje);
-      await notificarErrorApi(err, "No fue posible confirmar el pedido.");
-      return null;
-    } finally {
-      setConfirmando(false);
+  const confirmarCheckout = useCallback(
+    (dto: ConfirmarCheckoutDto) => enviarOperacion(dto),
+    [enviarOperacion],
+  );
+  const recuperarCheckout = useCallback(
+    () => enviarOperacion(),
+    [enviarOperacion],
+  );
+  const cerrarComprobacion = useCallback(async () => {
+    try {
+      obtenerOperacion().completar();
+      setPendiente(false);
+      await cargarCheckout();
+    } catch (err) {
+      setError(extraerMensajeError(err));
     }
-  }, []);
+  }, [obtenerOperacion, cargarCheckout]);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -119,13 +193,11 @@ export const useCheckout = () => {
       }));
 
       try {
-        const { data } = await pedidosApi.subirComprobante(
-          pedidoUuid,
-          archivo,
-        );
+        const { data } = await pedidosApi.subirComprobante(pedidoUuid, archivo);
 
         if (data.codigo !== "200") {
-          const mensaje = data.mensaje || "No fue posible subir el comprobante.";
+          const mensaje =
+            data.mensaje || "No fue posible subir el comprobante.";
 
           setErroresComprobante((actual) => ({
             ...actual,
@@ -172,6 +244,9 @@ export const useCheckout = () => {
   );
 
   return {
+    pendiente,
+    recuperarCheckout,
+    cerrarComprobacion,
     checkout,
     resultado,
     loading,

@@ -1,0 +1,20 @@
+Object.defineProperty(__vite_ssr_exports__, "BACKEND_URL", { enumerable: true, configurable: true, get(){ try { return BACKEND_URL } catch {} }});
+Object.defineProperty(__vite_ssr_exports__, "PANEL_BASE_URL", { enumerable: true, configurable: true, get(){ try { return PANEL_BASE_URL } catch {} }});
+Object.defineProperty(__vite_ssr_exports__, "URL_PANEL_COMERCIO", { enumerable: true, configurable: true, get(){ try { return URL_PANEL_COMERCIO } catch {} }});
+Object.defineProperty(__vite_ssr_exports__, "URL_REGISTRO_COMERCIO", { enumerable: true, configurable: true, get(){ try { return URL_REGISTRO_COMERCIO } catch {} }});
+Object.defineProperty(__vite_ssr_exports__, "URL_DASHBOARD_COMERCIO", { enumerable: true, configurable: true, get(){ try { return URL_DASHBOARD_COMERCIO } catch {} }});
+Object.defineProperty(__vite_ssr_exports__, "URL_ADLOCAL_COMERCIO", { enumerable: true, configurable: true, get(){ try { return URL_ADLOCAL_COMERCIO } catch {} }});
+__vite_ssr_import_meta__.env = {"BASE_URL": "/", "DEV": true, "MODE": "test", "PROD": false, "SSR": true};const isDev = Object.assign(
+  /* istanbul ignore next */
+  globalThis.__vitest_worker__?.metaEnv ?? __vite_ssr_import_meta__.env
+).MODE === "development";
+const BACKEND_URL = isDev ? "https://localhost:44319/api/" : "https://adlocalapi.onrender.com/api/";
+const PANEL_BASE_URL = isDev ? "http://localhost:5173" : "https://panel.adlocal.store";
+const URL_PANEL_COMERCIO = `${PANEL_BASE_URL}/usuario/login`;
+const URL_REGISTRO_COMERCIO = `${PANEL_BASE_URL}/usuario/crear-cuenta`;
+const URL_DASHBOARD_COMERCIO = `${PANEL_BASE_URL}/usuario/app`;
+const URL_ADLOCAL_COMERCIO = URL_REGISTRO_COMERCIO;
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTs7Ozs7O0FBQUEsd0JBQU0sSUFBUTtBQUFBO0FBQUE7QUFBQSxFQUFnQixTQUFTO0FBRWhDLE1BQU0sY0FBYyxRQUN2QixpQ0FDQTtBQUVHLE1BQU0saUJBQWlCLFFBQzFCLDBCQUNBO0FBRUcsTUFBTSxxQkFBcUIsR0FBRyxjQUFjO0FBQzVDLE1BQU0sd0JBQXdCLEdBQUcsY0FBYztBQUMvQyxNQUFNLHlCQUF5QixHQUFHLGNBQWM7QUFHaEQsTUFBTSx1QkFBdUIiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbImh0dHAudHMiXSwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgaXNEZXYgPSBpbXBvcnQubWV0YS5lbnYuTU9ERSA9PT0gXCJkZXZlbG9wbWVudFwiO1xyXG5cclxuZXhwb3J0IGNvbnN0IEJBQ0tFTkRfVVJMID0gaXNEZXZcclxuICA/IFwiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMTkvYXBpL1wiXHJcbiAgOiBcImh0dHBzOi8vYWRsb2NhbGFwaS5vbnJlbmRlci5jb20vYXBpL1wiO1xyXG5cclxuZXhwb3J0IGNvbnN0IFBBTkVMX0JBU0VfVVJMID0gaXNEZXZcclxuICA/IFwiaHR0cDovL2xvY2FsaG9zdDo1MTczXCJcclxuICA6IFwiaHR0cHM6Ly9wYW5lbC5hZGxvY2FsLnN0b3JlXCI7XHJcblxyXG5leHBvcnQgY29uc3QgVVJMX1BBTkVMX0NPTUVSQ0lPID0gYCR7UEFORUxfQkFTRV9VUkx9L3VzdWFyaW8vbG9naW5gO1xyXG5leHBvcnQgY29uc3QgVVJMX1JFR0lTVFJPX0NPTUVSQ0lPID0gYCR7UEFORUxfQkFTRV9VUkx9L3VzdWFyaW8vY3JlYXItY3VlbnRhYDtcclxuZXhwb3J0IGNvbnN0IFVSTF9EQVNIQk9BUkRfQ09NRVJDSU8gPSBgJHtQQU5FTF9CQVNFX1VSTH0vdXN1YXJpby9hcHBgO1xyXG5cclxuLy8gUmV0cm9jb21wYXRpYmlsaWRhZFxyXG5leHBvcnQgY29uc3QgVVJMX0FETE9DQUxfQ09NRVJDSU8gPSBVUkxfUkVHSVNUUk9fQ09NRVJDSU87XHJcbiJdLCJmaWxlIjoiL3NyYy9hcGkvaHR0cC50cyJ9
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZSwiZGVwcyI6IjQiLCJkeW5hbWljRGVwcyI6IjUiLCJzdGF0aWNNb2NrcyI6bnVsbH0sIkM6L1VzZXJzL1VTRVIvc291cmNlL3JlcG9zL0FkTG9jYWxXZWIvc3JjL2FwaS9odHRwLnRzIiwiL3NyYy9hcGkvaHR0cC50cyIsW10sW10sW11d

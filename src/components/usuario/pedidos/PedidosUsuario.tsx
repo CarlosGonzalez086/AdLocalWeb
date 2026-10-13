@@ -129,6 +129,9 @@ export default function PedidosUsuario({
               </MenuItem>
               <MenuItem value={EstadoPagoPedido.Pagado}>Pagados</MenuItem>
               <MenuItem value={EstadoPagoPedido.Rechazado}>Rechazados</MenuItem>
+              <MenuItem value={EstadoPagoPedido.Reembolsado}>
+                Reembolsados
+              </MenuItem>
             </Select>
           </div>
         </div>
@@ -301,58 +304,76 @@ function PedidoDetalle({
         />
       </div>
 
-      {pedido.metodoPago === MetodoPagoPedido.Transferencia && (
-        <div className="orderBankInfo p-3 mb-4">
-          <strong className="fz-h4 d-block mb-2">Transferencia bancaria</strong>
-          <div className="row g-2 fz-h5">
-            {pedido.banco && (
-              <div className="col-6">
-                <span className="checkoutMutedText d-block">Banco</span>
-                {pedido.banco}
-              </div>
+      {pedido.reembolso && (
+        <Alert severity="info" className="mb-4">
+          El comercio registró un reembolso de{" "}
+          {money.format(pedido.reembolso.monto)} por{" "}
+          {pedido.reembolso.metodo === 1 ? "efectivo" : "transferencia"}.<br />
+          Referencia: {pedido.reembolso.referencia}
+          <br />
+          Motivo: {pedido.reembolso.motivo}
+          <br />
+          {fecha.format(new Date(pedido.reembolso.fechaCreacion))}. Si no
+          recibiste el dinero, contacta al comercio con esta referencia.
+        </Alert>
+      )}
+      {pedido.metodoPago === MetodoPagoPedido.Transferencia &&
+        !pedido.reembolso && (
+          <div className="orderBankInfo p-3 mb-4">
+            <strong className="fz-h4 d-block mb-2">
+              Transferencia bancaria
+            </strong>
+            <div className="row g-2 fz-h5">
+              {pedido.banco && (
+                <div className="col-6">
+                  <span className="checkoutMutedText d-block">Banco</span>
+                  {pedido.banco}
+                </div>
+              )}
+              {pedido.beneficiario && (
+                <div className="col-6">
+                  <span className="checkoutMutedText d-block">
+                    Beneficiario
+                  </span>
+                  {pedido.beneficiario}
+                </div>
+              )}
+              {pedido.clabe && (
+                <div className="col-12">
+                  <span className="checkoutMutedText d-block">CLABE</span>
+                  {pedido.clabe}
+                </div>
+              )}
+              {pedido.numeroCuenta && (
+                <div className="col-6">
+                  <span className="checkoutMutedText d-block">Cuenta</span>
+                  {pedido.numeroCuenta}
+                </div>
+              )}
+              {pedido.numeroTarjeta && (
+                <div className="col-6">
+                  <span className="checkoutMutedText d-block">Tarjeta</span>
+                  {pedido.numeroTarjeta}
+                </div>
+              )}
+            </div>
+
+            {pedido.puedeSubirComprobante && (
+              <ComprobanteTransferenciaUploader
+                pedidoUuid={pedido.uuid}
+                loading={subiendo}
+                error={errorComprobante}
+                onSubir={onSubirComprobante}
+              />
             )}
-            {pedido.beneficiario && (
-              <div className="col-6">
-                <span className="checkoutMutedText d-block">Beneficiario</span>
-                {pedido.beneficiario}
-              </div>
-            )}
-            {pedido.clabe && (
-              <div className="col-12">
-                <span className="checkoutMutedText d-block">CLABE</span>
-                {pedido.clabe}
-              </div>
-            )}
-            {pedido.numeroCuenta && (
-              <div className="col-6">
-                <span className="checkoutMutedText d-block">Cuenta</span>
-                {pedido.numeroCuenta}
-              </div>
-            )}
-            {pedido.numeroTarjeta && (
-              <div className="col-6">
-                <span className="checkoutMutedText d-block">Tarjeta</span>
-                {pedido.numeroTarjeta}
-              </div>
+
+            {pedido.estadoPago === EstadoPagoPedido.PendienteVerificacion && (
+              <Alert severity="info" className="mt-3">
+                Tu comprobante está pendiente de verificación por el comercio.
+              </Alert>
             )}
           </div>
-
-          {pedido.puedeSubirComprobante && (
-            <ComprobanteTransferenciaUploader
-              pedidoUuid={pedido.uuid}
-              loading={subiendo}
-              error={errorComprobante}
-              onSubir={onSubirComprobante}
-            />
-          )}
-
-          {pedido.estadoPago === EstadoPagoPedido.PendienteVerificacion && (
-            <Alert severity="info" className="mt-3">
-              Tu comprobante está pendiente de verificación por el comercio.
-            </Alert>
-          )}
-        </div>
-      )}
+        )}
 
       {pedido.direccion && (
         <div className="mb-4">
@@ -396,14 +417,18 @@ function PedidoDetalle({
                 className="orderTimelineItem pb-3 ps-4"
               >
                 <strong className="fz-h5 d-block">
-                  {estadosPedido[item.estado]}
+                  {item.evento === "Pago" ||
+                  item.evento === "Comprobante" ||
+                  item.evento === "Reembolso"
+                    ? `${item.evento}: ${item.estadoPago ? estadosPago[item.estadoPago] : ""}`
+                    : estadosPedido[item.estado]}
                 </strong>
                 <span className="checkoutMutedText fz-h6 d-block">
                   {fecha.format(new Date(item.fecha))}
                 </span>
-                {/* {item.comentario && (
+                {item.comentario && (
                   <span className="fz-h6 d-block mt-1">{item.comentario}</span>
-                )} */}
+                )}
               </div>
             ))}
           </div>

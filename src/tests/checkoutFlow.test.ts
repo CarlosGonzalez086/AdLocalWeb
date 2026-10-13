@@ -6,7 +6,7 @@ import {
   type CheckoutProductoDto,
 } from '../types/checkout';
 
-describe('Flujo E2E de Carrito y Checkout (AdLocalWeb)', () => {
+describe('Reglas y ejemplos de Carrito y Checkout (sin navegador)', () => {
   // Helper para simular producto en checkout
   const crearProducto = (
     uuid: string,

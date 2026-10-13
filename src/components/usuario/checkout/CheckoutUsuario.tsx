@@ -20,6 +20,10 @@ import type { DireccionUsuarioDto } from "../../../services/direccionesUsuarioAp
 import MaterialSymbol from "../../UI/MaterialSymbol/MaterialSymbol";
 
 interface Props {
+  onActualizar: () => Promise<CheckoutResponseDto | null>;
+  pendiente: boolean;
+  onRecuperar: () => Promise<ConfirmarCheckoutResponseDto | null>;
+  onCerrarComprobacion: () => Promise<void>;
   checkout: CheckoutResponseDto | null;
 
   direcciones: DireccionUsuarioDto[];
@@ -49,6 +53,10 @@ interface Props {
 }
 
 export default function CheckoutUsuario({
+  pendiente,
+  onRecuperar,
+  onActualizar,
+  onCerrarComprobacion,
   checkout,
   direcciones,
 
@@ -217,6 +225,8 @@ export default function CheckoutUsuario({
     }
 
     const dto: ConfirmarCheckoutDto = {
+      carritoUuid: checkout.carritoUuid,
+      carritoVersion: checkout.carritoVersion,
       comercios: checkout.comercios.map((comercio) => {
         const form = forms[comercio.comercioUuid];
 
@@ -277,6 +287,49 @@ export default function CheckoutUsuario({
     );
   }
 
+  if (pendiente) {
+    return (
+      <div className="container py-5">
+        <Alert severity="warning" className="mb-3">
+          {error ||
+            "Hay una compra pendiente de comprobar. Recupera su resultado antes de continuar."}
+        </Alert>
+        <Button
+          variant="contained"
+          disabled={confirmando}
+          onClick={() => {
+            void onRecuperar();
+          }}
+        >
+          {confirmando
+            ? "Comprobando pedido…"
+            : "Recuperar resultado del pedido"}
+        </Button>
+        <Button className="ms-3" href="/usuario/pedidos">
+          Ver mis pedidos
+        </Button>
+        <div className="mt-3">
+          <Button
+            disabled={confirmando}
+            onClick={async () => {
+              const decision = await Swal.fire({
+                title: "¿Ya comprobaste tus pedidos?",
+                text: "Si tu compra aparece, no la vuelvas a enviar. Al cerrar esta comprobación podrás preparar otra compra.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya revisé, cerrar comprobación",
+                cancelButtonText: "Seguir comprobando",
+              });
+              if (decision.isConfirmed) await onCerrarComprobacion();
+            }}
+          >
+            Ya revisé mis pedidos
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   /* ==========================================
      SIN CHECKOUT
   ========================================== */
@@ -284,6 +337,11 @@ export default function CheckoutUsuario({
   if (!checkout) {
     return (
       <div className="container py-5">
+        {error && (
+          <Alert severity="error" className="mb-3">
+            {error}
+          </Alert>
+        )}
         <div className="checkoutEmptyState text-center p-4 p-md-5">
           <div className="checkoutEmptyIcon d-flex align-items-center justify-content-center mx-auto">
             <MaterialSymbol icon="shopping_cart_off" size="large" />
@@ -325,7 +383,8 @@ export default function CheckoutUsuario({
             <h1 className="checkoutTitle fw-bold mb-1">Confirmar pedido</h1>
 
             <p className="checkoutMutedText fz-h4 fw-regular mb-0">
-              Cada negocio vecino preparará tu pedido con dedicación. Configura la entrega y tu método de pago.
+              Cada negocio vecino preparará tu pedido con dedicación. Configura
+              la entrega y tu método de pago.
             </p>
           </div>
 
@@ -345,7 +404,21 @@ export default function CheckoutUsuario({
         </div>
 
         {error && (
-          <Alert severity="error" className="mb-4" onClose={clearError}>
+          <Alert
+            severity="error"
+            className="mb-4"
+            onClose={clearError}
+            action={
+              <Button
+                color="inherit"
+                onClick={() => {
+                  void onActualizar();
+                }}
+              >
+                Actualizar checkout
+              </Button>
+            }
+          >
             {error}
           </Alert>
         )}

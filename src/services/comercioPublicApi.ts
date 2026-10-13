@@ -52,6 +52,7 @@ export interface ComercioListadoResponse {
 }
 
 export interface ComercioDto {
+  zonaHoraria?: string;
   id: number;
   nombre: string;
   direccion?: string;
@@ -75,29 +76,29 @@ export interface ComercioDto {
   tipoComercio: string;
 }
 
-export const dataDefault : ComercioDto = {
-  id:0,
-  nombre:"",
-  direccion:"",
-  telefono:"",
-  email:"",
-  descripcion:"",
-  logoBase64:"",
-  imagenes:[""],
-  lat:0.0,
-  lng:0.0,
-  colorPrimario:"",
-  colorSecundario:"",
-  activo:false,
-  horarios:[],
-  productos:[],
-  estadoNombre:"",
-  municipioNombre:"",
-  calificacion:0,
-  badge:"",
-  tipoComercioId:0,
-  tipoComercio:"",
-}
+export const dataDefault: ComercioDto = {
+  id: 0,
+  nombre: "",
+  direccion: "",
+  telefono: "",
+  email: "",
+  descripcion: "",
+  logoBase64: "",
+  imagenes: [""],
+  lat: 0.0,
+  lng: 0.0,
+  colorPrimario: "",
+  colorSecundario: "",
+  activo: false,
+  horarios: [],
+  productos: [],
+  estadoNombre: "",
+  municipioNombre: "",
+  calificacion: 0,
+  badge: "",
+  tipoComercioId: 0,
+  tipoComercio: "",
+};
 
 export enum TipoProductoServicio {
   Producto = 1,
@@ -226,7 +227,17 @@ export const comercioPublicApi = {
     page: number = 1,
     pageSize: number = 8,
   ) =>
-    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios/por-filtros", {
-      params: { estadoId, municipioId, idTipoComercio, orden, page, pageSize },
-    }),
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>(
+      "comercios/por-filtros",
+      {
+        params: {
+          estadoId,
+          municipioId,
+          idTipoComercio,
+          orden,
+          page,
+          pageSize,
+        },
+      },
+    ),
 };

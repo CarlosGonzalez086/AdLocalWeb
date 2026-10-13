@@ -1,0 +1,24 @@
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/node_modules/vitest/dist/index.js", {"importedNames":["describe","it","expect"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/src/utils/usuarioSesion.ts", {"importedNames":["getInicialesUsuario"]});
+(0,__vite_ssr_import_0__.describe)("usuarioSesion utility tests", () => {
+  (0,__vite_ssr_import_0__.describe)("getInicialesUsuario", () => {
+    (0,__vite_ssr_import_0__.it)('debe retornar "U" cuando el nombre está vacío o sólo contiene espacios', () => {
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("")).toBe("U");
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("   ")).toBe("U");
+    });
+    (0,__vite_ssr_import_0__.it)("debe retornar las dos primeras letras en mayúscula para un solo nombre", () => {
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("Carlos")).toBe("CA");
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("ana")).toBe("AN");
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("J")).toBe("J");
+    });
+    (0,__vite_ssr_import_0__.it)("debe retornar la primera letra de cada uno de los dos primeros nombres", () => {
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("Carlos Gonzalez")).toBe("CG");
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("Juan Perez Lopez")).toBe("JP");
+      (0,__vite_ssr_import_0__.expect)((0,__vite_ssr_import_1__.getInicialesUsuario)("  maria   del   carmen  ")).toBe("MD");
+    });
+  });
+});
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtHQUVBLGdDQUFTLCtCQUErQixNQUFNO0FBQzVDLHFDQUFTLHVCQUF1QixNQUFNO0FBQ3BDLGlDQUFHLDBFQUEwRSxNQUFNO0FBQ2pGLDBDQUFPLDJDQUFvQixFQUFFLENBQUMsRUFBRSxLQUFLLEdBQUc7QUFDeEMsMENBQU8sMkNBQW9CLEtBQUssQ0FBQyxFQUFFLEtBQUssR0FBRztBQUFBLElBQzdDLENBQUM7QUFFRCxpQ0FBRywwRUFBMEUsTUFBTTtBQUNqRiwwQ0FBTywyQ0FBb0IsUUFBUSxDQUFDLEVBQUUsS0FBSyxJQUFJO0FBQy9DLDBDQUFPLDJDQUFvQixLQUFLLENBQUMsRUFBRSxLQUFLLElBQUk7QUFDNUMsMENBQU8sMkNBQW9CLEdBQUcsQ0FBQyxFQUFFLEtBQUssR0FBRztBQUFBLElBQzNDLENBQUM7QUFFRCxpQ0FBRywwRUFBMEUsTUFBTTtBQUNqRiwwQ0FBTywyQ0FBb0IsaUJBQWlCLENBQUMsRUFBRSxLQUFLLElBQUk7QUFDeEQsMENBQU8sMkNBQW9CLGtCQUFrQixDQUFDLEVBQUUsS0FBSyxJQUFJO0FBQ3pELDBDQUFPLDJDQUFvQiwwQkFBMEIsQ0FBQyxFQUFFLEtBQUssSUFBSTtBQUFBLElBQ25FLENBQUM7QUFBQSxFQUNILENBQUM7QUFDSCxDQUFDIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJ1c3VhcmlvU2VzaW9uLnRlc3QudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgZGVzY3JpYmUsIGl0LCBleHBlY3QgfSBmcm9tICd2aXRlc3QnO1xuaW1wb3J0IHsgZ2V0SW5pY2lhbGVzVXN1YXJpbyB9IGZyb20gJy4uL3V0aWxzL3VzdWFyaW9TZXNpb24nO1xuXG5kZXNjcmliZSgndXN1YXJpb1Nlc2lvbiB1dGlsaXR5IHRlc3RzJywgKCkgPT4ge1xuICBkZXNjcmliZSgnZ2V0SW5pY2lhbGVzVXN1YXJpbycsICgpID0+IHtcbiAgICBpdCgnZGViZSByZXRvcm5hciBcIlVcIiBjdWFuZG8gZWwgbm9tYnJlIGVzdMOhIHZhY8OtbyBvIHPDs2xvIGNvbnRpZW5lIGVzcGFjaW9zJywgKCkgPT4ge1xuICAgICAgZXhwZWN0KGdldEluaWNpYWxlc1VzdWFyaW8oJycpKS50b0JlKCdVJyk7XG4gICAgICBleHBlY3QoZ2V0SW5pY2lhbGVzVXN1YXJpbygnICAgJykpLnRvQmUoJ1UnKTtcbiAgICB9KTtcblxuICAgIGl0KCdkZWJlIHJldG9ybmFyIGxhcyBkb3MgcHJpbWVyYXMgbGV0cmFzIGVuIG1hecO6c2N1bGEgcGFyYSB1biBzb2xvIG5vbWJyZScsICgpID0+IHtcbiAgICAgIGV4cGVjdChnZXRJbmljaWFsZXNVc3VhcmlvKCdDYXJsb3MnKSkudG9CZSgnQ0EnKTtcbiAgICAgIGV4cGVjdChnZXRJbmljaWFsZXNVc3VhcmlvKCdhbmEnKSkudG9CZSgnQU4nKTtcbiAgICAgIGV4cGVjdChnZXRJbmljaWFsZXNVc3VhcmlvKCdKJykpLnRvQmUoJ0onKTtcbiAgICB9KTtcblxuICAgIGl0KCdkZWJlIHJldG9ybmFyIGxhIHByaW1lcmEgbGV0cmEgZGUgY2FkYSB1bm8gZGUgbG9zIGRvcyBwcmltZXJvcyBub21icmVzJywgKCkgPT4ge1xuICAgICAgZXhwZWN0KGdldEluaWNpYWxlc1VzdWFyaW8oJ0NhcmxvcyBHb256YWxleicpKS50b0JlKCdDRycpO1xuICAgICAgZXhwZWN0KGdldEluaWNpYWxlc1VzdWFyaW8oJ0p1YW4gUGVyZXogTG9wZXonKSkudG9CZSgnSlAnKTtcbiAgICAgIGV4cGVjdChnZXRJbmljaWFsZXNVc3VhcmlvKCcgIG1hcmlhICAgZGVsICAgY2FybWVuICAnKSkudG9CZSgnTUQnKTtcbiAgICB9KTtcbiAgfSk7XG59KTtcbiJdLCJmaWxlIjoiL3NyYy90ZXN0cy91c3VhcmlvU2VzaW9uLnRlc3QudHMifQ==
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZSwiZGVwcyI6IjQiLCJkeW5hbWljRGVwcyI6IjUiLCJzdGF0aWNNb2NrcyI6bnVsbH0sIkM6L1VzZXJzL1VTRVIvc291cmNlL3JlcG9zL0FkTG9jYWxXZWIvc3JjL3Rlc3RzL3VzdWFyaW9TZXNpb24udGVzdC50cyIsIi9zcmMvdGVzdHMvdXN1YXJpb1Nlc2lvbi50ZXN0LnRzIixbXSxbIjYiLCI3Il0sW10sIi9ub2RlX21vZHVsZXMvdml0ZXN0L2Rpc3QvaW5kZXguanMiLCIvc3JjL3V0aWxzL3VzdWFyaW9TZXNpb24udHMiXQ==

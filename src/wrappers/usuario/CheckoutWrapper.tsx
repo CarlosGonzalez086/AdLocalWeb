@@ -2,8 +2,6 @@ import { useEffect } from "react";
 
 import App from "../../components/App";
 
-
-
 import { useCheckout } from "../../hooks/useCheckout";
 
 import { useDireccionesUsuario } from "../../hooks/useDireccionesUsuario";
@@ -13,6 +11,9 @@ import CheckoutUsuario from "../../components/usuario/checkout/CheckoutUsuario";
 
 const CheckoutContent = () => {
   const {
+    pendiente,
+    recuperarCheckout,
+    cerrarComprobacion,
     checkout,
 
     resultado,
@@ -54,6 +55,10 @@ const CheckoutContent = () => {
     <App>
       <div className="w-100">
         <CheckoutUsuario
+          onActualizar={cargarCheckout}
+          pendiente={pendiente}
+          onRecuperar={recuperarCheckout}
+          onCerrarComprobacion={cerrarComprobacion}
           checkout={checkout}
           direcciones={direcciones}
           loading={loading || loadingDirecciones}
