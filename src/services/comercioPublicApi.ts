@@ -2,7 +2,10 @@ import type { ApiResponse } from "../api/apiResponse";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 import { getLocalStorageJWTUsuario } from "../utils/storageUsuario";
 
-const municipioActual: string | null = (() => {
+export const getMunicipioActual = (): string | null => {
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return null;
+  }
   const raw = localStorage.getItem("municipioActual");
   if (!raw) return null;
   try {
@@ -11,7 +14,7 @@ const municipioActual: string | null = (() => {
   } catch {
     return null;
   }
-})();
+};
 
 export interface HorarioComercioDto {
   dia: number;
@@ -164,7 +167,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "destacados",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -174,7 +177,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "populares",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -184,7 +187,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "recientes",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -196,7 +199,7 @@ export const comercioPublicApi = {
         tipo: "sugeridos",
         lat,
         lng,
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -211,7 +214,7 @@ export const comercioPublicApi = {
         tipo: "cercanos",
         lat,
         lng,
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },

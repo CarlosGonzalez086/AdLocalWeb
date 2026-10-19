@@ -1,12 +1,42 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import BusinessWraper from "../wrappers/BusinessWraper";
+import { comercioPublicApi, type ComercioDtoListItem } from "../services/comercioPublicApi";
 
 const title = "Comercios Locales | AdLocal";
 const description =
   "Explora todos los comercios afiliados a AdLocal en tu municipio y comunidad.";
+
+let initialComercios: ComercioDtoListItem[] = [];
+try {
+  const resp = await comercioPublicApi.getDestacados(1, 8);
+  if (resp?.data?.respuesta?.items) {
+    initialComercios = resp.data.respuesta.items;
+  }
+} catch {
+  // Fallback silencioso si la API no está disponible durante el renderizado inicial
+}
 ---
 
 <Layout title={title} description={description}>
-  <BusinessWraper client:only="react" />
+  <BusinessWraper initialComercios={initialComercios} client:load />
+
+  {initialComercios.length > 0 && (
+    <noscript>
+      <div style="padding: 1.5rem; max-width: 900px; margin: 0 auto; font-family: sans-serif;">
+        <h2>Comercios Locales</h2>
+        <ul>
+          {initialComercios.map((c) => (
+            <li>
+              <a href={`/comercios/${c.id}_${c.nombre.replace(/\s+/g, "_")}`}>
+                <strong>{c.nombre}</strong>
+              </a>
+              {c.descripcion && <div>{c.descripcion}</div>}
+              {c.municipioNombre && <div>{c.municipioNombre}, {c.estadoNombre}</div>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </noscript>
+  )}
 </Layout>

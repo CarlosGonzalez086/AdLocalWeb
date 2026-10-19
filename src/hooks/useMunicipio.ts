@@ -76,6 +76,9 @@ const obtenerMunicipioDesdeGeocode = (
 };
 
 const obtenerCache = (): MunicipioCache | null => {
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return null;
+  }
   try {
     const raw = localStorage.getItem(CACHE_KEY);
 
@@ -104,6 +107,9 @@ const obtenerCache = (): MunicipioCache | null => {
 };
 
 const guardarCache = (municipio: string | null, ubicacion: Ubicacion): void => {
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return;
+  }
   const cache: MunicipioCache = {
     municipio,
     lat: ubicacion.lat,

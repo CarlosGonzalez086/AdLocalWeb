@@ -1,19 +1,105 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ComercioWraper from "../../wrappers/ComercioWraper";
+import { comercioPublicApi, type ComercioDto } from "../../services/comercioPublicApi";
 
 export const prerender = false;
 const { slug } = Astro.params;
 const parts = slug?.split("_");
-const id = Number(slug?.split("_")[0]);
-const nombre = parts?.slice(1).join("_").replace(/_/g, " ");
+const id = Number(parts?.[0]);
+const nombreSlug = parts?.slice(1).join("_").replace(/_/g, " ");
 
-if (isNaN(id)) return Astro.redirect("/");
+if (isNaN(id) || id <= 0) return Astro.redirect("/");
 
-const title = `${nombre || "Comercio"} | AdLocal`;
-const description = `Consulta catálogo, información, ubicación y contacto de ${nombre || "comercio local"} en AdLocal.`;
+let comercioData: ComercioDto | null = null;
+try {
+  const resp = await comercioPublicApi.getById(id);
+  if (resp?.data?.respuesta) {
+    comercioData = resp.data.respuesta;
+  }
+} catch {
+  // Degradación elegante en SSR si el backend no responde
+}
+
+const nombre = comercioData?.nombre || nombreSlug || "Comercio Local";
+const title = `${nombre} | AdLocal`;
+const description = comercioData?.descripcion
+  ? (comercioData.descripcion.length > 155
+      ? `${comercioData.descripcion.substring(0, 152)}...`
+      : comercioData.descripcion)
+  : `Consulta catálogo, información, ubicación, horarios y contacto de ${nombre} en AdLocal.`;
+const ogImage = comercioData?.logoBase64 || comercioData?.imagenes?.[0] || undefined;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": nombre,
+  "description": comercioData?.descripcion || description,
+  "telephone": comercioData?.telefono || undefined,
+  "email": comercioData?.email || undefined,
+  "address": comercioData?.direccion
+    ? {
+        "@type": "PostalAddress",
+        "streetAddress": comercioData.direccion,
+        "addressLocality": comercioData.municipioNombre || undefined,
+        "addressRegion": comercioData.estadoNombre || undefined,
+        "addressCountry": "MX",
+      }
+    : undefined,
+  "geo":
+    comercioData?.lat && comercioData?.lng
+      ? {
+          "@type": "GeoCoordinates",
+          "latitude": comercioData.lat,
+          "longitude": comercioData.lng,
+        }
+      : undefined,
+  "image": ogImage || undefined,
+};
 ---
 
-<Layout title={title} description={description}>
-  <ComercioWraper id={id} client:only="react" />
+<Layout title={title} description={description} ogImage={ogImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <ComercioWraper id={id} initialData={comercioData} client:load />
+
+  {comercioData && (
+    <noscript>
+      <div style="padding: 1.5rem; max-width: 800px; margin: 0 auto; font-family: sans-serif;">
+        <h1>{comercioData.nombre}</h1>
+        {comercioData.descripcion && <p>{comercioData.descripcion}</p>}
+        {comercioData.direccion && (
+          <p>
+            <strong>Dirección:</strong> {comercioData.direccion}, {comercioData.municipioNombre}, {comercioData.estadoNombre}
+          </p>
+        )}
+        {comercioData.telefono && <p><strong>Teléfono:</strong> {comercioData.telefono}</p>}
+        {comercioData.email && <p><strong>Email:</strong> {comercioData.email}</p>}
+        {comercioData.horarios && comercioData.horarios.length > 0 && (
+          <div>
+            <h2>Horarios de Atención</h2>
+            <ul>
+              {comercioData.horarios.map((h) => (
+                <li>
+                  Día {h.dia}: {h.abierto ? `${h.horaAperturaFormateada || h.horaApertura || ""} - ${h.horaCierreFormateada || h.horaCierre || ""}` : "Cerrado"}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {comercioData.productos && comercioData.productos.length > 0 && (
+          <div>
+            <h2>Catálogo de Productos y Servicios</h2>
+            <ul>
+              {comercioData.productos.map((p) => (
+                <li>
+                  <strong>{p.nombre}</strong> {p.precio != null && `- $${p.precio} MXN`}
+                  {p.descripcion && <div>{p.descripcion}</div>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </noscript>
+  )}
 </Layout>

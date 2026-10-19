@@ -20,14 +20,17 @@ import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import ComercioDetalle from "./ComercioDetalle";
 import ReservarCitaModal from "./ReservarCitaModal";
 
-interface ComercioProps {
+export interface ComercioProps {
   id: number;
+  initialData?: ComercioDto | null;
 }
 
-const Comercio: FC<ComercioProps> = ({ id }) => {
-  const [comercio, setComercio] = useState<ComercioDto | null>(dataDefault);
+const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
+  const [comercio, setComercio] = useState<ComercioDto | null>(
+    initialData ?? dataDefault,
+  );
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
 
   const [error, setError] = useState<string | null>(null);
   const [productoCita, setProductoCita] = useState<ProductoServicioDto | null>(
@@ -85,8 +88,10 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
   }, [id]);
 
   useEffect(() => {
-    void fetchComercio();
-  }, [fetchComercio]);
+    if (!initialData || initialData.id !== id) {
+      void fetchComercio();
+    }
+  }, [fetchComercio, id, initialData]);
 
   // ==========================================
   // VALIDAR SESIÓN
