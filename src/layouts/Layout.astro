@@ -1,5 +1,7 @@
 ---
 import PwaHead from "../components/common/PwaHead.astro";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/bootstrap-overrides.css";
 import "../styles/App.css";
 import "../styles/sweetalert.css";
 
@@ -91,6 +93,8 @@ const fullTitle = title.includes("AdLocal") ? title : `${title} | AdLocal`;
       <slot />
     </div>
 
-    
+    <script>
+      import "bootstrap/dist/js/bootstrap.bundle.min.js";
+    </script>
   </body>
 </html>

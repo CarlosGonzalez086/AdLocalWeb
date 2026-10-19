@@ -1,6 +1,6 @@
-import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from '../chunks/astro/server_CALqXRaA.mjs';
+import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from '../chunks/astro/server_09C4vKdF.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../chunks/Layout_T33uJGiz.mjs';
+import { $ as $$Layout } from '../chunks/Layout_tK4KqB7s.mjs';
 import { B as BusinessWraper } from '../chunks/BusinessWraper_CHYrT3tQ.mjs';
 import { G as comercioPublicApi } from '../chunks/generals_-gU_CziR.mjs';
 export { renderers } from '../renderers.mjs';

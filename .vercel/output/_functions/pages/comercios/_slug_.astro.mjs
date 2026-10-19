@@ -1,6 +1,6 @@
-import { e as createComponent, f as createAstro, k as renderComponent, r as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from '../../chunks/astro/server_CALqXRaA.mjs';
+import { e as createComponent, f as createAstro, k as renderComponent, r as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from '../../chunks/astro/server_09C4vKdF.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../../chunks/Layout_T33uJGiz.mjs';
+import { $ as $$Layout } from '../../chunks/Layout_tK4KqB7s.mjs';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { u as useDefaultProps, d as duration, a as useTheme, b as useSlot, s as styled, n as normalizedTransitionCallback, m as memoTheme, g as getTransitionProps, P as Paper, B as ButtonBase, c as createSvgIcon, I as IconButton, e as createSimplePaletteValueFilter, i as internal_createExtendSxProp, f as globalCss, r as rootShouldForwardProp, C as CircularProgress, F as Fade, h as FOCUSABLE_ATTRIBUTE, M as Modal, j as Backdrop, k as Menu, l as slotShouldForwardProp, o as httpUsuarioPublico, p as httpUsuario, q as getLocalStorageJWTUsuario, t as clearStorageUsuario, v as renovarTokenSilencioso, w as isTokenProximoAExpirar, x as extraerMensajeError, y as MaterialSymbol, T as TipoProductoServicio, z as ModalidadProductoServicio, A as estaAbiertoAhora, D as DIAS_SEMANA_MAP, E as dataDefault, G as comercioPublicApi, H as App } from '../../chunks/generals_-gU_CziR.mjs';
 import * as React from 'react';
