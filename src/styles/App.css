@@ -770,7 +770,7 @@ body {
   }
 }
 
-@media (max-width: 899px) {
+@media (max-width: 767.98px) {
   .toolbar {
     min-height: 64px;
 
@@ -779,7 +779,7 @@ body {
   }
 
   .desktopNavigation {
-    display: none;
+    display: none !important;
   }
 
   .brandArea {

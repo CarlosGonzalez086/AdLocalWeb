@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery, useTheme } from "@mui/material";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import NotificacionesMenu from "../usuario/notificaciones/NotificacionesMenu";
 import {
@@ -29,10 +28,11 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [usuario, setUsuario] = useState<UsuarioSesion | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean(getLocalStorageJWTUsuario());
+  });
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const urls = useMemo(() => getHeaderUrls(), []);
 
   useEffect(() => {
@@ -173,21 +173,19 @@ const Header: FC<HeaderProps> = () => {
           />
 
           {/* Botones de acción móvil */}
-          {isMobile && (
-            <div className="d-flex align-items-center gap-2">
-              {usuario && <NotificacionesMenu />}
-              <button
-                type="button"
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
-                aria-label="Abrir menú de navegación"
-                aria-expanded={drawerOpen}
-                aria-controls="mobile-navigation"
-                onClick={() => setDrawerOpen(true)}
-              >
-                <MaterialSymbol icon="menu" size="medium" />
-              </button>
-            </div>
-          )}
+          <div className="d-flex d-md-none align-items-center gap-2">
+            {usuario && <NotificacionesMenu />}
+            <button
+              type="button"
+              className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
+              aria-label="Abrir menú de navegación"
+              aria-expanded={drawerOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MaterialSymbol icon="menu" size="medium" />
+            </button>
+          </div>
         </div>
       </header>
 
