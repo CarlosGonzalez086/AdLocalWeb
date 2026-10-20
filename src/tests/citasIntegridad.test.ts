@@ -4,6 +4,7 @@ import { citasApi } from "../services/citasApi";
 
 const http = vi.hoisted(() => ({ post: vi.fn(), get: vi.fn(), put: vi.fn() }));
 vi.mock("../api/httpUsuario", () => ({ httpUsuario: http }));
+vi.mock("../api/httpUsuarioPublico", () => ({ httpUsuarioPublico: http }));
 const uuid = "550e8400-e29b-41d4-a716-446655440000";
 const dto = { productoUuid: uuid, fechaInicio: "2030-05-21T09:00:00", zonaHoraria: "America/Tijuana", nombrePersona: "Persona sintética" };
 function storage() { const datos = new Map<string,string>(); return { getItem: (k:string) => datos.get(k) ?? null,

@@ -87,8 +87,16 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }: Props) {
           setHorarios(r.data.respuesta ?? []);
         }
       })
-      .catch(() => {
-        if (vigente) setError("No fue posible consultar los horarios.");
+      .catch((err: unknown) => {
+        if (vigente) {
+          const mensaje = (
+            err as {
+              response?: { data?: { mensaje?: string } };
+              message?: string;
+            }
+          )?.response?.data?.mensaje;
+          setError(mensaje ?? "No fue posible consultar los horarios.");
+        }
       })
       .finally(() => {
         if (vigente) setConsultando(false);
@@ -141,7 +149,7 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }: Props) {
       )[registrada.estado];
       await Swal.fire(
         "Reserva comprobada",
-        `${fechaCitaLocal(registrada.fechaInicio)} · ${registrada.zonaHoraria} · ${estado}`,
+        `${fechaCitaLocal(registrada.fechaInicio)} · ${estado}`,
         "success",
       );
       onClose();
@@ -172,10 +180,6 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }: Props) {
       </DialogTitle>
       <DialogContent>
         <div className="d-flex flex-column gap-3 pt-2">
-          <Alert severity="info">
-            Zona del horario: <strong>{zonaMostrada}</strong>. La disponibilidad
-            se confirma al guardar.
-          </Alert>
           {error && <Alert severity="error">{error}</Alert>}
           {pendiente && (
             <Alert severity="warning">

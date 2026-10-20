@@ -1,5 +1,6 @@
 import type { ApiResponse } from "../api/apiResponse";
 import { httpUsuario } from "../api/httpUsuario";
+import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 
 export interface CitaDto {
   productoUuid: string;
@@ -31,7 +32,7 @@ export interface CrearCitaDto {
 
 export const citasApi = {
   disponibilidad: (productoUuid: string, fecha: string, citaUuid?: string) =>
-    httpUsuario.get<ApiResponse<string[]>>(
+    (citaUuid ? httpUsuario : httpUsuarioPublico).get<ApiResponse<string[]>>(
       `Citas/disponibilidad/${productoUuid}`,
       { params: { fecha, ...(citaUuid ? { citaUuid } : {}) } },
     ),
