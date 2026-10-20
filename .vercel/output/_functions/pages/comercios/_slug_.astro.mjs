@@ -11568,6 +11568,15 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }) {
       }
       return;
     }
+    if (!producto.uuid || producto.uuid === "00000000-0000-0000-0000-000000000000") {
+      setConsultando(false);
+      setHora("");
+      setHorarios([]);
+      setError(
+        "El servicio seleccionado no cuenta con un identificador válido para citas."
+      );
+      return;
+    }
     setHora("");
     setHorarios([]);
     setConsultando(true);
@@ -11591,7 +11600,7 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }) {
   }, [fecha, producto, pendiente]);
   const guardar = async () => {
     if (vuelo.current || !inicio.op || inicio.error) return;
-    if (!pendiente && (!producto || !fecha || !hora || nombre.trim().length < 2)) {
+    if (!pendiente && (!producto || !producto.uuid || producto.uuid === "00000000-0000-0000-0000-000000000000" || !fecha || !hora || nombre.trim().length < 2)) {
       setError(
         "Selecciona fecha, hora e indica un nombre de al menos dos caracteres."
       );
