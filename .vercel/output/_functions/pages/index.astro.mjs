@@ -1,8 +1,8 @@
 import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from '../chunks/astro/server_09C4vKdF.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../chunks/Layout_CmYpdFxP.mjs';
-import { B as BusinessWraper } from '../chunks/BusinessWraper_DsYutCjD.mjs';
-import { G as comercioPublicApi } from '../chunks/generals_BNjAEWtJ.mjs';
+import { $ as $$Layout } from '../chunks/Layout_D07HLnn6.mjs';
+import { B as BusinessWraper } from '../chunks/BusinessWraper_DUfy-KtR.mjs';
+import { G as comercioPublicApi } from '../chunks/generals_BFi0dT1X.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {

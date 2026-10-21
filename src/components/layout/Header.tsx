@@ -149,18 +149,18 @@ const Header: FC<HeaderProps> = () => {
     <>
       <header className="header shadow-sm bg-white sticky-top">
         <div className="toolbar container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between" style={{ minHeight: "64px" }}>
-          <div className="brandArea d-flex align-items-center gap-2">
+          <div className="brandArea d-flex align-items-center gap-2 flex-shrink-0">
             <a
               href="/"
-              className="brandLink d-flex align-items-center gap-2 text-decoration-none"
+              className="brandLink d-flex align-items-center gap-2 text-decoration-none flex-shrink-0"
               aria-label="Ir al inicio de ADLocal"
             >
               <img
                 src={LOGO_URL}
                 alt=""
-                className="logo"
+                className="logo flex-shrink-0"
               />
-              <span className="brandName fz-h4 fw-bold mb-0"><span className="brandNameAd">AD</span><span className="brandNameLocal">Local</span></span>
+              <span className="brandName fz-h4 fw-bold mb-0 text-nowrap"><span className="brandNameAd">AD</span><span className="brandNameLocal">Local</span></span>
             </a>
           </div>
 
@@ -177,7 +177,7 @@ const Header: FC<HeaderProps> = () => {
             {usuario && <NotificacionesMenu />}
             <button
               type="button"
-              className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
+              className="headerActionBtn d-inline-flex align-items-center justify-content-center"
               aria-label="Abrir menú de navegación"
               aria-expanded={drawerOpen}
               aria-controls="mobile-navigation"

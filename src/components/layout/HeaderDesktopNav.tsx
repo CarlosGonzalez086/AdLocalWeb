@@ -18,44 +18,52 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
   urls,
 }) => {
   return (
-    <nav className="desktopNavigation d-none d-md-flex align-items-center gap-3" aria-label="Navegación principal">
-      <a href={urls.inicio} className="navigationLink fz-h5 fw-medium d-inline-flex align-items-center gap-1 text-decoration-none">
+    <nav className="desktopNavigation d-none d-md-flex align-items-center gap-2 gap-lg-3" aria-label="Navegación principal">
+      <a
+        href={urls.inicio}
+        className="navigationLink fz-h5 fw-medium d-inline-flex align-items-center gap-1 text-decoration-none"
+        title="Inicio"
+      >
         <MaterialSymbol icon="home" size="small" filled />
-        <span>Inicio</span>
+        <span className="d-none d-lg-inline">Inicio</span>
       </a>
 
       <a
         href={urls.busquedaAvanzada}
         className="navigationLink fz-h5 fw-medium d-inline-flex align-items-center gap-1 text-decoration-none"
+        title="Búsqueda avanzada"
       >
         <MaterialSymbol icon="search" size="small" />
-        <span>Búsqueda avanzada</span>
+        <span className="d-none d-lg-inline">Búsqueda avanzada</span>
       </a>
 
       {!authLoading && (
         <>
           {usuario ? (
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-1 gap-md-2">
               <a
                 href={urls.carrito}
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
+                className="headerActionBtn"
                 aria-label="Ver mi carrito de compras"
+                title="Carrito de compras"
               >
                 <MaterialSymbol icon="shopping_cart" size="small" />
               </a>
 
               <a
                 href={urls.pedidos}
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
+                className="headerActionBtn"
                 aria-label="Ver mis pedidos"
+                title="Mis pedidos"
               >
                 <MaterialSymbol icon="receipt_long" size="small" />
               </a>
 
               <a
                 href={urls.citas}
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
+                className="headerActionBtn"
                 aria-label="Ver mis citas agendadas"
+                title="Mis citas"
               >
                 <MaterialSymbol icon="calendar_month" size="small" />
               </a>
@@ -66,6 +74,7 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
                 href={urls.cuentaUsuario}
                 className="userAccount d-inline-flex align-items-center gap-2 text-decoration-none p-1 rounded"
                 aria-label={`Perfil de ${usuario.nombre}`}
+                title={`Perfil de ${usuario.nombre}`}
               >
                 {usuario.fotoUrl ? (
                   <Avatar
@@ -79,7 +88,7 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
                   </span>
                 )}
 
-                <span className="userName fz-body-sm fw-semibold text-dark">
+                <span className="userName fz-body-sm fw-semibold text-dark d-none d-xl-inline">
                   {usuario.nombre}
                 </span>
               </a>
@@ -109,7 +118,7 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
       {usuario?.rol?.toLowerCase() === "comercio" ? (
         <a
           href={urls.dashboardNegocio}
-          className="btn-adlocal btn-adlocal-secondary btn-adlocal-sm fz-body-sm fw-semibold d-inline-flex align-items-center gap-1 text-decoration-none"
+          className="btn-adlocal btn-adlocal-secondary btn-adlocal-sm fz-body-sm fw-semibold d-inline-flex align-items-center gap-1 text-decoration-none flex-shrink-0"
         >
           <MaterialSymbol icon="dashboard" size="small" />
           <span>Mi Panel</span>
@@ -117,10 +126,11 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
       ) : (
         <a
           href={urls.registroNegocio}
-          className="btn-adlocal btn-adlocal-primary btn-adlocal-sm fz-body-sm fw-semibold d-inline-flex align-items-center gap-1 text-decoration-none"
+          className="btn-adlocal btn-adlocal-primary btn-adlocal-sm fz-body-sm fw-semibold d-inline-flex align-items-center gap-1 text-decoration-none flex-shrink-0"
         >
           <MaterialSymbol icon="storefront" size="small" />
-          <span>Unirme como negocio</span>
+          <span className="d-none d-xl-inline">Unirme como negocio</span>
+          <span className="d-inline d-xl-none">Soy negocio</span>
         </a>
       )}
     </nav>
