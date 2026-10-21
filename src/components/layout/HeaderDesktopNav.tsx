@@ -94,21 +94,27 @@ export const HeaderDesktopNav: FC<HeaderDesktopNavProps> = ({
               </a>
             </div>
           ) : (
-            <div className="authActions d-flex align-items-center gap-2">
+            <div className="authActions d-flex align-items-center gap-1 gap-md-2">
               <a
                 href={urls.loginUsuario}
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm fz-body-sm fw-medium d-inline-flex align-items-center gap-1 text-decoration-none"
+                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm fz-body-sm fw-medium d-inline-flex align-items-center gap-1 text-decoration-none flex-shrink-0"
+                title="Iniciar sesión"
+                aria-label="Iniciar sesión"
               >
                 <MaterialSymbol icon="login" size="small" />
-                <span>Iniciar sesión</span>
+                <span className="d-none d-lg-inline">Iniciar sesión</span>
+                <span className="d-inline d-lg-none">Ingresar</span>
               </a>
 
               <a
                 href={urls.registroUsuario}
-                className="btn-adlocal btn-adlocal-primary btn-adlocal-sm fz-body-sm fw-medium d-inline-flex align-items-center gap-1 text-decoration-none"
+                className="btn-adlocal btn-adlocal-primary btn-adlocal-sm fz-body-sm fw-medium d-inline-flex align-items-center gap-1 text-decoration-none flex-shrink-0"
+                title="Crear cuenta"
+                aria-label="Crear cuenta"
               >
                 <MaterialSymbol icon="person_add" size="small" />
-                <span>Crear cuenta</span>
+                <span className="d-none d-lg-inline">Crear cuenta</span>
+                <span className="d-inline d-lg-none">Registro</span>
               </a>
             </div>
           )}
