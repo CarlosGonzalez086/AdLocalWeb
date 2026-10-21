@@ -1,0 +1,41 @@
+Object.defineProperty(__vite_ssr_exports__, "default", { enumerable: true, configurable: true, get(){ try { return __vite_ssr_export_default__ } catch {} }});
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/node_modules/react/jsx-dev-runtime.js", {"importedNames":["jsxDEV"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/src/components/UI/MaterialSymbol/MaterialSymbol.module.css", {"importedNames":["default"]});
+const MaterialSymbol = ({
+  icon,
+  size = "medium",
+  filled = false,
+  className = ""
+}) => {
+  const sizeClass = {
+    small: __vite_ssr_import_1__.default.small,
+    medium: __vite_ssr_import_1__.default.medium,
+    large: __vite_ssr_import_1__.default.large
+  }[size];
+  return /* @__PURE__ */ (0,__vite_ssr_import_0__.jsxDEV)(
+    "span",
+    {
+      "aria-hidden": "true",
+      className: [
+        __vite_ssr_import_1__.default.icon,
+        sizeClass,
+        filled ? __vite_ssr_import_1__.default.filled : "",
+        className
+      ].filter(Boolean).join(" "),
+      children: icon
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/USER/source/repos/AdLocalWeb/src/components/UI/MaterialSymbol/MaterialSymbol.tsx",
+      lineNumber: 26,
+      columnNumber: 5
+    },
+    this
+  );
+};
+const __vite_ssr_export_default__ = MaterialSymbol;
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTtBQXlCSTtBQXhCSjtBQVdBLE1BQU0saUJBQTRCLENBQUM7QUFBQSxFQUNqQztBQUFBLEVBQ0EsT0FBTztBQUFBLEVBQ1AsU0FBUztBQUFBLEVBQ1QsWUFBWTtBQUNkLE1BQU07QUFDSixRQUFNLFlBQVk7QUFBQSxJQUNoQixPQUFPLDhCQUFPO0FBQUEsSUFDZCxRQUFRLDhCQUFPO0FBQUEsSUFDZixPQUFPLDhCQUFPO0FBQUEsRUFDaEIsRUFBRSxJQUFJO0FBRU4sU0FDRTtBQUFBLElBQUM7QUFBQTtBQUFBLE1BQ0MsZUFBWTtBQUFBLE1BQ1osV0FBVztBQUFBLFFBQ1QsOEJBQU87QUFBQSxRQUNQO0FBQUEsUUFDQSxTQUFTLDhCQUFPLFNBQVM7QUFBQSxRQUN6QjtBQUFBLE1BQ0YsRUFDRyxPQUFPLE9BQU8sRUFDZCxLQUFLLEdBQUc7QUFBQSxNQUVWO0FBQUE7QUFBQSxJQVhIO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQVlBO0FBRUo7QUFFQSxvQ0FBZSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiTWF0ZXJpYWxTeW1ib2wudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB0eXBlIHsgRkMgfSBmcm9tIFwicmVhY3RcIjtcclxuaW1wb3J0IHN0eWxlcyBmcm9tIFwiLi9NYXRlcmlhbFN5bWJvbC5tb2R1bGUuY3NzXCI7XHJcblxyXG50eXBlIEljb25TaXplID0gXCJzbWFsbFwiIHwgXCJtZWRpdW1cIiB8IFwibGFyZ2VcIjtcclxuXHJcbmludGVyZmFjZSBQcm9wcyB7XHJcbiAgaWNvbjogc3RyaW5nO1xyXG4gIHNpemU/OiBJY29uU2l6ZTtcclxuICBmaWxsZWQ/OiBib29sZWFuO1xyXG4gIGNsYXNzTmFtZT86IHN0cmluZztcclxufVxyXG5cclxuY29uc3QgTWF0ZXJpYWxTeW1ib2w6IEZDPFByb3BzPiA9ICh7XHJcbiAgaWNvbixcclxuICBzaXplID0gXCJtZWRpdW1cIixcclxuICBmaWxsZWQgPSBmYWxzZSxcclxuICBjbGFzc05hbWUgPSBcIlwiLFxyXG59KSA9PiB7XHJcbiAgY29uc3Qgc2l6ZUNsYXNzID0ge1xyXG4gICAgc21hbGw6IHN0eWxlcy5zbWFsbCxcclxuICAgIG1lZGl1bTogc3R5bGVzLm1lZGl1bSxcclxuICAgIGxhcmdlOiBzdHlsZXMubGFyZ2UsXHJcbiAgfVtzaXplXTtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxzcGFuXHJcbiAgICAgIGFyaWEtaGlkZGVuPVwidHJ1ZVwiXHJcbiAgICAgIGNsYXNzTmFtZT17W1xyXG4gICAgICAgIHN0eWxlcy5pY29uLFxyXG4gICAgICAgIHNpemVDbGFzcyxcclxuICAgICAgICBmaWxsZWQgPyBzdHlsZXMuZmlsbGVkIDogXCJcIixcclxuICAgICAgICBjbGFzc05hbWUsXHJcbiAgICAgIF1cclxuICAgICAgICAuZmlsdGVyKEJvb2xlYW4pXHJcbiAgICAgICAgLmpvaW4oXCIgXCIpfVxyXG4gICAgPlxyXG4gICAgICB7aWNvbn1cclxuICAgIDwvc3Bhbj5cclxuICApO1xyXG59O1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgTWF0ZXJpYWxTeW1ib2w7XHJcbiJdLCJmaWxlIjoiL3NyYy9jb21wb25lbnRzL1VJL01hdGVyaWFsU3ltYm9sL01hdGVyaWFsU3ltYm9sLnRzeCJ9
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZSwiZGVwcyI6IjQiLCJkeW5hbWljRGVwcyI6IjUiLCJzdGF0aWNNb2NrcyI6bnVsbH0sIkM6L1VzZXJzL1VTRVIvc291cmNlL3JlcG9zL0FkTG9jYWxXZWIvc3JjL2NvbXBvbmVudHMvVUkvTWF0ZXJpYWxTeW1ib2wvTWF0ZXJpYWxTeW1ib2wudHN4IiwiL3NyYy9jb21wb25lbnRzL1VJL01hdGVyaWFsU3ltYm9sL01hdGVyaWFsU3ltYm9sLnRzeCIsW10sWyI2IiwiNyJdLFtdLCIvbm9kZV9tb2R1bGVzL3JlYWN0L2pzeC1kZXYtcnVudGltZS5qcyIsIi9zcmMvY29tcG9uZW50cy9VSS9NYXRlcmlhbFN5bWJvbC9NYXRlcmlhbFN5bWJvbC5tb2R1bGUuY3NzIl0=

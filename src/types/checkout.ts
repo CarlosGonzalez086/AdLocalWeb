@@ -102,6 +102,8 @@ export interface CheckoutComercioResponseDto {
 }
 
 export interface CheckoutResponseDto {
+  carritoUuid: string;
+  carritoVersion: string;
   totalGeneral: number;
 
   comercios: CheckoutComercioResponseDto[];
@@ -124,6 +126,9 @@ export interface CheckoutComercioConfirmacionDto {
 }
 
 export interface ConfirmarCheckoutDto {
+  carritoUuid: string;
+  carritoVersion: string;
+  idempotencyKey?: string;
   comercios: CheckoutComercioConfirmacionDto[];
 }
 

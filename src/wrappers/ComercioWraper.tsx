@@ -1,31 +1,21 @@
 import App from "../components/App";
 import React from "react";
+import Comercio from "../components/business/Comercio";
+import type { ComercioDto } from "../services/comercioPublicApi";
 
-const ComercioWraper: React.FC<{ id: number }> = ({ id }) => {
+interface ComercioWraperProps {
+  id: number;
+  initialData?: ComercioDto | null;
+}
+
+const ComercioWraper: React.FC<ComercioWraperProps> = ({ id, initialData }) => {
   return (
     <App>
-      <React.Suspense>
-        <div className="w-100 h-100 p-3">
-          <ComercioLoader id={id} />
-        </div>
-      </React.Suspense>
+      <div className="w-100 h-100 p-3">
+        <Comercio id={id} initialData={initialData} />
+      </div>
     </App>
   );
 };
 
 export default ComercioWraper;
-
-const ComercioLoader = ({ id }: { id: number }) => {
-  const [ComercioComponent, setComercioComponent] = React.useState<React.FC<{
-    id: number;
-  }> | null>(null);
-
-  React.useEffect(() => {
-    import("../components/business/Comercio").then((mod) => {
-      setComercioComponent(() => mod.default);
-    });
-  }, []);
-
-  if (!ComercioComponent) return <div></div>;
-  return <ComercioComponent id={id} />;
-};

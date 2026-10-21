@@ -1,0 +1,56 @@
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/node_modules/react/index.js", {"importedNames":["createElement"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/node_modules/react-dom/server.node.js", {"importedNames":["renderToStaticMarkup"]});
+const __vite_ssr_import_2__ = await __vite_ssr_import__("/node_modules/vitest/dist/index.js", {"importedNames":["describe","expect","it"]});
+const __vite_ssr_import_3__ = await __vite_ssr_import__("/src/components/usuario/pedidos/PedidosUsuario.tsx", {"importedNames":["default"]});
+const detalle = {
+  uuid: "pedido",
+  numeroPedido: "PED-SINTETICO",
+  comercio: "Comercio sintético",
+  total: 90,
+  estado: 10,
+  estadoPago: 5,
+  metodoPago: 2,
+  tipoEntrega: 1,
+  totalProductos: 2,
+  fechaCreacion: "2026-10-12T12:00:00Z",
+  puedeSubirComprobante: false,
+  productos: [],
+  historial: [{ estado: 10, evento: "Reembolso", estadoPago: 5, comentario: "Motivo visible del reembolso", fecha: "2026-10-12T13:00:00Z" }],
+  reembolso: { uuid: "reembolso", monto: 90, metodo: 2, referencia: "REFERENCIA-SINTETICA", motivo: "Pedido cancelado", fechaCreacion: "2026-10-12T13:00:00Z" }
+};
+const props = {
+  pedidos: { items: [detalle], totalItems: 1, totalPages: 1, page: 1, pageSize: 10 },
+  detalle,
+  loading: false,
+  loadingDetalle: false,
+  subiendo: false,
+  error: null,
+  errorComprobante: null,
+  pagina: 1,
+  filtroPago: null,
+  onPagina: () => {
+  },
+  onFiltro: () => {
+  },
+  onSeleccionar: async () => {
+  },
+  onSubirComprobante: async () => null
+};
+(0,__vite_ssr_import_2__.describe)("Seguimiento real renderizado de pedidos reembolsados", () => {
+  (0,__vite_ssr_import_2__.it)("muestra referencia, motivo y distinción entre registro y recepción del dinero", () => {
+    const html = (0,__vite_ssr_import_1__.renderToStaticMarkup)((0,__vite_ssr_import_0__.createElement)((0,__vite_ssr_import_3__.default), props));
+    (0,__vite_ssr_import_2__.expect)(html).toContain("REFERENCIA-SINTETICA");
+    (0,__vite_ssr_import_2__.expect)(html).toContain("Pedido cancelado");
+    (0,__vite_ssr_import_2__.expect)(html).toContain("Si no recibiste el dinero");
+  });
+  (0,__vite_ssr_import_2__.it)("expone el motivo del historial y evita pedir otra transferencia", () => {
+    const html = (0,__vite_ssr_import_1__.renderToStaticMarkup)((0,__vite_ssr_import_0__.createElement)((0,__vite_ssr_import_3__.default), props));
+    (0,__vite_ssr_import_2__.expect)(html).toContain("Motivo visible del reembolso");
+    (0,__vite_ssr_import_2__.expect)(html).toContain("Reembolso: Reembolsado");
+    (0,__vite_ssr_import_2__.expect)(html).not.toContain("Transferencia bancaria");
+  });
+});
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFHQSxNQUFNLFVBQW1DO0FBQUEsRUFBRSxNQUFNO0FBQUEsRUFBVSxjQUFjO0FBQUEsRUFBaUIsVUFBVTtBQUFBLEVBQ2xHLE9BQU87QUFBQSxFQUFJLFFBQVE7QUFBQSxFQUFJLFlBQVk7QUFBQSxFQUFHLFlBQVk7QUFBQSxFQUFHLGFBQWE7QUFBQSxFQUNsRSxnQkFBZ0I7QUFBQSxFQUFHLGVBQWU7QUFBQSxFQUF3Qix1QkFBdUI7QUFBQSxFQUFPLFdBQVcsQ0FBQztBQUFBLEVBQ3BHLFdBQVcsQ0FBQyxFQUFFLFFBQVEsSUFBSSxRQUFRLGFBQWEsWUFBWSxHQUFHLFlBQVksZ0NBQWdDLE9BQU8sdUJBQXVCLENBQUM7QUFBQSxFQUN6SSxXQUFXLEVBQUUsTUFBTSxhQUFhLE9BQU8sSUFBSSxRQUFRLEdBQUcsWUFBWSx3QkFBd0IsUUFBUSxvQkFBb0IsZUFBZSx1QkFBdUI7QUFBRTtBQUNoSyxNQUFNLFFBQVE7QUFBQSxFQUFFLFNBQVMsRUFBRSxPQUFPLENBQUMsT0FBTyxHQUFHLFlBQVksR0FBRyxZQUFZLEdBQUcsTUFBTSxHQUFHLFVBQVUsR0FBRztBQUFBLEVBQUc7QUFBQSxFQUNsRyxTQUFTO0FBQUEsRUFBTyxnQkFBZ0I7QUFBQSxFQUFPLFVBQVU7QUFBQSxFQUFPLE9BQU87QUFBQSxFQUFNLGtCQUFrQjtBQUFBLEVBQU0sUUFBUTtBQUFBLEVBQUcsWUFBWTtBQUFBLEVBQ3BILFVBQVUsTUFBTTtBQUFBLEVBQUM7QUFBQSxFQUFHLFVBQVUsTUFBTTtBQUFBLEVBQUM7QUFBQSxFQUFHLGVBQWUsWUFBWTtBQUFBLEVBQUM7QUFBQSxFQUFHLG9CQUFvQixZQUFZO0FBQUs7R0FDOUcsZ0NBQVMsd0RBQXdELE1BQU07QUFDckUsK0JBQUcsaUZBQWlGLE1BQU07QUFDeEYsVUFBTSxVQUFPLCtDQUFxQix3Q0FBYyxnQ0FBZ0IsS0FBSyxDQUFDO0FBQ3RFLHFDQUFPLElBQUksRUFBRSxVQUFVLHNCQUFzQjtBQUFHLHFDQUFPLElBQUksRUFBRSxVQUFVLGtCQUFrQjtBQUN6RixxQ0FBTyxJQUFJLEVBQUUsVUFBVSwyQkFBMkI7QUFBQSxFQUNwRCxDQUFDO0FBQ0QsK0JBQUcsbUVBQW1FLE1BQU07QUFDMUUsVUFBTSxVQUFPLCtDQUFxQix3Q0FBYyxnQ0FBZ0IsS0FBSyxDQUFDO0FBQ3RFLHFDQUFPLElBQUksRUFBRSxVQUFVLDhCQUE4QjtBQUFHLHFDQUFPLElBQUksRUFBRSxVQUFVLHdCQUF3QjtBQUN2RyxxQ0FBTyxJQUFJLEVBQUUsSUFBSSxVQUFVLHdCQUF3QjtBQUFBLEVBQ3JELENBQUM7QUFDSCxDQUFDIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJwZWRpZG9zUmVlbWJvbHNvLnRlc3QudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgY3JlYXRlRWxlbWVudCB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgcmVuZGVyVG9TdGF0aWNNYXJrdXAgfSBmcm9tIFwicmVhY3QtZG9tL3NlcnZlclwiO1xuaW1wb3J0IHsgZGVzY3JpYmUsIGV4cGVjdCwgaXQgfSBmcm9tIFwidml0ZXN0XCI7XG5pbXBvcnQgUGVkaWRvc1VzdWFyaW8gZnJvbSBcIi4uL2NvbXBvbmVudHMvdXN1YXJpby9wZWRpZG9zL1BlZGlkb3NVc3VhcmlvXCI7XG5pbXBvcnQgdHlwZSB7IFBlZGlkb0NsaWVudGVEZXRhbGxlRHRvIH0gZnJvbSBcIi4uL3R5cGVzL3BlZGlkb3NcIjtcblxuY29uc3QgZGV0YWxsZTogUGVkaWRvQ2xpZW50ZURldGFsbGVEdG8gPSB7IHV1aWQ6IFwicGVkaWRvXCIsIG51bWVyb1BlZGlkbzogXCJQRUQtU0lOVEVUSUNPXCIsIGNvbWVyY2lvOiBcIkNvbWVyY2lvIHNpbnTDqXRpY29cIixcbiAgdG90YWw6IDkwLCBlc3RhZG86IDEwLCBlc3RhZG9QYWdvOiA1LCBtZXRvZG9QYWdvOiAyLCB0aXBvRW50cmVnYTogMSxcbiAgdG90YWxQcm9kdWN0b3M6IDIsIGZlY2hhQ3JlYWNpb246IFwiMjAyNi0xMC0xMlQxMjowMDowMFpcIiwgcHVlZGVTdWJpckNvbXByb2JhbnRlOiBmYWxzZSwgcHJvZHVjdG9zOiBbXSxcbiAgaGlzdG9yaWFsOiBbeyBlc3RhZG86IDEwLCBldmVudG86IFwiUmVlbWJvbHNvXCIsIGVzdGFkb1BhZ286IDUsIGNvbWVudGFyaW86IFwiTW90aXZvIHZpc2libGUgZGVsIHJlZW1ib2xzb1wiLCBmZWNoYTogXCIyMDI2LTEwLTEyVDEzOjAwOjAwWlwiIH1dLFxuICByZWVtYm9sc286IHsgdXVpZDogXCJyZWVtYm9sc29cIiwgbW9udG86IDkwLCBtZXRvZG86IDIsIHJlZmVyZW5jaWE6IFwiUkVGRVJFTkNJQS1TSU5URVRJQ0FcIiwgbW90aXZvOiBcIlBlZGlkbyBjYW5jZWxhZG9cIiwgZmVjaGFDcmVhY2lvbjogXCIyMDI2LTEwLTEyVDEzOjAwOjAwWlwiIH0gfTtcbmNvbnN0IHByb3BzID0geyBwZWRpZG9zOiB7IGl0ZW1zOiBbZGV0YWxsZV0sIHRvdGFsSXRlbXM6IDEsIHRvdGFsUGFnZXM6IDEsIHBhZ2U6IDEsIHBhZ2VTaXplOiAxMCB9LCBkZXRhbGxlLFxuICBsb2FkaW5nOiBmYWxzZSwgbG9hZGluZ0RldGFsbGU6IGZhbHNlLCBzdWJpZW5kbzogZmFsc2UsIGVycm9yOiBudWxsLCBlcnJvckNvbXByb2JhbnRlOiBudWxsLCBwYWdpbmE6IDEsIGZpbHRyb1BhZ286IG51bGwsXG4gIG9uUGFnaW5hOiAoKSA9PiB7fSwgb25GaWx0cm86ICgpID0+IHt9LCBvblNlbGVjY2lvbmFyOiBhc3luYyAoKSA9PiB7fSwgb25TdWJpckNvbXByb2JhbnRlOiBhc3luYyAoKSA9PiBudWxsIH07XG5kZXNjcmliZShcIlNlZ3VpbWllbnRvIHJlYWwgcmVuZGVyaXphZG8gZGUgcGVkaWRvcyByZWVtYm9sc2Fkb3NcIiwgKCkgPT4ge1xuICBpdChcIm11ZXN0cmEgcmVmZXJlbmNpYSwgbW90aXZvIHkgZGlzdGluY2nDs24gZW50cmUgcmVnaXN0cm8geSByZWNlcGNpw7NuIGRlbCBkaW5lcm9cIiwgKCkgPT4ge1xuICAgIGNvbnN0IGh0bWwgPSByZW5kZXJUb1N0YXRpY01hcmt1cChjcmVhdGVFbGVtZW50KFBlZGlkb3NVc3VhcmlvLCBwcm9wcykpO1xuICAgIGV4cGVjdChodG1sKS50b0NvbnRhaW4oXCJSRUZFUkVOQ0lBLVNJTlRFVElDQVwiKTsgZXhwZWN0KGh0bWwpLnRvQ29udGFpbihcIlBlZGlkbyBjYW5jZWxhZG9cIik7XG4gICAgZXhwZWN0KGh0bWwpLnRvQ29udGFpbihcIlNpIG5vIHJlY2liaXN0ZSBlbCBkaW5lcm9cIik7XG4gIH0pO1xuICBpdChcImV4cG9uZSBlbCBtb3Rpdm8gZGVsIGhpc3RvcmlhbCB5IGV2aXRhIHBlZGlyIG90cmEgdHJhbnNmZXJlbmNpYVwiLCAoKSA9PiB7XG4gICAgY29uc3QgaHRtbCA9IHJlbmRlclRvU3RhdGljTWFya3VwKGNyZWF0ZUVsZW1lbnQoUGVkaWRvc1VzdWFyaW8sIHByb3BzKSk7XG4gICAgZXhwZWN0KGh0bWwpLnRvQ29udGFpbihcIk1vdGl2byB2aXNpYmxlIGRlbCByZWVtYm9sc29cIik7IGV4cGVjdChodG1sKS50b0NvbnRhaW4oXCJSZWVtYm9sc286IFJlZW1ib2xzYWRvXCIpO1xuICAgIGV4cGVjdChodG1sKS5ub3QudG9Db250YWluKFwiVHJhbnNmZXJlbmNpYSBiYW5jYXJpYVwiKTtcbiAgfSk7XG59KTtcbiJdLCJmaWxlIjoiL3NyYy90ZXN0cy9wZWRpZG9zUmVlbWJvbHNvLnRlc3QudHMifQ==
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZSwiZGVwcyI6IjQiLCJkeW5hbWljRGVwcyI6IjUiLCJzdGF0aWNNb2NrcyI6bnVsbH0sIkM6L1VzZXJzL1VTRVIvc291cmNlL3JlcG9zL0FkTG9jYWxXZWIvc3JjL3Rlc3RzL3BlZGlkb3NSZWVtYm9sc28udGVzdC50cyIsIi9zcmMvdGVzdHMvcGVkaWRvc1JlZW1ib2xzby50ZXN0LnRzIixbXSxbIjYiLCI3IiwiOCIsIjkiXSxbXSwiL25vZGVfbW9kdWxlcy9yZWFjdC9pbmRleC5qcyIsIi9ub2RlX21vZHVsZXMvcmVhY3QtZG9tL3NlcnZlci5ub2RlLmpzIiwiL25vZGVfbW9kdWxlcy92aXRlc3QvZGlzdC9pbmRleC5qcyIsIi9zcmMvY29tcG9uZW50cy91c3VhcmlvL3BlZGlkb3MvUGVkaWRvc1VzdWFyaW8udHN4Il0=

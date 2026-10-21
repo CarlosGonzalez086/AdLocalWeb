@@ -111,7 +111,10 @@ body {
 .btn-adlocal--danger:hover {
   background-color: rgba(255, 59, 48, 0.08) !important;
 } /* Tamaño compacto, para acciones dentro de tablas/cards */
-.btn-adlocal--sm {
+.btn-adlocal--sm,
+.btn-adlocal-sm,
+.btn-adlocal--icon,
+.btn-adlocal-icon {
   min-width: auto !important;
   padding-top: 0.3rem !important;
   padding-bottom: 0.3rem !important;
@@ -191,12 +194,13 @@ body {
 ========================================================= */
 
 .brandArea {
-  min-width: 0;
+  min-width: max-content;
 
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
 .brandLink {
@@ -433,6 +437,32 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.headerActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--border-soft, #e2e8f0);
+  background-color: #ffffff;
+  color: var(--text-secondary, #515154);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.headerActionBtn:hover {
+  background-color: var(--surface-hover, #f8fafc);
+  color: var(--primary, #008989);
+  border-color: var(--primary-light, #a7d7d7);
+  box-shadow: 0 2px 6px rgba(0, 137, 137, 0.12);
 }
 
 /* =========================================================
@@ -770,7 +800,60 @@ body {
   }
 }
 
-@media (max-width: 899px) {
+@media (min-width: 768px) and (max-width: 1024px) {
+  .toolbar {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .headerActionBtn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    border-radius: 8px !important;
+  }
+
+  .desktopNavigation {
+    gap: 6px !important;
+  }
+
+  .navigationLink {
+    padding: 0 6px;
+  }
+
+  .homeHeroSection {
+    padding: 34px 18px 26px;
+    margin-bottom: 22px;
+  }
+
+  .homeHeroTitle {
+    font-size: 32px;
+    line-height: 1.25;
+  }
+
+  .homeHeroSubtitle {
+    font-size: 15px;
+    max-width: 560px;
+    margin-bottom: 20px;
+  }
+
+  .homeHeroSearchForm {
+    max-width: 560px;
+    margin-bottom: 16px;
+  }
+
+  .homeHeroCategories {
+    gap: 6px;
+  }
+
+  .homeHeroCategoryChip {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 767.98px) {
   .toolbar {
     min-height: 64px;
 
@@ -779,7 +862,7 @@ body {
   }
 
   .desktopNavigation {
-    display: none;
+    display: none !important;
   }
 
   .brandArea {
@@ -4381,12 +4464,10 @@ body {
 }
 
 .comercioDetalleCarousel {
+  position: relative;
   width: 100%;
-
   overflow: hidden;
-
   border-radius: 14px;
-
   background: #f5f5f5;
 }
 
@@ -4397,25 +4478,48 @@ body {
 .comercioDetalleCarouselImage {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: cover;
 }
 
 .comercioDetalleCarouselIndicators {
-  margin-bottom: 12px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin-right: 15%;
+  margin-bottom: 14px;
+  margin-left: 15%;
+  list-style: none;
+  gap: 8px;
 }
 
 .comercioDetalleCarouselIndicators button {
-  width: 7px !important;
-  height: 7px !important;
-
+  width: 10px !important;
+  height: 10px !important;
   border-radius: 50% !important;
+  border: 2px solid #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  padding: 0 !important;
+  opacity: 0.6 !important;
+  transition: all 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+
+.comercioDetalleCarouselIndicators button.active {
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  transform: scale(1.25);
 }
 
 .comercioDetalleCarouselControl {
-  width: 9%;
+  width: 10%;
+  z-index: 3;
 }
 
 /* =========================================================
@@ -7905,6 +8009,7 @@ body {
 
 .usuarioAuthField {
   width: 100%;
+  margin-bottom: 1.25rem !important;
 }
 
 .usuarioAuthField .MuiOutlinedInput-root {
@@ -7920,6 +8025,13 @@ body {
 
 .usuarioAuthField .MuiOutlinedInput-notchedOutline {
   border-color: var(--border);
+}
+
+.usuarioAuthField .MuiOutlinedInput-notchedOutline legend {
+  float: none !important;
+  width: auto !important;
+  line-height: inherit !important;
+  padding: 0 !important;
 }
 
 .usuarioAuthField

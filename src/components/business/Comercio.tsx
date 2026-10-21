@@ -3,9 +3,10 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import Swal from "../../utils/sweetalert";
 
 import {
-    comercioPublicApi,
-    type ComercioDto,
-    type ProductoServicioDto, dataDefault,
+  comercioPublicApi,
+  type ComercioDto,
+  type ProductoServicioDto,
+  dataDefault,
 } from "../../services/comercioPublicApi";
 
 import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
@@ -19,17 +20,22 @@ import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import ComercioDetalle from "./ComercioDetalle";
 import ReservarCitaModal from "./ReservarCitaModal";
 
-interface ComercioProps {
+export interface ComercioProps {
   id: number;
+  initialData?: ComercioDto | null;
 }
 
-const Comercio: FC<ComercioProps> = ({ id }) => {
-  const [comercio, setComercio] = useState<ComercioDto | null>(dataDefault);
+const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
+  const [comercio, setComercio] = useState<ComercioDto | null>(
+    initialData ?? dataDefault,
+  );
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
 
   const [error, setError] = useState<string | null>(null);
-  const [productoCita, setProductoCita] = useState<ProductoServicioDto | null>(null);
+  const [productoCita, setProductoCita] = useState<ProductoServicioDto | null>(
+    null,
+  );
 
   useRegistrarVisita(id);
 
@@ -82,8 +88,10 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
   }, [id]);
 
   useEffect(() => {
-    void fetchComercio();
-  }, [fetchComercio]);
+    if (!initialData || initialData.id !== id) {
+      void fetchComercio();
+    }
+  }, [fetchComercio, id, initialData]);
 
   // ==========================================
   // VALIDAR SESIÓN
@@ -341,7 +349,11 @@ const Comercio: FC<ComercioProps> = ({ id }) => {
         onReservar={handleReservar}
         onCotizar={handleCotizar}
       />
-      <ReservarCitaModal producto={productoCita} onClose={() => setProductoCita(null)} />
+      <ReservarCitaModal
+        producto={productoCita}
+        zonaHoraria={comercio?.zonaHoraria ?? "America/Mexico_City"}
+        onClose={() => setProductoCita(null)}
+      />
     </div>
   );
 };

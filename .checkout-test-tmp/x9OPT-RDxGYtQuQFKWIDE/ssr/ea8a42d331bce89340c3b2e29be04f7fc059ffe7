@@ -1,0 +1,7 @@
+Object.defineProperty(__vite_ssr_exports__, "default", { enumerable: true, configurable: true, get(){ try { return __vite_ssr_export_default__ } catch {} }});
+const __vite_ssr_export_default__ = new Proxy(Object.create(null), {
+            get(_, style) {
+              return `_${style}_b434a7`;
+            },
+          })
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZSwiZGVwcyI6IjQiLCJkeW5hbWljRGVwcyI6IjUiLCJzdGF0aWNNb2NrcyI6bnVsbH0sIkM6L1VzZXJzL1VTRVIvc291cmNlL3JlcG9zL0FkTG9jYWxXZWIvc3JjL2NvbXBvbmVudHMvVUkvTWF0ZXJpYWxTeW1ib2wvTWF0ZXJpYWxTeW1ib2wubW9kdWxlLmNzcyIsIi9zcmMvY29tcG9uZW50cy9VSS9NYXRlcmlhbFN5bWJvbC9NYXRlcmlhbFN5bWJvbC5tb2R1bGUuY3NzIixbXSxbXSxbXV0=

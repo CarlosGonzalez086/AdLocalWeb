@@ -110,6 +110,7 @@
 
 /* --- Tamaños --- */
 .btn-adlocal-sm {
+  min-width: auto !important;
   padding: 0.35rem 0.85rem;
   font-size: 0.825rem;
   border-radius: var(--radius-xs);
@@ -122,6 +123,8 @@
 }
 
 .btn-adlocal-icon {
+  min-width: auto !important;
+  width: auto;
   padding: 0.5rem;
   border-radius: var(--radius-full);
 }

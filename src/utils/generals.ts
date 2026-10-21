@@ -2,7 +2,12 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import type { ComercioDto } from "../services/comercioPublicApi";
 import * as turf from "@turf/turf";
-import type { Feature, Polygon, MultiPolygon, FeatureCollection } from "geojson";
+import type {
+  Feature,
+  Polygon,
+  MultiPolygon,
+  FeatureCollection,
+} from "geojson";
 import { arcgisToGeoJSON } from "@esri/arcgis-to-geojson-utils";
 
 dayjs.extend(customParseFormat);
@@ -28,21 +33,33 @@ export const diasSemana = [
 ];
 
 export const estaAbiertoAhora = (
-  horarios: ComercioDto["horarios"] | undefined
+  horarios: ComercioDto["horarios"] | undefined,
+  zonaHoraria = "America/Mexico_City",
+  ahora = new Date(),
 ) => {
   if (!horarios) return false;
 
-  const ahora = new Date();
-  const diaHoy = ahora.getDay();
-  const horaActual = ahora.toTimeString().slice(0, 5); // HH:mm
+  const partes = new Intl.DateTimeFormat("en-US", {
+    timeZone: zonaHoraria,
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(ahora);
+  const parte = (tipo: string) =>
+    partes.find((p) => p.type === tipo)?.value ?? "";
+  const diaHoy = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+    parte("weekday"),
+  );
+  const horaActual = `${parte("hour")}:${parte("minute")}`;
 
   const horarioHoy = horarios.find((h) => h.dia === diaHoy);
 
   if (!horarioHoy || !horarioHoy.abierto) return false;
 
   return (
-    horarioHoy.horaApertura! <= horaActual &&
-    horaActual <= horarioHoy.horaCierre!
+    (horarioHoy.horaApertura?.slice(0, 5) ?? "99:99") <= horaActual &&
+    horaActual < (horarioHoy.horaCierre?.slice(0, 5) ?? "00:00")
   );
 };
 
@@ -69,23 +86,26 @@ export const formatHoraSimple = (hora?: string) => {
   }
 
   return parsed.isValid() ? parsed.format("HH:mm") : "--";
-}
+};
 
 export function getMunicipioFromLatLng(
   lat: number,
   lng: number,
-  municipios: GeoJSON.FeatureCollection
+  municipios: GeoJSON.FeatureCollection,
 ): string | null {
-
   const pt = turf.point([lng, lat]);
 
   for (const feature of municipios.features) {
-
     if (
       feature.geometry.type === "Polygon" ||
       feature.geometry.type === "MultiPolygon"
     ) {
-      if (turf.booleanPointInPolygon(pt, feature as Feature<Polygon | MultiPolygon>)) {
+      if (
+        turf.booleanPointInPolygon(
+          pt,
+          feature as Feature<Polygon | MultiPolygon>,
+        )
+      ) {
         return feature.properties?.NOM_MUN ?? null;
       }
     }
@@ -108,7 +128,9 @@ export interface EsriDataInput {
   [key: string]: unknown;
 }
 
-export function esriToGeoJSON(esriData: EsriDataInput | null | undefined): FeatureCollection {
+export function esriToGeoJSON(
+  esriData: EsriDataInput | null | undefined,
+): FeatureCollection {
   if (!esriData || !Array.isArray(esriData.features)) {
     return {
       type: "FeatureCollection",
@@ -129,7 +151,6 @@ export function esriToGeoJSON(esriData: EsriDataInput | null | undefined): Featu
     }),
   };
 }
-
 
 export function obtenerUbicacion(): Promise<{
   lat: number;
@@ -155,11 +176,10 @@ export function obtenerUbicacion(): Promise<{
         enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 0,
-      }
+      },
     );
   });
 }
-
 
 export async function getPublicIp(): Promise<string | null> {
   try {

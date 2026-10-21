@@ -41,12 +41,22 @@ export interface PedidoClienteProductoDto {
 }
 
 export interface PedidoClienteHistorialDto {
+  evento?: string;
+  estadoPago?: EstadoPagoPedido | null;
   estado: EstadoPedido;
   comentario?: string | null;
   fecha: string;
 }
 
 export interface PedidoClienteDetalleDto extends PedidoClienteListadoDto {
+  reembolso?: {
+    uuid: string;
+    monto: number;
+    metodo: MetodoPagoPedido;
+    referencia: string;
+    motivo: string;
+    fechaCreacion: string;
+  } | null;
   observacionesCliente?: string | null;
   direccion?: string | null;
   telefonoEntrega?: string | null;

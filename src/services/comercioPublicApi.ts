@@ -2,7 +2,10 @@ import type { ApiResponse } from "../api/apiResponse";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 import { getLocalStorageJWTUsuario } from "../utils/storageUsuario";
 
-const municipioActual: string | null = (() => {
+export const getMunicipioActual = (): string | null => {
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return null;
+  }
   const raw = localStorage.getItem("municipioActual");
   if (!raw) return null;
   try {
@@ -11,7 +14,7 @@ const municipioActual: string | null = (() => {
   } catch {
     return null;
   }
-})();
+};
 
 export interface HorarioComercioDto {
   dia: number;
@@ -52,6 +55,7 @@ export interface ComercioListadoResponse {
 }
 
 export interface ComercioDto {
+  zonaHoraria?: string;
   id: number;
   nombre: string;
   direccion?: string;
@@ -75,29 +79,29 @@ export interface ComercioDto {
   tipoComercio: string;
 }
 
-export const dataDefault : ComercioDto = {
-  id:0,
-  nombre:"",
-  direccion:"",
-  telefono:"",
-  email:"",
-  descripcion:"",
-  logoBase64:"",
-  imagenes:[""],
-  lat:0.0,
-  lng:0.0,
-  colorPrimario:"",
-  colorSecundario:"",
-  activo:false,
-  horarios:[],
-  productos:[],
-  estadoNombre:"",
-  municipioNombre:"",
-  calificacion:0,
-  badge:"",
-  tipoComercioId:0,
-  tipoComercio:"",
-}
+export const dataDefault: ComercioDto = {
+  id: 0,
+  nombre: "",
+  direccion: "",
+  telefono: "",
+  email: "",
+  descripcion: "",
+  logoBase64: "",
+  imagenes: [""],
+  lat: 0.0,
+  lng: 0.0,
+  colorPrimario: "",
+  colorSecundario: "",
+  activo: false,
+  horarios: [],
+  productos: [],
+  estadoNombre: "",
+  municipioNombre: "",
+  calificacion: 0,
+  badge: "",
+  tipoComercioId: 0,
+  tipoComercio: "",
+};
 
 export enum TipoProductoServicio {
   Producto = 1,
@@ -163,7 +167,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "destacados",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -173,7 +177,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "populares",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -183,7 +187,7 @@ export const comercioPublicApi = {
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios", {
       params: {
         tipo: "recientes",
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -195,7 +199,7 @@ export const comercioPublicApi = {
         tipo: "sugeridos",
         lat,
         lng,
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -210,7 +214,7 @@ export const comercioPublicApi = {
         tipo: "cercanos",
         lat,
         lng,
-        municipio: municipioActual,
+        municipio: getMunicipioActual(),
         page,
         pageSize,
       },
@@ -226,7 +230,17 @@ export const comercioPublicApi = {
     page: number = 1,
     pageSize: number = 8,
   ) =>
-    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>("comercios/por-filtros", {
-      params: { estadoId, municipioId, idTipoComercio, orden, page, pageSize },
-    }),
+    httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>(
+      "comercios/por-filtros",
+      {
+        params: {
+          estadoId,
+          municipioId,
+          idTipoComercio,
+          orden,
+          page,
+          pageSize,
+        },
+      },
+    ),
 };

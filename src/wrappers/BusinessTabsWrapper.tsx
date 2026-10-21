@@ -11,12 +11,19 @@ import {
 
 const PAGE_SIZE = 8;
 
-const BusinessTabsWrapper: React.FC = () => {
-  const [comercios, setComercios] = useState<ComercioDtoListItem[]>([]);
+interface BusinessTabsWrapperProps {
+  initialComercios?: ComercioDtoListItem[];
+}
+
+const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
+  initialComercios = [],
+}) => {
+  const [comercios, setComercios] = useState<ComercioDtoListItem[]>(initialComercios);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const isFirstMountRef = React.useRef(true);
 
   const [activeTab, setActiveTab] = useState<
     "destacados" | "populares" | "recientes" | "cercanos" | "sugeridos"
@@ -112,6 +119,11 @@ const BusinessTabsWrapper: React.FC = () => {
   );
 
   useEffect(() => {
+    if (initialComercios.length > 0 && activeTab === "destacados" && isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+    isFirstMountRef.current = false;
     setPage(1);
     setHasMore(true);
     void fetchComercios(1, true);

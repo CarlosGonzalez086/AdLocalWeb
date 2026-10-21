@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery, useTheme } from "@mui/material";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import NotificacionesMenu from "../usuario/notificaciones/NotificacionesMenu";
 import {
@@ -29,10 +28,11 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [usuario, setUsuario] = useState<UsuarioSesion | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean(getLocalStorageJWTUsuario());
+  });
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const urls = useMemo(() => getHeaderUrls(), []);
 
   useEffect(() => {
@@ -149,18 +149,18 @@ const Header: FC<HeaderProps> = () => {
     <>
       <header className="header shadow-sm bg-white sticky-top">
         <div className="toolbar container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between" style={{ minHeight: "64px" }}>
-          <div className="brandArea d-flex align-items-center gap-2">
+          <div className="brandArea d-flex align-items-center gap-2 flex-shrink-0">
             <a
               href="/"
-              className="brandLink d-flex align-items-center gap-2 text-decoration-none"
+              className="brandLink d-flex align-items-center gap-2 text-decoration-none flex-shrink-0"
               aria-label="Ir al inicio de ADLocal"
             >
               <img
                 src={LOGO_URL}
                 alt=""
-                className="logo"
+                className="logo flex-shrink-0"
               />
-              <span className="brandName fz-h4 fw-bold mb-0"><span className="brandNameAd">AD</span><span className="brandNameLocal">Local</span></span>
+              <span className="brandName fz-h4 fw-bold mb-0 text-nowrap"><span className="brandNameAd">AD</span><span className="brandNameLocal">Local</span></span>
             </a>
           </div>
 
@@ -173,21 +173,19 @@ const Header: FC<HeaderProps> = () => {
           />
 
           {/* Botones de acción móvil */}
-          {isMobile && (
-            <div className="d-flex align-items-center gap-2">
-              {usuario && <NotificacionesMenu />}
-              <button
-                type="button"
-                className="btn-adlocal btn-adlocal-ghost btn-adlocal-sm d-inline-flex align-items-center justify-content-center p-2"
-                aria-label="Abrir menú de navegación"
-                aria-expanded={drawerOpen}
-                aria-controls="mobile-navigation"
-                onClick={() => setDrawerOpen(true)}
-              >
-                <MaterialSymbol icon="menu" size="medium" />
-              </button>
-            </div>
-          )}
+          <div className="d-flex d-md-none align-items-center gap-2">
+            {usuario && <NotificacionesMenu />}
+            <button
+              type="button"
+              className="headerActionBtn d-inline-flex align-items-center justify-content-center"
+              aria-label="Abrir menú de navegación"
+              aria-expanded={drawerOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MaterialSymbol icon="menu" size="medium" />
+            </button>
+          </div>
         </div>
       </header>
 

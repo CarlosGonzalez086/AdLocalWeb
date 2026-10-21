@@ -58,3 +58,31 @@ a:hover {
   padding-right: var(--space-4);
   padding-left: var(--space-4);
 }
+
+/* ==============================================================
+   MUI / BOOTSTRAP COLLISION FIXES
+   ============================================================== */
+.MuiOutlinedInput-notchedOutline legend {
+  float: none !important;
+  margin-bottom: 0 !important;
+  line-height: inherit !important;
+  padding: 0 !important;
+}
+
+.MuiInputBase-root {
+  box-sizing: border-box !important;
+}
+
+/* Formas de Card con Design Tokens */
+.card, .adlocal-card {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border) !important;
+  background-color: var(--surface) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+
+.leaflet-div-icon.adlocal-svg-marker-container {
+  background: transparent !important;
+  border: none !important;
+}

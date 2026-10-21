@@ -151,7 +151,10 @@ export default function ComercioDetalle({
 
   const horarios = [...(comercio.horarios ?? [])].sort((a, b) => a.dia - b.dia);
 
-  const abiertoAhora = horarios.length > 0 ? estaAbiertoAhora(horarios) : false;
+  const abiertoAhora =
+    horarios.length > 0
+      ? estaAbiertoAhora(horarios, comercio.zonaHoraria)
+      : false;
 
   const badgeConfig = getBadgeConfig(comercio.badge);
 
