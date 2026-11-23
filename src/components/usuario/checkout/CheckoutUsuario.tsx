@@ -127,11 +127,28 @@ export default function CheckoutUsuario({
       checkout.comercios.forEach((comercio) => {
         const existente = prev[comercio.comercioUuid];
         if (existente) {
+          const entregaValida =
+            (existente.tipoEntrega === TipoEntregaPedido.Domicilio && comercio.permiteDomicilio) ||
+            (existente.tipoEntrega === TipoEntregaPedido.Recoger && comercio.permiteRecoger)
+              ? existente.tipoEntrega
+              : nuevos[comercio.comercioUuid].tipoEntrega;
+          const pagoValido =
+            (existente.metodoPago === MetodoPagoPedido.Efectivo && comercio.aceptaEfectivo) ||
+            (existente.metodoPago === MetodoPagoPedido.Transferencia && comercio.aceptaTransferencia)
+              ? existente.metodoPago
+              : nuevos[comercio.comercioUuid].metodoPago;
+          const direccionActiva = existente.direccionUuid
+            ? direcciones.some((d) => d.activo && d.uuid === existente.direccionUuid)
+              ? existente.direccionUuid
+              : (direccionPredeterminada?.uuid ?? null)
+            : (direccionPredeterminada?.uuid ?? null);
           combinados[comercio.comercioUuid] = {
             ...existente,
+            tipoEntrega: entregaValida,
+            metodoPago: pagoValido,
             direccionUuid:
-              existente.tipoEntrega === TipoEntregaPedido.Domicilio
-                ? (existente.direccionUuid ?? direccionPredeterminada?.uuid ?? null)
+              entregaValida === TipoEntregaPedido.Domicilio
+                ? direccionActiva
                 : null,
           };
         } else {

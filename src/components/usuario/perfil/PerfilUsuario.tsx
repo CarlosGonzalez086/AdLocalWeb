@@ -18,8 +18,8 @@ export default function PerfilUsuario({ usuario }: Props) {
   const nombre = perfil?.nombre ?? usuario.nombre;
   const esComercio = usuario.rol?.toLowerCase() === "comercio";
 
-  const cerrarSesion = () => {
-    void clienteAuthApi.logout().catch(() => {});
+  const cerrarSesion = async () => {
+    await clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
     window.dispatchEvent(new Event("usuarioSesionActualizada"));
     window.location.replace("/");

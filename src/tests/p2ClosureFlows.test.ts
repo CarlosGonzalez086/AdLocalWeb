@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
+import { ReservaCitaOperacion } from "../utils/citaOperacion";
 
 describe("P2 Closure Security & Flows (AdLocalWeb)", () => {
   it("Logout cliente invoca POST /ClienteAuth/logout desde API, hook, header y perfil", () => {
@@ -71,5 +72,49 @@ describe("P2 Closure Security & Flows (AdLocalWeb)", () => {
     const csp = vercel.headers[0].headers.find((h) => h.key === "Content-Security-Policy");
     expect(csp?.value).toContain("frame-ancestors 'none'");
     expect(csp?.value).toContain("object-src 'none'");
+  });
+
+  it("ReservaCitaOperacion aisla borradores por productoUuid evitando envío cruzado", () => {
+    const data = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => data.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        data.set(k, v);
+      },
+      removeItem: (k: string) => {
+        data.delete(k);
+      },
+    };
+    const svcA = "11111111-1111-4111-8111-111111111111";
+    const svcB = "22222222-2222-4222-8222-222222222222";
+    const opA = new ReservaCitaOperacion(storage, "user-1", () => "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", svcA);
+    const opB = new ReservaCitaOperacion(storage, "user-1", () => "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", svcB);
+
+    opA.preparar({
+      productoUuid: svcA,
+      zonaHoraria: "America/Mexico_City",
+      fechaInicio: "2026-12-01T10:00:00",
+      nombrePersona: "Ana López",
+    });
+
+    expect(opA.pendiente()?.productoUuid).toBe(svcA);
+    expect(opB.pendiente()).toBeNull();
+  });
+
+  it("[slug].astro aplica 301 canónico y 503 en fallos de backend; ComercioCard valida hex y usa safeLogoUrl", () => {
+    const slug = fs.readFileSync(path.resolve(process.cwd(), "src/pages/comercios/[slug].astro"), "utf8");
+    const card = fs.readFileSync(path.resolve(process.cwd(), "src/components/business/ComercioCard.tsx"), "utf8");
+    const app = fs.readFileSync(path.resolve(process.cwd(), "src/components/App.tsx"), "utf8");
+    const dirSel = fs.readFileSync(
+      path.resolve(process.cwd(), "src/components/usuario/checkout/CheckoutDireccionSelector.tsx"),
+      "utf8",
+    );
+
+    expect(slug).toContain("Astro.redirect(`/comercios/${canonicalSlug}`, 301)");
+    expect(slug).toContain("Astro.response.status = 503");
+    expect(card).toContain("isValidHex");
+    expect(card).toContain("src={safeLogoUrl}");
+    expect(app).toContain('startsWith("/usuario")');
+    expect(dirSel).toContain("direccionesActivas.length === 0");
   });
 });

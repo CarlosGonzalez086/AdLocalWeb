@@ -67,8 +67,8 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
     }
   };
 
-  const cerrarSesion = () => {
-    void clienteAuthApi.logout().catch(() => {});
+  const cerrarSesion = async () => {
+    await clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
     window.dispatchEvent(new Event("usuarioSesionActualizada"));
     window.location.replace("/");

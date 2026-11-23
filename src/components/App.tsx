@@ -13,7 +13,11 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ children }) => {
-  const { municipioActual, loadingMunicipios } = useMunicipio();
+  const shouldAutoDetectLocation =
+    typeof window === "undefined" || !window.location.pathname.startsWith("/usuario");
+  const { municipioActual, loadingMunicipios } = useMunicipio({
+    autoDetect: shouldAutoDetectLocation,
+  });
 
   return (
     <ThemeProvider theme={muiTheme}>

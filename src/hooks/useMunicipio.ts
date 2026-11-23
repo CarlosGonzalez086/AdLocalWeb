@@ -120,7 +120,7 @@ const guardarCache = (municipio: string | null, ubicacion: Ubicacion): void => {
   localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
 };
 
-export const useMunicipio = () => {
+export const useMunicipio = ({ autoDetect = true }: { autoDetect?: boolean } = {}) => {
   const [municipioActual, setMunicipioActual] = useState<string | null>(null);
   const [ubicacionActual, setUbicacionActual] = useState<Ubicacion | null>(
     null,
@@ -129,6 +129,10 @@ export const useMunicipio = () => {
   const [errorMunicipio, setErrorMunicipio] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!autoDetect) {
+      setLoadingMunicipios(false);
+      return;
+    }
     let activo = true;
 
     const detectarMunicipio = async () => {
@@ -209,7 +213,7 @@ export const useMunicipio = () => {
     return () => {
       activo = false;
     };
-  }, []);
+  }, [autoDetect]);
 
   return {
     municipioActual,

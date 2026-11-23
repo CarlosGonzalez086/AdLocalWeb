@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = () => {
   useEffect(() => {
     let activo = true;
 
-    const cargarUsuario = async () => {
+    const cargarUsuario = async (reintento = false) => {
       try {
         const token = getLocalStorageJWTUsuario();
 
@@ -58,9 +58,9 @@ const Header: FC<HeaderProps> = () => {
 
         // Si ya expiró el token, intentamos renovarlo antes de cerrar sesión
         if (payload.exp && payload.exp * 1000 <= Date.now()) {
-          const nuevoToken = await renovarTokenSilencioso();
+          const nuevoToken = !reintento ? await renovarTokenSilencioso() : null;
           if (nuevoToken && activo) {
-            cargarUsuario();
+            await cargarUsuario(true);
             return;
           } else {
             clearStorageUsuario();
@@ -101,11 +101,15 @@ const Header: FC<HeaderProps> = () => {
       }
     };
 
-    cargarUsuario();
+    const onSessionUpdate = () => {
+      void cargarUsuario();
+    };
+
+    void cargarUsuario();
 
     // Sincronización en tiempo real entre componentes y pestañas
-    window.addEventListener("usuarioSesionActualizada", cargarUsuario);
-    window.addEventListener("storage", cargarUsuario);
+    window.addEventListener("usuarioSesionActualizada", onSessionUpdate);
+    window.addEventListener("storage", onSessionUpdate);
 
     // Renovación periódica silenciosa en segundo plano (cada 2.5 minutos)
     const interval = setInterval(() => {
@@ -131,15 +135,15 @@ const Header: FC<HeaderProps> = () => {
     return () => {
       activo = false;
       clearInterval(interval);
-      window.removeEventListener("usuarioSesionActualizada", cargarUsuario);
-      window.removeEventListener("storage", cargarUsuario);
+      window.removeEventListener("usuarioSesionActualizada", onSessionUpdate);
+      window.removeEventListener("storage", onSessionUpdate);
       window.removeEventListener("focus", handleReanudar);
       document.removeEventListener("visibilitychange", handleReanudar);
     };
   }, []);
 
-  const handleCerrarSesion = () => {
-    void clienteAuthApi.logout().catch(() => {});
+  const handleCerrarSesion = async () => {
+    await clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
     setUsuario(null);
     setDrawerOpen(false);

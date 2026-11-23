@@ -7,8 +7,11 @@ export class ReservaCitaOperacion {
     private storage: CheckoutStorage,
     cuenta: string,
     private clave: () => string = () => crypto.randomUUID(),
+    productoUuid?: string,
   ) {
-    this.key = `adlocal.cita.pendiente.v1.${cuenta}`;
+    this.key = productoUuid
+      ? `adlocal.cita.pendiente.v1.${cuenta}.${productoUuid}`
+      : `adlocal.cita.pendiente.v1.${cuenta}`;
   }
   pendiente(): CrearCitaDto | null {
     const raw = this.storage.getItem(this.key);

@@ -41,7 +41,12 @@ export default function ReservarCitaModal({
 function ReservaCitaFormulario({ producto, zonaHoraria, onClose }: Props) {
   const [inicio] = useState(() => {
     try {
-      const op = new ReservaCitaOperacion(localStorage, cuentaCheckout());
+      const op = new ReservaCitaOperacion(
+        localStorage,
+        cuentaCheckout(),
+        undefined,
+        producto?.uuid,
+      );
       return { op, dto: op.pendiente(), error: "" };
     } catch {
       return {
@@ -203,7 +208,20 @@ function ReservaCitaFormulario({ producto, zonaHoraria, onClose }: Props) {
               Se reenviarán los datos originales con la misma clave. No se
               creará otra cita al recuperar una reserva ya confirmada. Puedes
               resolver la solicitud también desde{" "}
-              <a href="/usuario/citas">Mis citas</a>.
+              <a href="/usuario/citas">Mis citas</a> o{" "}
+              <button
+                type="button"
+                className="btn btn-link p-0 align-baseline fw-semibold"
+                disabled={guardando}
+                onClick={() => {
+                  inicio.op?.completar();
+                  setPendiente(null);
+                  setError("");
+                }}
+              >
+                descartar este borrador
+              </button>
+              .
             </Alert>
           )}
           <TextField

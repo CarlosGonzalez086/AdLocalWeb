@@ -112,9 +112,10 @@ const ComercioCard: FC<Props> = ({ comercio }) => {
 
   const distance = Number(comercio.distanciaKm ?? 0);
 
-  const primaryColor = comercio.colorPrimario || "#5B3A29";
+  const isValidHex = (val?: string) => Boolean(val && /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(val.trim()));
+  const primaryColor = isValidHex(comercio.colorPrimario) ? comercio.colorPrimario!.trim() : "#5B3A29";
 
-  const secondaryColor = comercio.colorSecundario || "#3A2419";
+  const secondaryColor = isValidHex(comercio.colorSecundario) ? comercio.colorSecundario!.trim() : "#3A2419";
 
   const cardStyles: CardCSSProperties = {
     "--card-primary": primaryColor,
@@ -178,9 +179,9 @@ const ComercioCard: FC<Props> = ({ comercio }) => {
 
           <div className="comercioCardIdentity">
             <div className="comercioCardAvatar">
-              {comercio.logoUrl ? (
+              {safeLogoUrl ? (
                 <img
-                  src={comercio.logoUrl}
+                  src={safeLogoUrl}
                   alt=""
                   loading="lazy"
                   className="comercioCardAvatarImage"

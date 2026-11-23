@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import ComercioWraper from "../../wrappers/ComercioWraper";
 import { comercioPublicApi, type ComercioDto } from "../../services/comercioPublicApi";
+import { slugifyConId } from "../../utils/generals";
 
 export const prerender = false;
 const { slug } = Astro.params;
@@ -13,6 +14,7 @@ if (isNaN(id) || id <= 0) return Astro.redirect("/");
 
 let comercioData: ComercioDto | null = null;
 let notFound = false;
+let serverError = false;
 try {
   const resp = await comercioPublicApi.getById(id);
   if (resp?.data?.respuesta) {
@@ -24,15 +26,30 @@ try {
   const status = (err as { response?: { status?: number } })?.response?.status;
   if (status === 404 || status === 400) {
     notFound = true;
+  } else {
+    serverError = true;
+  }
+}
+
+if (comercioData && comercioData.nombre) {
+  const canonicalSlug = slugifyConId(comercioData.id, comercioData.nombre);
+  if (slug !== canonicalSlug) {
+    return Astro.redirect(`/comercios/${canonicalSlug}`, 301);
   }
 }
 
 if (notFound) {
   Astro.response.status = 404;
+} else if (serverError) {
+  Astro.response.status = 503;
 }
 
 const nombre = comercioData?.nombre || nombreSlug || "Comercio Local";
-const title = notFound ? "Comercio no encontrado | AdLocal" : `${nombre} | AdLocal`;
+const title = notFound
+  ? "Comercio no encontrado | AdLocal"
+  : serverError
+    ? "Servicio temporalmente no disponible | AdLocal"
+    : `${nombre} | AdLocal`;
 const description = comercioData?.descripcion
   ? (comercioData.descripcion.length > 155
       ? `${comercioData.descripcion.substring(0, 152)}...`
@@ -79,8 +96,8 @@ const safeJsonLd = JSON.stringify(jsonLd)
   .replace(/\u2029/g, "\\u2029");
 ---
 
-<Layout title={title} description={description} ogImage={ogImage} noindex={notFound}>
-  {!notFound && <script type="application/ld+json" set:html={safeJsonLd} />}
+<Layout title={title} description={description} ogImage={ogImage} noindex={notFound || serverError}>
+  {!notFound && !serverError && <script type="application/ld+json" set:html={safeJsonLd} />}
   <ComercioWraper id={id} initialData={comercioData} client:load />
 
   {comercioData && (

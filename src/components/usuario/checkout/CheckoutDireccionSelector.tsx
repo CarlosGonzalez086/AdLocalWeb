@@ -15,7 +15,9 @@ export default function CheckoutDireccionSelector({
   value,
   onChange,
 }: Props) {
-  if (direcciones.length === 0) {
+  const direccionesActivas = direcciones.filter((direccion) => direccion.activo);
+
+  if (direccionesActivas.length === 0) {
     return (
       <div className="checkoutNoAddress p-3">
         <div className="d-flex align-items-center gap-3">
@@ -53,9 +55,7 @@ export default function CheckoutDireccionSelector({
 
   return (
     <div className="row g-2">
-      {direcciones
-        .filter((direccion) => direccion.activo)
-        .map((direccion) => {
+      {direccionesActivas.map((direccion) => {
           const selected = value === direccion.uuid;
 
           return (

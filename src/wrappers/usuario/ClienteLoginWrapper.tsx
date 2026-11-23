@@ -27,7 +27,7 @@ const ClienteLoginWrapper = () => {
     const params = new URLSearchParams(window.location.search);
     const rawReturnUrl = params.get("returnUrl")?.trim() ?? "";
     const safeReturnUrl =
-      rawReturnUrl.startsWith("/") && !rawReturnUrl.startsWith("//")
+      rawReturnUrl.startsWith("/") && !rawReturnUrl.startsWith("//") && !rawReturnUrl.startsWith("/\\")
         ? rawReturnUrl
         : "/";
 
