@@ -163,7 +163,10 @@ export default function ComercioDetalle({
   const latitude = Number(comercio.lat);
   const longitude = Number(comercio.lng);
 
-  const hasLocation = Number.isFinite(latitude) && Number.isFinite(longitude);
+  const hasLocation =
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude) &&
+    (latitude !== 0 || longitude !== 0);
 
   const address = [
     comercio.direccion,

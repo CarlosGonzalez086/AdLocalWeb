@@ -8,10 +8,31 @@ export default function NotificacionesMenu() {
   const [ancla, setAncla] = useState<HTMLElement | null>(null);
   const { notificaciones, noLeidas, leer, leerTodas } = useNotificaciones(true);
 
+  const obtenerDestinoSeguro = (url?: string | null): string | null => {
+    if (!url) return null;
+    const limpia = url.trim();
+    if (limpia.startsWith("/") && !limpia.startsWith("//")) {
+      return limpia;
+    }
+    try {
+      const destino = new URL(limpia, window.location.origin);
+      if (
+        destino.origin === window.location.origin &&
+        (destino.protocol === "https:" || destino.protocol === "http:")
+      ) {
+        return `${destino.pathname}${destino.search}${destino.hash}`;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  };
+
   const abrirNotificacion = async (notificacion: Notificacion) => {
     await leer(notificacion);
     setAncla(null);
-    if (notificacion.url) window.location.href = notificacion.url;
+    const destinoSeguro = obtenerDestinoSeguro(notificacion.url);
+    if (destinoSeguro) window.location.href = destinoSeguro;
   };
 
   return (

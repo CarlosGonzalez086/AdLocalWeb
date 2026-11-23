@@ -2,7 +2,10 @@ import axios from "axios";
 import type { ApiResponse } from "../api/apiResponse";
 import { BACKEND_URL } from "../api/http";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
-import { getLocalStorageJWTUsuario } from "../utils/storageUsuario";
+import {
+  getLocalStorageJWTUsuario,
+  getLocalStorageRefreshTokenUsuario,
+} from "../utils/storageUsuario";
 
 export interface ClienteRegistroDto {
   nombre: string;
@@ -59,18 +62,22 @@ export const clienteAuthApi = {
 
   renovarToken: (token?: string) => {
     const currentToken = token || getLocalStorageJWTUsuario();
+    const refreshToken = getLocalStorageRefreshTokenUsuario();
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
+    if (refreshToken) headers["X-Refresh-Token"] = refreshToken;
     return axios.post<ApiResponse<RenovarTokenResponse>>(
       `${BACKEND_URL}ClienteAuth/renovar-token`,
       {
         token: currentToken,
         tokenActual: currentToken,
+        refreshToken,
       },
       {
         withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: currentToken ? `Bearer ${currentToken}` : "",
-        },
+        headers,
       },
     );
   },

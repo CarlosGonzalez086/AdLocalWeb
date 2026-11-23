@@ -229,6 +229,7 @@ export const comercioPublicApi = {
     orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
     page: number = 1,
     pageSize: number = 8,
+    search: string = "",
   ) =>
     httpUsuarioPublico.get<ApiResponse<ComercioListadoResponse>>(
       "comercios/por-filtros",
@@ -240,6 +241,7 @@ export const comercioPublicApi = {
           orden,
           page,
           pageSize,
+          ...(search.trim() ? { search: search.trim() } : {}),
         },
       },
     ),

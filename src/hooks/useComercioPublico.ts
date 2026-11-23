@@ -85,12 +85,13 @@ export const useComercioPublico = () => {
     }
   };
 
-  const cargarPorFiltros = async (
+  const cargarPorFiltros = useCallback(async (
     estadoId = 0,
     municipioId = 0,
     idTipoComercio = 0,
-    orden: "alfabetico" | "recientes" | "antiguos" | "populares",
+    orden: "alfabetico" | "recientes" | "antiguos" | "populares" = "alfabetico",
     reset = false,
+    search = "",
   ) => {
     setLoading(true);
 
@@ -108,6 +109,7 @@ export const useComercioPublico = () => {
         orden,
         currentPage,
         8,
+        search,
       );
       if (data.codigo !== "200") {
         Swal.fire("Error", data.mensaje, "error");
@@ -125,7 +127,7 @@ export const useComercioPublico = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, resetPaginacion]);
 
   useEffect(() => {
     void cargarPopulares();

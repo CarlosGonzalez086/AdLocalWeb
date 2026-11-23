@@ -1,4 +1,5 @@
 import type { ApiResponse } from "../api/apiResponse";
+import { httpUsuario } from "../api/httpUsuario";
 import { httpUsuarioPublico } from "../api/httpUsuarioPublico";
 
 export interface CalificacionComentarioCreateDto {
@@ -26,7 +27,7 @@ export interface CalificacionComentarioListResponse {
 
 export const calificacionesApi = {
   crear: (dto: CalificacionComentarioCreateDto) =>
-    httpUsuarioPublico.post<ApiResponse<CalificacionComentarioDto>>(
+    httpUsuario.post<ApiResponse<CalificacionComentarioDto>>(
       "CalificacionesComentarios",
       dto,
     ),

@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Página no encontrada | AdLocal"
+  description="La página o comercio que buscas no se encuentra disponible en AdLocal."
+  noindex={true}
+>
+  <main class="container py-5 my-5 text-center" style="max-width: 640px;">
+    <p class="text-uppercase fw-bold text-muted small mb-2">Error 404</p>
+    <h1 class="fw-bold mb-3">No encontramos esta página</h1>
+    <p class="text-muted mb-4">
+      El enlace puede haber cambiado o el comercio ya no se encuentra publicado en el directorio.
+    </p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      <a href="/" class="btn-adlocal btn-adlocal-primary text-decoration-none">
+        Volver al inicio
+      </a>
+      <a href="/comercios" class="btn-adlocal btn-adlocal-ghost text-decoration-none">
+        Explorar comercios
+      </a>
+    </div>
+  </main>
+</Layout>

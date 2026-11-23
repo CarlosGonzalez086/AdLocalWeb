@@ -11,6 +11,7 @@ import { useState, type CSSProperties, type FormEvent } from "react";
 import Swal from "../../utils/sweetalert";
 
 import { useCalificaciones } from "../../hooks/useCalificaciones";
+import { getUsuarioSesion } from "../../utils/usuarioSesion";
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
 interface Props {
@@ -72,7 +73,26 @@ const CalificacionesComentarios = ({
   const handleEnviar = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const cleanName = nombre.trim();
+    const sesion = getUsuarioSesion();
+    if (!sesion) {
+      const returnUrl = encodeURIComponent(
+        `${window.location.pathname}${window.location.search}`,
+      );
+      const res = await Swal.fire({
+        icon: "info",
+        title: "Inicia sesión para opinar",
+        text: "Debes iniciar sesión con tu cuenta para dejar una calificación.",
+        showCancelButton: true,
+        confirmButtonText: "Iniciar sesión",
+        cancelButtonText: "Cancelar",
+      });
+      if (res.isConfirmed) {
+        window.location.href = `/usuario/login?returnUrl=${returnUrl}`;
+      }
+      return;
+    }
+
+    const cleanName = nombre.trim() || sesion.nombre;
     const cleanComment = comentario.trim();
 
     if (!cleanName || !cleanComment || !calificacion) {

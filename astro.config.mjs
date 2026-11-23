@@ -3,6 +3,7 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
+  site: "https://adlocal.store",
   output: "server", 
   adapter: vercel({ edge: false }), 
   integrations: [react({ client: "load" })],

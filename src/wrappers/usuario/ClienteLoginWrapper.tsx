@@ -19,11 +19,19 @@ const ClienteLoginWrapper = () => {
       icon: "success",
       title: "Bienvenido",
       text: "Has iniciado sesión correctamente.",
+      timer: 1400,
       timerProgressBar: true,
       showConfirmButton: false,
     });
 
-    window.location.replace("/");
+    const params = new URLSearchParams(window.location.search);
+    const rawReturnUrl = params.get("returnUrl")?.trim() ?? "";
+    const safeReturnUrl =
+      rawReturnUrl.startsWith("/") && !rawReturnUrl.startsWith("//")
+        ? rawReturnUrl
+        : "/";
+
+    window.location.replace(safeReturnUrl);
   };
 
   return (

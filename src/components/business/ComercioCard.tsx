@@ -121,9 +121,23 @@ const ComercioCard: FC<Props> = ({ comercio }) => {
     "--card-secondary": secondaryColor,
   };
 
+  const safeLogoUrl = (() => {
+    const raw = comercio.logoUrl?.trim();
+    if (!raw || /["'()\\\r\n]/.test(raw)) return null;
+    if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
+    try {
+      const parsed = new URL(raw);
+      return parsed.protocol === "https:" || parsed.protocol === "http:"
+        ? parsed.toString()
+        : null;
+    } catch {
+      return null;
+    }
+  })();
+
   const coverStyles: CSSProperties = {
-    backgroundImage: comercio.logoUrl
-      ? `url("${comercio.logoUrl}")`
+    backgroundImage: safeLogoUrl
+      ? `url("${safeLogoUrl}")`
       : `linear-gradient(
           135deg,
           ${primaryColor},

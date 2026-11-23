@@ -1,0 +1,56 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+---
+
+<Layout
+  title="Términos y Condiciones | AdLocal"
+  description="Consulta los términos y condiciones de uso de la plataforma AdLocal para clientes y comercios locales."
+>
+  <Header client:load />
+  <main class="container py-5 flex-grow-1" style="max-width: 820px;">
+    <h1 class="fw-bold mb-3">Términos y Condiciones de Uso</h1>
+    <p class="text-muted mb-4">Última actualización: 2026</p>
+
+    <section class="mb-4">
+      <h2 class="h5 fw-semibold">1. Objeto de la plataforma</h2>
+      <p class="text-body-secondary">
+        AdLocal facilita el descubrimiento de comercios y servicios locales, la realización de pedidos,
+        reservación de citas y consulta de información publicada directamente por cada negocio afiliado.
+      </p>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h5 fw-semibold">2. Responsabilidad de los comercios</h2>
+      <p class="text-body-secondary">
+        Cada comercio es responsable de la veracidad de sus precios, disponibilidad de productos,
+        horarios de atención, cumplimiento fiscal, calidad de sus servicios y atención de entregas o citas.
+      </p>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h5 fw-semibold">3. Cuentas y conducta</h2>
+      <p class="text-body-secondary">
+        Al crear una cuenta aceptas proporcionar información verídica y mantener la confidencialidad
+        de tus credenciales. Nos reservamos el derecho de suspender cuentas ante uso fraudulento,
+        suplantación de identidad o incumplimiento de estas condiciones.
+      </p>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h5 fw-semibold">4. Pagos y cancelaciones</h2>
+      <p class="text-body-secondary">
+        Las condiciones de pago, reembolso o cancelación de pedidos y citas dependen del método de pago
+        seleccionado y de las políticas informadas por el comercio correspondiente.
+      </p>
+    </section>
+
+    <div class="pt-3">
+      <a href="/" class="btn-adlocal btn-adlocal-ghost btn-adlocal-sm text-decoration-none">
+        Volver al directorio
+      </a>
+    </div>
+  </main>
+  <Footer client:load />
+</Layout>

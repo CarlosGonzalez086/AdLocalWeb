@@ -13,7 +13,7 @@ import { useRegistrarVisita } from "../../hooks/useRegistrarVisita";
 
 import { useCarrito } from "../../hooks/useCarrito";
 
-import { getUsuarioSesion } from "../../utils/usuarioSesion";
+import { obtenerSesionValidaOActualizar } from "../../utils/usuarioSesion";
 
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
@@ -97,8 +97,8 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
   // VALIDAR SESIÓN
   // ==========================================
 
-  const validarSesion = useCallback(() => {
-    const usuario = getUsuarioSesion();
+  const validarSesion = useCallback(async () => {
+    const usuario = await obtenerSesionValidaOActualizar();
 
     if (usuario) {
       return true;
@@ -119,7 +119,7 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
 
   const handleAgregarCarrito = useCallback(
     async (producto: ProductoServicioDto) => {
-      if (!validarSesion()) {
+      if (!(await validarSesion())) {
         return;
       }
 
@@ -156,7 +156,7 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
 
   const handleIncrementarCantidad = useCallback(
     async (detalleUuid: string) => {
-      if (!validarSesion()) {
+      if (!(await validarSesion())) {
         return false;
       }
 
@@ -171,7 +171,7 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
 
   const handleDisminuirCantidad = useCallback(
     async (detalleUuid: string) => {
-      if (!validarSesion()) {
+      if (!(await validarSesion())) {
         return false;
       }
 
@@ -186,7 +186,7 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
 
   const handleEliminarProducto = useCallback(
     async (detalleUuid: string) => {
-      if (!validarSesion()) {
+      if (!(await validarSesion())) {
         return false;
       }
 
@@ -200,8 +200,8 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
   // ==========================================
 
   const handleReservar = useCallback(
-    (producto: ProductoServicioDto) => {
-      if (!validarSesion()) {
+    async (producto: ProductoServicioDto) => {
+      if (!(await validarSesion())) {
         return;
       }
 
@@ -215,8 +215,8 @@ const Comercio: FC<ComercioProps> = ({ id, initialData }) => {
   // ==========================================
 
   const handleCotizar = useCallback(
-    (_producto: ProductoServicioDto) => {
-      if (!validarSesion()) {
+    async (_producto: ProductoServicioDto) => {
+      if (!(await validarSesion())) {
         return;
       }
 

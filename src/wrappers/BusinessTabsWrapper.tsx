@@ -22,8 +22,11 @@ const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(() =>
+    initialComercios.length > 0 ? initialComercios.length >= PAGE_SIZE : true,
+  );
   const isFirstMountRef = React.useRef(true);
+  const initialCountRef = React.useRef(initialComercios.length);
 
   const [activeTab, setActiveTab] = useState<
     "destacados" | "populares" | "recientes" | "cercanos" | "sugeridos"
@@ -119,8 +122,9 @@ const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
   );
 
   useEffect(() => {
-    if (initialComercios.length > 0 && activeTab === "destacados" && isFirstMountRef.current) {
+    if (initialCountRef.current > 0 && activeTab === "destacados" && isFirstMountRef.current) {
       isFirstMountRef.current = false;
+      setPage(2);
       return;
     }
     isFirstMountRef.current = false;

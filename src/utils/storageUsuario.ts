@@ -59,6 +59,7 @@ export const clearStorageUsuario = (): void => {
     window.localStorage.removeItem("jwtCliente");
     window.localStorage.removeItem("refreshTokenCliente");
     window.localStorage.removeItem("cliente");
+    window.localStorage.removeItem("usuario");
   } catch {
     // Manejo seguro
   }

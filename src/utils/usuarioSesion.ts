@@ -1,6 +1,9 @@
+import { decodeJwtPayload, type JwtBasePayload } from "./jwt";
+import { isTokenProximoAExpirar, renovarTokenSilencioso } from "./tokenManager";
 import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
+  getLocalStorageRefreshTokenUsuario,
 } from "./storageUsuario";
 
 export interface UsuarioSesion {
@@ -12,7 +15,7 @@ export interface UsuarioSesion {
   exp?: number;
 }
 
-interface JwtPayload {
+interface JwtPayload extends JwtBasePayload {
   id?: string;
   nombre?: string;
   email?: string;
@@ -22,33 +25,8 @@ interface JwtPayload {
   exp?: number;
 }
 
-const decodeJwt = (token: string): JwtPayload | null => {
-  try {
-    const parts = token.split(".");
-
-    if (parts.length !== 3) {
-      return null;
-    }
-
-    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-
-    while (base64.length % 4) {
-      base64 += "=";
-    }
-
-    const binary = window.atob(base64);
-
-    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-
-    const json = new TextDecoder().decode(bytes);
-
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
-};
-
-import { isTokenProximoAExpirar, renovarTokenSilencioso } from "./tokenManager";
+const decodeJwt = (token: string): JwtPayload | null =>
+  decodeJwtPayload<JwtPayload>(token);
 
 export const getUsuarioSesion = (): UsuarioSesion | null => {
   if (typeof window === "undefined") {
@@ -107,9 +85,10 @@ export const obtenerSesionValidaOActualizar = async (): Promise<UsuarioSesion | 
   }
 
   const token = getLocalStorageJWTUsuario();
-  if (!token) return null;
+  const refreshToken = getLocalStorageRefreshTokenUsuario();
+  if (!token && !refreshToken) return null;
 
-  if (isTokenProximoAExpirar(token, 5)) {
+  if (!token || isTokenProximoAExpirar(token, 5)) {
     const nuevoToken = await renovarTokenSilencioso();
     if (nuevoToken) {
       return getUsuarioSesion();

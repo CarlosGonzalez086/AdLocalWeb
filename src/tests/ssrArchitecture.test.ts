@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, afterEach } from "vitest";
 import { getMunicipioActual, comercioPublicApi } from "../services/comercioPublicApi";
 
 describe("Fase 2 Architecture & SSR Hardening", () => {
@@ -11,9 +11,7 @@ describe("Fase 2 Architecture & SSR Hardening", () => {
   });
 
   it("getMunicipioActual() returns null safely in SSR when window/localStorage are undefined", () => {
-    // @ts-expect-error simulating SSR
     delete (globalThis as Record<string, unknown>).window;
-    // @ts-expect-error simulating SSR
     delete (globalThis as Record<string, unknown>).localStorage;
 
     expect(getMunicipioActual()).toBeNull();

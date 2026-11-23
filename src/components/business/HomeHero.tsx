@@ -79,7 +79,7 @@ const HomeHero: React.FC<Props> = ({ onSearch: _onSearch }) => {
             {categorias.map((cat) => (
               <a
                 key={cat.label}
-                href={`/comercios/busqueda-avanzada`}
+                href={`/comercios/busqueda-avanzada?q=${encodeURIComponent(cat.query)}`}
                 className="homeHeroCategoryChip"
               >
                 <MaterialSymbol icon={cat.icon} size="small" />

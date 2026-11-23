@@ -14,7 +14,9 @@ export interface UsuarioSesion {
   fotoUrl?: string | null;
 }
 
-export interface JwtUsuarioPayload {
+import { decodeJwtPayload, type JwtBasePayload } from "../../utils/jwt";
+
+export interface JwtUsuarioPayload extends JwtBasePayload {
   id?: string;
   nombre?: string;
   rol?: string;
@@ -53,24 +55,8 @@ export const getHeaderUrls = (): HeaderNavUrls => ({
   dashboardNegocio: URL_DASHBOARD_COMERCIO,
 });
 
-export const decodeJwt = (token: string): JwtUsuarioPayload | null => {
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-
-    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4) {
-      base64 += "=";
-    }
-
-    const binary = window.atob(base64);
-    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-    const json = new TextDecoder().decode(bytes);
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
-};
+export const decodeJwt = (token: string): JwtUsuarioPayload | null =>
+  decodeJwtPayload<JwtUsuarioPayload>(token);
 
 export const obtenerIniciales = (nombre: string): string => {
   const partes = nombre.trim().split(/\s+/).filter(Boolean);

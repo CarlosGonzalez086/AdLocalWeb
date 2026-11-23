@@ -10,6 +10,7 @@ import {
 import {
   clearStorageUsuario,
   setLocalStorageJWTUsuario,
+  setLocalStorageRefreshTokenUsuario,
 } from "../utils/storageUsuario";
 import { extraerMensajeError } from "../utils/errorHandler";
 
@@ -43,7 +44,14 @@ export const useClienteAuth = () => {
         return null;
       }
 
+      const refreshToken =
+        typeof rawRespuesta === "object" && rawRespuesta !== null
+          ? (rawRespuesta.refreshToken as string | undefined)
+          : undefined;
       setLocalStorageJWTUsuario(token);
+      if (refreshToken) {
+        setLocalStorageRefreshTokenUsuario(refreshToken);
+      }
 
       if (typeof window !== "undefined") {
         window.dispatchEvent(
@@ -92,7 +100,14 @@ export const useClienteAuth = () => {
         return null;
       }
 
+      const refreshToken =
+        typeof rawRespuesta === "object" && rawRespuesta !== null
+          ? (rawRespuesta.refreshToken as string | undefined)
+          : undefined;
       setLocalStorageJWTUsuario(token);
+      if (refreshToken) {
+        setLocalStorageRefreshTokenUsuario(refreshToken);
+      }
 
       if (typeof window !== "undefined") {
         window.dispatchEvent(

@@ -1,35 +1,15 @@
 import { clienteAuthApi } from "../services/clienteAuthApi";
+import { decodeJwtPayload, type JwtBasePayload } from "./jwt";
 import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
+  getLocalStorageRefreshTokenUsuario,
   setLocalStorageJWTUsuario,
   setLocalStorageRefreshTokenUsuario,
 } from "./storageUsuario";
 
-interface JwtPayload {
-  exp?: number;
-  [key: string]: unknown;
-}
-
-export const decodeJwtPayload = (token: string): JwtPayload | null => {
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-
-    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4) {
-      base64 += "=";
-    }
-
-    const binary = window.atob(base64);
-    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-    const json = new TextDecoder().decode(bytes);
-
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
-};
+export type { JwtBasePayload as JwtPayload };
+export { decodeJwtPayload };
 
 /**
  * Retorna true si el token ya expiró o si expirará dentro de `margenMinutos`.
@@ -64,7 +44,8 @@ export const renovarTokenSilencioso = async (): Promise<string | null> => {
   }
 
   const tokenActual = getLocalStorageJWTUsuario();
-  if (!tokenActual) {
+  const refreshActual = getLocalStorageRefreshTokenUsuario();
+  if (!tokenActual && !refreshActual) {
     return null;
   }
 

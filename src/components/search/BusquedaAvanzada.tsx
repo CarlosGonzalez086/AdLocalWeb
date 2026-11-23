@@ -5,10 +5,11 @@ import {
   MenuItem,
   Select,
   Skeleton,
+  TextField,
   type SelectChangeEvent,
 } from "@mui/material";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { SelectEstadoAutocomplete } from "../Locations/SelectEstadoAutocomplete";
 import { SelectMunicipioAutocomplete } from "../Locations/SelectMunicipioAutocomplete";
@@ -22,12 +23,14 @@ import { useComercioPublico } from "../../hooks/useComercioPublico";
 type OrdenType = "alfabetico" | "recientes" | "antiguos" | "populares";
 
 interface FiltersPanelProps {
+  search: string;
   idState: number;
   idMunicipality: number;
   idTipoComercio: number;
   orden: OrdenType;
   mobile?: boolean;
 
+  onSearchChange: (val: string) => void;
   onStateChange: (id: number) => void;
   onMunicipalityChange: (id: number) => void;
   onTipoComercioChange: (id: number) => void;
@@ -40,11 +43,13 @@ interface FiltersPanelProps {
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
+  search,
   idState,
   idMunicipality,
   idTipoComercio,
   orden,
   mobile = false,
+  onSearchChange,
   onStateChange,
   onMunicipalityChange,
   onTipoComercioChange,
@@ -85,6 +90,34 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
       </div>
 
       <div className="advancedFiltersFields">
+        <div className="advancedFilterField">
+          <label htmlFor={mobile ? "busqueda-palabra-mobile" : "busqueda-palabra"} className="fz-h5 fw-semibold">
+            Palabra clave
+          </label>
+          <TextField
+            id={mobile ? "busqueda-palabra-mobile" : "busqueda-palabra"}
+            size="small"
+            fullWidth
+            placeholder="Ej. café, florería, taller..."
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                onAplicar();
+              }
+            }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MaterialSymbol icon="search" size="small" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </div>
         <div className="advancedFilterField">
           <span className="fz-h5 fw-semibold">Estado</span>
 
@@ -177,6 +210,12 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 };
 
 const BusquedaAvanzada: React.FC = () => {
+  const initialQuery =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("q")?.trim() ?? ""
+      : "";
+
+  const [search, setSearch] = useState(initialQuery);
   const [idState, setIdState] = useState(0);
 
   const [idMunicipality, setIdMunicipality] = useState(0);
@@ -186,11 +225,21 @@ const BusquedaAvanzada: React.FC = () => {
   const [orden, setOrden] = useState<OrdenType>("alfabetico");
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const initialLoadedRef = useRef(false);
 
   const { comercios, loading, hasMore, cargarPorFiltros } =
     useComercioPublico();
 
+  useEffect(() => {
+    if (initialLoadedRef.current) return;
+    initialLoadedRef.current = true;
+    if (initialQuery) {
+      void cargarPorFiltros(0, 0, 0, "alfabetico", true, initialQuery);
+    }
+  }, [cargarPorFiltros, initialQuery]);
+
   const activeFiltersCount =
+    Number(Boolean(search.trim())) +
     Number(idState > 0) +
     Number(idMunicipality > 0) +
     Number(idTipoComercio > 0) +
@@ -206,31 +255,34 @@ const BusquedaAvanzada: React.FC = () => {
   };
 
   const handleLimpiar = () => {
+    setSearch("");
     setIdState(0);
     setIdMunicipality(0);
     setIdTipoComercio(0);
     setOrden("alfabetico");
 
-    cargarPorFiltros(0, 0, 0, "alfabetico", true);
+    void cargarPorFiltros(0, 0, 0, "alfabetico", true, "");
 
     setMobileOpen(false);
   };
 
   const handleAplicar = () => {
-    cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden, true);
+    void cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden, true, search);
 
     setMobileOpen(false);
   };
 
   const handleLoadMore = () => {
-    cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden);
+    void cargarPorFiltros(idState, idMunicipality, idTipoComercio, orden, false, search);
   };
 
   const filtersPanelProps = {
+    search,
     idState,
     idMunicipality,
     idTipoComercio,
     orden,
+    onSearchChange: setSearch,
     onStateChange: handleStateChange,
     onMunicipalityChange: setIdMunicipality,
     onTipoComercioChange: setIdTipoComercio,

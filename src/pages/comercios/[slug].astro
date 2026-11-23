@@ -12,23 +12,37 @@ const nombreSlug = parts?.slice(1).join("_").replace(/_/g, " ");
 if (isNaN(id) || id <= 0) return Astro.redirect("/");
 
 let comercioData: ComercioDto | null = null;
+let notFound = false;
 try {
   const resp = await comercioPublicApi.getById(id);
   if (resp?.data?.respuesta) {
     comercioData = resp.data.respuesta;
+  } else {
+    notFound = true;
   }
-} catch {
-  // Degradación elegante en SSR si el backend no responde
+} catch (err: unknown) {
+  const status = (err as { response?: { status?: number } })?.response?.status;
+  if (status === 404 || status === 400) {
+    notFound = true;
+  }
+}
+
+if (notFound) {
+  Astro.response.status = 404;
 }
 
 const nombre = comercioData?.nombre || nombreSlug || "Comercio Local";
-const title = `${nombre} | AdLocal`;
+const title = notFound ? "Comercio no encontrado | AdLocal" : `${nombre} | AdLocal`;
 const description = comercioData?.descripcion
   ? (comercioData.descripcion.length > 155
       ? `${comercioData.descripcion.substring(0, 152)}...`
       : comercioData.descripcion)
   : `Consulta catálogo, información, ubicación, horarios y contacto de ${nombre} en AdLocal.`;
-const ogImage = comercioData?.logoBase64 || comercioData?.imagenes?.[0] || undefined;
+const rawLogoUrl =
+  comercioData?.logoBase64 && !comercioData.logoBase64.startsWith("data:")
+    ? comercioData.logoBase64
+    : undefined;
+const ogImage = comercioData?.imagenes?.[0] || rawLogoUrl || undefined;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -56,10 +70,17 @@ const jsonLd = {
       : undefined,
   "image": ogImage || undefined,
 };
+
+const safeJsonLd = JSON.stringify(jsonLd)
+  .replace(/</g, "\\u003c")
+  .replace(/>/g, "\\u003e")
+  .replace(/&/g, "\\u0026")
+  .replace(/\u2028/g, "\\u2028")
+  .replace(/\u2029/g, "\\u2029");
 ---
 
-<Layout title={title} description={description} ogImage={ogImage}>
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<Layout title={title} description={description} ogImage={ogImage} noindex={notFound}>
+  {!notFound && <script type="application/ld+json" set:html={safeJsonLd} />}
   <ComercioWraper id={id} initialData={comercioData} client:load />
 
   {comercioData && (

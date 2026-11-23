@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'adlocal-pwa-v2';
+﻿const CACHE_NAME = 'adlocal-pwa-v3';
 
 const PRECACHE_ASSETS = [
   '/',
@@ -48,9 +48,11 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // 1. API and dynamic backend requests: Network-Only
+  // 1. Cross-origin, API, analytics, and authenticated routes: Network-Only
   if (
+    url.origin !== self.location.origin ||
     url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/usuario/') ||
     url.hostname.includes('googleapis.com') ||
     url.hostname.includes('vercel-insights') ||
     url.hostname.includes('analytics')

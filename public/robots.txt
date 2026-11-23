@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /usuario/
+
+Sitemap: https://adlocal.store/sitemap.xml
