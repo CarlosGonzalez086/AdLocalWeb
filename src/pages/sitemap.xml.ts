@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { comercioPublicApi } from "../services/comercioPublicApi";
+import { slugifyConId } from "../utils/generals";
 
 export const prerender = false;
 
@@ -23,23 +24,28 @@ export const GET: APIRoute = async ({ site, url }) => {
   ];
 
   const dynamicEntries: Array<{ path: string; lastmod?: string }> = [];
+  const PAGE_SIZE = 50;
+  const MAX_PAGES = 20;
   try {
-    const resp = await comercioPublicApi.getDestacados(1, 100);
-    const items = resp?.data?.respuesta?.items ?? [];
-    for (const comercio of items) {
-      const slugNombre = (comercio.nombre || "comercio")
-        .trim()
-        .replace(/\s+/g, "_");
-      const lastmod = comercio.fechaCreacion
-        ? comercio.fechaCreacion.split("T")[0]
-        : undefined;
-      dynamicEntries.push({
-        path: `/comercios/${comercio.id}_${encodeURIComponent(slugNombre)}`,
-        lastmod,
-      });
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const resp = await comercioPublicApi.getDestacados(page, PAGE_SIZE);
+      const items = resp?.data?.respuesta?.items ?? [];
+      for (const comercio of items) {
+        const slug = slugifyConId(comercio.id, comercio.nombre || "comercio");
+        const lastmod = comercio.fechaCreacion
+          ? comercio.fechaCreacion.split("T")[0]
+          : undefined;
+        dynamicEntries.push({
+          path: `/comercios/${slug}`,
+          lastmod,
+        });
+      }
+      if (items.length < PAGE_SIZE) {
+        break;
+      }
     }
   } catch {
-    // Degradar con rutas estáticas si el API no responde al generar sitemap
+    // Degradar con las rutas ya recopiladas si el API falla
   }
 
   const urlsXml = [

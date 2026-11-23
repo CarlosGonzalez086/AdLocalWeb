@@ -60,6 +60,9 @@ export const clienteAuthApi = {
   login: (dto: LoginClienteDto) =>
     httpUsuarioPublico.post<ApiResponse<string>>("/ClienteAuth/login", dto, { withCredentials: true }),
 
+  logout: () =>
+    httpUsuarioPublico.post<ApiResponse<object>>("/ClienteAuth/logout", null, { withCredentials: true }),
+
   renovarToken: (token?: string) => {
     const currentToken = token || getLocalStorageJWTUsuario();
     const refreshToken = getLocalStorageRefreshTokenUsuario();

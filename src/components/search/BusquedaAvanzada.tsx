@@ -228,14 +228,12 @@ const BusquedaAvanzada: React.FC = () => {
   const initialLoadedRef = useRef(false);
 
   const { comercios, loading, hasMore, cargarPorFiltros } =
-    useComercioPublico();
+    useComercioPublico({ autoLoad: false });
 
   useEffect(() => {
     if (initialLoadedRef.current) return;
     initialLoadedRef.current = true;
-    if (initialQuery) {
-      void cargarPorFiltros(0, 0, 0, "alfabetico", true, initialQuery);
-    }
+    void cargarPorFiltros(0, 0, 0, "alfabetico", true, initialQuery);
   }, [cargarPorFiltros, initialQuery]);
 
   const activeFiltersCount =

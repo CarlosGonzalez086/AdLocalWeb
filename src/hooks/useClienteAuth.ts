@@ -219,6 +219,7 @@ export const useClienteAuth = () => {
   );
 
   const logout = useCallback(() => {
+    void clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event("usuarioSesionActualizada"));

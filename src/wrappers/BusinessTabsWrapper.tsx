@@ -11,6 +11,20 @@ import {
 
 const PAGE_SIZE = 8;
 
+const obtenerCoordenadas = (): Promise<{ lat: number; lng: number }> => {
+  if (typeof window === "undefined" || !("geolocation" in navigator)) {
+    return Promise.reject(new Error("Geolocalización no disponible"));
+  }
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) =>
+        resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      reject,
+      { timeout: 10000, maximumAge: 60000 },
+    );
+  });
+};
+
 interface BusinessTabsWrapperProps {
   initialComercios?: ComercioDtoListItem[];
 }
@@ -42,28 +56,22 @@ const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
           | AxiosResponse<ApiResponse<ComercioListadoResponse>>
           | undefined;
 
-        if (
-          activeTab === "cercanos" &&
-          typeof window !== "undefined" &&
-          navigator.geolocation
-        ) {
-          response = await new Promise<
-            AxiosResponse<ApiResponse<ComercioListadoResponse>>
-          >((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-              try {
-                const resp = await comercioPublicApi.getCercanos(
-                  pos.coords.latitude,
-                  pos.coords.longitude,
-                  pageToLoad,
-                  PAGE_SIZE,
-                );
-                resolve(resp);
-              } catch (e) {
-                reject(e);
-              }
-            }, reject);
-          });
+        if (activeTab === "cercanos") {
+          const coords = await obtenerCoordenadas();
+          response = await comercioPublicApi.getCercanos(
+            coords.lat,
+            coords.lng,
+            pageToLoad,
+            PAGE_SIZE,
+          );
+        } else if (activeTab === "sugeridos") {
+          const coords = await obtenerCoordenadas();
+          response = await comercioPublicApi.getSugeridos(
+            coords.lat,
+            coords.lng,
+            pageToLoad,
+            PAGE_SIZE,
+          );
         } else {
           switch (activeTab) {
             case "destacados":
@@ -84,25 +92,6 @@ const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
                 PAGE_SIZE,
               );
               break;
-            case "sugeridos":
-              response = await new Promise<
-                AxiosResponse<ApiResponse<ComercioListadoResponse>>
-              >((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                  try {
-                    const resp = await comercioPublicApi.getSugeridos(
-                      pos.coords.latitude,
-                      pos.coords.longitude,
-                      pageToLoad,
-                      PAGE_SIZE,
-                    );
-                    resolve(resp);
-                  } catch (e) {
-                    reject(e);
-                  }
-                }, reject);
-              });
-              break;
           }
         }
 
@@ -113,6 +102,9 @@ const BusinessTabsWrapper: React.FC<BusinessTabsWrapperProps> = ({
         setHasMore(nuevos.length === PAGE_SIZE);
         setPage(pageToLoad + 1);
       } catch {
+        if (reset) {
+          setComercios([]);
+        }
         setError("No se pudieron cargar los comercios");
       } finally {
         setLoading(false);

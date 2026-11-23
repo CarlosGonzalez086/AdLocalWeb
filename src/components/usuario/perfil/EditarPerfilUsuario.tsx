@@ -8,6 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { usePerfilCliente } from "../../../hooks/usePerfilCliente";
 import { clearStorageUsuario } from "../../../utils/storageUsuario";
+import { clienteAuthApi } from "../../../services/clienteAuthApi";
 import {
   getInicialesUsuario,
   type UsuarioSesion,
@@ -67,7 +68,9 @@ export default function EditarPerfilUsuario({ usuario }: Props) {
   };
 
   const cerrarSesion = () => {
+    void clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
+    window.dispatchEvent(new Event("usuarioSesionActualizada"));
     window.location.replace("/");
   };
   const nombreVisible = perfil?.nombre ?? usuario.nombre;

@@ -19,8 +19,8 @@ export const useCalificaciones = (idComercio: number) => {
 
   const cargarComentarios = useCallback(
     async (
-      pageParam: number = page,
-      orderParam: "asc" | "desc" = orderBy,
+      pageParam: number = 1,
+      orderParam: "asc" | "desc" = "desc",
     ) => {
       setLoading(true);
       try {
@@ -49,7 +49,7 @@ export const useCalificaciones = (idComercio: number) => {
         setLoading(false);
       }
     },
-    [idComercio, page, pageSize, orderBy],
+    [idComercio, pageSize],
   );
 
   const crearComentario = async (dto: CalificacionComentarioCreateDto) => {

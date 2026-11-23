@@ -115,16 +115,18 @@ const CalificacionesComentarios = ({
       return;
     }
 
-    await crearComentario({
+    const created = await crearComentario({
       calificacion,
       comentario: cleanComment,
       idComercio,
       nombrePersona: cleanName,
     });
 
-    setNombre("");
-    setComentario("");
-    setCalificacion(0);
+    if (created) {
+      setNombre("");
+      setComentario("");
+      setCalificacion(0);
+    }
   };
 
   const handleChangeOrder = () => {

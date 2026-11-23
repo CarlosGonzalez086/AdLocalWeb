@@ -58,7 +58,12 @@ httpUsuario.interceptors.response.use(
       // Si no se pudo renovar el token definitivamente, limpiar y redirigir
       clearStorageUsuario();
       if (typeof window !== "undefined") {
-        window.location.href = "/usuario/login";
+        const destino = window.location.pathname + window.location.search;
+        const loginUrl =
+          destino && !destino.startsWith("/usuario/login") && !destino.startsWith("//")
+            ? `/usuario/login?returnUrl=${encodeURIComponent(destino)}`
+            : "/usuario/login";
+        window.location.href = loginUrl;
       }
     }
 

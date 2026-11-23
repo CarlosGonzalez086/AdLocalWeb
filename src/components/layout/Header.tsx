@@ -6,6 +6,7 @@ import {
   clearStorageUsuario,
   getLocalStorageJWTUsuario,
 } from "../../utils/storageUsuario";
+import { clienteAuthApi } from "../../services/clienteAuthApi";
 import {
   isTokenProximoAExpirar,
   renovarTokenSilencioso,
@@ -74,8 +75,9 @@ const Header: FC<HeaderProps> = () => {
         }
 
         const id = Number(payload.id);
+        const rol = payload.rol?.toLowerCase();
 
-        if (!id || !payload.nombre) {
+        if (!id || !payload.nombre || (rol !== "cliente" && rol !== "comercio")) {
           clearStorageUsuario();
           if (activo) setUsuario(null);
           return;
@@ -137,9 +139,11 @@ const Header: FC<HeaderProps> = () => {
   }, []);
 
   const handleCerrarSesion = () => {
+    void clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
     setUsuario(null);
     setDrawerOpen(false);
+    window.dispatchEvent(new Event("usuarioSesionActualizada"));
     window.location.replace("/");
   };
 

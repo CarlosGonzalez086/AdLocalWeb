@@ -122,7 +122,24 @@ export default function CheckoutUsuario({
       };
     });
 
-    setForms(nuevos);
+    setForms((prev) => {
+      const combinados: Record<string, CheckoutComercioForm> = {};
+      checkout.comercios.forEach((comercio) => {
+        const existente = prev[comercio.comercioUuid];
+        if (existente) {
+          combinados[comercio.comercioUuid] = {
+            ...existente,
+            direccionUuid:
+              existente.tipoEntrega === TipoEntregaPedido.Domicilio
+                ? (existente.direccionUuid ?? direccionPredeterminada?.uuid ?? null)
+                : null,
+          };
+        } else {
+          combinados[comercio.comercioUuid] = nuevos[comercio.comercioUuid];
+        }
+      });
+      return combinados;
+    });
   }, [checkout, direcciones]);
 
   /* ==========================================
@@ -161,9 +178,13 @@ export default function CheckoutUsuario({
         return false;
       }
 
+      if (!comercio.permiteDomicilio && !comercio.permiteRecoger) {
+        return false;
+      }
+
       if (
         form.tipoEntrega === TipoEntregaPedido.Domicilio &&
-        !form.direccionUuid
+        (!comercio.permiteDomicilio || !form.direccionUuid)
       ) {
         return false;
       }

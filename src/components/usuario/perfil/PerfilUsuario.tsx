@@ -1,6 +1,7 @@
 import { Alert, Avatar, Button, CircularProgress } from "@mui/material";
 import { usePerfilCliente } from "../../../hooks/usePerfilCliente";
 import { clearStorageUsuario } from "../../../utils/storageUsuario";
+import { clienteAuthApi } from "../../../services/clienteAuthApi";
 import {
   getInicialesUsuario,
   type UsuarioSesion,
@@ -18,7 +19,9 @@ export default function PerfilUsuario({ usuario }: Props) {
   const esComercio = usuario.rol?.toLowerCase() === "comercio";
 
   const cerrarSesion = () => {
+    void clienteAuthApi.logout().catch(() => {});
     clearStorageUsuario();
+    window.dispatchEvent(new Event("usuarioSesionActualizada"));
     window.location.replace("/");
   };
 
