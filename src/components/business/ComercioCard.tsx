@@ -2,6 +2,7 @@ import type { CSSProperties, FC } from "react";
 
 import type { ComercioDtoListItem } from "../../services/comercioPublicApi";
 import { slugifyConId } from "../../utils/generals";
+import { sanitizeHexColor, sanitizeSafeImageUrl } from "../../utils/sanitize";
 
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 
@@ -112,29 +113,18 @@ const ComercioCard: FC<Props> = ({ comercio }) => {
 
   const distance = Number(comercio.distanciaKm ?? 0);
 
-  const isValidHex = (val?: string) => Boolean(val && /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(val.trim()));
-  const primaryColor = isValidHex(comercio.colorPrimario) ? comercio.colorPrimario!.trim() : "#5B3A29";
+  const primaryColor = sanitizeHexColor(comercio.colorPrimario, "#5B3A29");
 
-  const secondaryColor = isValidHex(comercio.colorSecundario) ? comercio.colorSecundario!.trim() : "#3A2419";
+  const secondaryColor = sanitizeHexColor(comercio.colorSecundario, "#3A2419");
 
   const cardStyles: CardCSSProperties = {
     "--card-primary": primaryColor,
     "--card-secondary": secondaryColor,
   };
 
-  const safeLogoUrl = (() => {
-    const raw = comercio.logoUrl?.trim();
-    if (!raw || /["'()\\\r\n]/.test(raw)) return null;
-    if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
-    try {
-      const parsed = new URL(raw);
-      return parsed.protocol === "https:" || parsed.protocol === "http:"
-        ? parsed.toString()
-        : null;
-    } catch {
-      return null;
-    }
-  })();
+  const safeLogoUrl = sanitizeSafeImageUrl(comercio.logoUrl, {
+    rejectCssChars: true,
+  });
 
   const coverStyles: CSSProperties = {
     backgroundImage: safeLogoUrl

@@ -168,15 +168,28 @@ export default function CheckoutUsuario({
 
     changes: Partial<CheckoutComercioForm>,
   ) => {
-    setForms((current) => ({
-      ...current,
-
-      [comercioUuid]: {
-        ...current[comercioUuid],
-
+    setForms((current) => {
+      const anterior = current[comercioUuid];
+      const actualizado: CheckoutComercioForm = {
+        ...anterior,
         ...changes,
-      },
-    }));
+      };
+
+      if (
+        changes.tipoEntrega === TipoEntregaPedido.Domicilio &&
+        !actualizado.direccionUuid
+      ) {
+        const direccionPredeterminada =
+          direcciones.find((x) => x.activo && x.esPredeterminada) ??
+          direcciones.find((x) => x.activo);
+        actualizado.direccionUuid = direccionPredeterminada?.uuid ?? null;
+      }
+
+      return {
+        ...current,
+        [comercioUuid]: actualizado,
+      };
+    });
   };
 
   /* ==========================================

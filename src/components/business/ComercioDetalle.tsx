@@ -14,6 +14,7 @@ import type {
 } from "../../services/comercioPublicApi";
 
 import { DIAS_SEMANA_MAP, estaAbiertoAhora } from "../../utils/generals";
+import { sanitizeHexColor, sanitizeSafeImageUrl } from "../../utils/sanitize";
 
 import MaterialSymbol from "../UI/MaterialSymbol/MaterialSymbol";
 import CalificacionesComentarios from "./CalificacionesComentarios";
@@ -140,9 +141,20 @@ export default function ComercioDetalle({
     );
   }
 
-  const colorPrimario = comercio.colorPrimario || "#6f4e37";
+  const colorPrimario = sanitizeHexColor(comercio.colorPrimario, "#6f4e37");
 
-  const colorSecundario = comercio.colorSecundario || "#3e2723";
+  const colorSecundario = sanitizeHexColor(
+    comercio.colorSecundario,
+    "#3e2723",
+  );
+
+  const safeLogoUrl = sanitizeSafeImageUrl(comercio.logoBase64, {
+    allowDataImage: true,
+  });
+
+  const safeImagenes = (comercio.imagenes ?? [])
+    .map((img) => sanitizeSafeImageUrl(img, { allowDataImage: true }))
+    .filter((img): img is string => Boolean(img));
 
   const detailStyles: DetailCSSProperties = {
     "--business-primary": colorPrimario,
@@ -235,9 +247,9 @@ export default function ComercioDetalle({
 
         <div className="comercioDetalleHeroContent">
           <div className="comercioDetalleLogoContainer">
-            {comercio.logoBase64 ? (
+            {safeLogoUrl ? (
               <img
-                src={comercio.logoBase64}
+                src={safeLogoUrl}
                 alt={`Logotipo de ${comercio.nombre}`}
                 className="comercioDetalleLogo"
               />
@@ -365,7 +377,7 @@ export default function ComercioDetalle({
           )}
         </div>
 
-        {comercio.imagenes && comercio.imagenes.length > 0 && (
+        {safeImagenes.length > 0 && (
           <div className="comercioDetalleSection">
             <div className="comercioDetalleSectionHeader">
               <span className="comercioDetalleSectionIcon">
@@ -387,9 +399,9 @@ export default function ComercioDetalle({
                 className="comercioDetalleCarousel carousel slide"
                 data-bs-ride="carousel"
               >
-                {comercio.imagenes.length > 1 && (
+                {safeImagenes.length > 1 && (
                   <div className="comercioDetalleCarouselIndicators carousel-indicators">
-                    {comercio.imagenes.map((_, index) => (
+                    {safeImagenes.map((_, index) => (
                       <button
                         key={index}
                         type="button"
@@ -404,7 +416,7 @@ export default function ComercioDetalle({
                 )}
 
                 <div className="carousel-inner">
-                  {comercio.imagenes.map((image, index) => (
+                  {safeImagenes.map((image, index) => (
                     <div
                       key={`${image}-${index}`}
                       className={`comercioDetalleCarouselItem carousel-item ${
@@ -421,7 +433,7 @@ export default function ComercioDetalle({
                   ))}
                 </div>
 
-                {comercio.imagenes.length > 1 && (
+                {safeImagenes.length > 1 && (
                   <>
                     <button
                       className="comercioDetalleCarouselControl carousel-control-prev"

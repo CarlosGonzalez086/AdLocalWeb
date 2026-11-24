@@ -11,7 +11,11 @@ export default function NotificacionesMenu() {
   const obtenerDestinoSeguro = (url?: string | null): string | null => {
     if (!url) return null;
     const limpia = url.trim();
-    if (limpia.startsWith("/") && !limpia.startsWith("//")) {
+    if (
+      limpia.startsWith("/") &&
+      !limpia.startsWith("//") &&
+      !limpia.startsWith("/\\")
+    ) {
       return limpia;
     }
     try {

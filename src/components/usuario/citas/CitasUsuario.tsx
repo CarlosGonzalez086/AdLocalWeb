@@ -39,8 +39,16 @@ export default function CitasUsuario() {
           : null,
       );
       try {
-        const op = new ReservaCitaOperacion(localStorage, cuentaCheckout());
-        setPendiente(Boolean(op.pendiente()));
+        const pendientes = ReservaCitaOperacion.pendientes(
+          localStorage,
+          cuentaCheckout(),
+        );
+        setPendiente(pendientes.some((item) => Boolean(item.dto) || item.corrupta));
+        if (pendientes.some((item) => item.corrupta)) {
+          setError(
+            "No se pudo leer la reserva guardada. Revisa la lista antes de cerrar esa comprobación.",
+          );
+        }
       } catch {
         setPendiente(true);
         setError(
@@ -62,15 +70,22 @@ export default function CitasUsuario() {
     setRecuperando(true);
     setError("");
     try {
-      const op = new ReservaCitaOperacion(localStorage, cuentaCheckout());
-      const dto = op.pendiente();
-      if (dto) {
-        const r = await citasApi.crear(dto);
+      const pendientes = ReservaCitaOperacion.pendientes(
+        localStorage,
+        cuentaCheckout(),
+      );
+      for (const item of pendientes) {
+        if (!item.dto) continue;
+        const r = await citasApi.crear(item.dto);
         if (r.data.codigo !== "200" || !r.data.respuesta?.uuid)
           throw new Error(r.data.mensaje);
-        op.completar();
+        localStorage.removeItem(item.key);
       }
-      setPendiente(false);
+      const restantes = ReservaCitaOperacion.pendientes(
+        localStorage,
+        cuentaCheckout(),
+      );
+      setPendiente(restantes.some((item) => Boolean(item.dto) || item.corrupta));
       await cargar();
     } catch (e: unknown) {
       setError(
@@ -94,7 +109,7 @@ export default function CitasUsuario() {
     });
     if (r.isConfirmed) {
       try {
-        new ReservaCitaOperacion(localStorage, cuentaCheckout()).completar();
+        ReservaCitaOperacion.limpiarCuenta(localStorage, cuentaCheckout());
         setPendiente(false);
       } catch {
         setError("No se pudo eliminar la solicitud local.");

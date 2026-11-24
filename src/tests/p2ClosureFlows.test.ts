@@ -112,7 +112,7 @@ describe("P2 Closure Security & Flows (AdLocalWeb)", () => {
 
     expect(slug).toContain("Astro.redirect(`/comercios/${canonicalSlug}`, 301)");
     expect(slug).toContain("Astro.response.status = 503");
-    expect(card).toContain("isValidHex");
+    expect(card).toContain("sanitizeHexColor");
     expect(card).toContain("src={safeLogoUrl}");
     expect(app).toContain('startsWith("/usuario")');
     expect(dirSel).toContain("direccionesActivas.length === 0");
